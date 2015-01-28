@@ -24,9 +24,11 @@ public class Robot extends IterativeRobot {
 	Talon FrontR;
 	Talon BackL;
 	Talon BackR;
-	Talon Hellovator;
+	Talon Hellovator1, Hellovator2;
 	Solenoid Saulenoid;
 	RobotDrive DriveRobot;
+	SmoothedEncoder encFL, encFR, encRL, encRR;
+	SmoothedEncoder encVator;
 	
 	/**
      * This function is run when the robot is first started up and should be
@@ -35,12 +37,18 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	sticktoriaJustice = new Joystick(0);
     	comPreston = new Compressor(1);
-    	FrontL = new Talon(2);
-    	FrontR = new Talon(3);
-    	BackL = new Talon(4);
-    	BackR = new Talon(5);
-    	Hellovator = new Talon(6);
-    	Saulenoid = new Solenoid(7);
+    	FrontL = new Talon(1);
+    	FrontR = new Talon(0);
+    	BackL = new Talon(3);
+    	BackR = new Talon(2);
+    	Hellovator1 = new Talon(4);
+    	Hellovator2 = new Talon(5);
+    	Saulenoid = new Solenoid(1, 0);
+    	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
+    	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
+    	encRR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
+    	encRL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
+    	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
     }
 
     /**
