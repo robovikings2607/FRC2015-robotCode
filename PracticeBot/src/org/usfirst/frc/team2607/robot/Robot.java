@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 	Talon Hellovator1, Hellovator2;
 	Solenoid Saulenoid;
 	RobotDrive DriveRobot;
-	SmoothedEncoder encFL, encFR, encRL, encRR;
+	SmoothedEncoder encFL, encFR, encBL, encBR;
 	SmoothedEncoder encVator;
 	Gyro gyroPyro;
 	boolean Saul;
@@ -37,12 +37,12 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	sticktoriaJustice = new Joystick(0);
+    	sticktoriaJustice = new robovikingStick(0);
     	comPreston = new Compressor(1);
-    	FL = new Talon(1);
-    	FR = new Talon(0);
-    	BL = new Talon(3);
-    	BR = new Talon(2);
+    	FrontL = new Talon(1);
+    	FrontR = new Talon(0);
+    	BackL = new Talon(3);
+    	BackR = new Talon(2);
     	Hellovator1 = new Talon(4);
     	Hellovator2 = new Talon(5);
     	Saulenoid = new Solenoid(1, 0);
@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
-    	DriveRobot = new robotDrive(FL, BL, FR, BR);
+    	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	gyroPyro = new Gyro(0);
     }
 
@@ -66,12 +66,10 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX, sticktoriaJustice.getY, gyroPyro.getRotation, gyroPyro.getAngle);
-    	
-    	if(sticktoriaJustice.getRawButton(2)){
-    		
-    		Saulenoid.set(!Saul);
-    	}
+    	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
+
+    	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
+
     }
     
     /**

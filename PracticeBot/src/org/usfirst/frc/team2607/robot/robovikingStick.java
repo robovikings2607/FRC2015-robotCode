@@ -6,13 +6,16 @@ public class robovikingStick extends Joystick{
 
 
 private int previousState;
+private boolean[] buttonStates;
 
 public robovikingStick(int port) {
     super(port);
     previousState = 0;
+    buttonStates = new boolean[16];
+    for (int i = 0; i < buttonStates.length; i++) buttonStates[i] = false;
 }
 
-public boolean getButtonToggle(int buttonNumber) {
+public boolean getOneShotButton(int buttonNumber) {
     int bitValue = 0x1 << (buttonNumber - 1);
     boolean retValue = false;
     
@@ -24,5 +27,11 @@ public boolean getButtonToggle(int buttonNumber) {
     if (!buttonIsOn) previousState = previousState & ~bitValue;
     
     return retValue;
+}
+
+public boolean getToggleButton(int buttonNumber) {
+	int btn = buttonNumber - 1;
+	if (getOneShotButton(buttonNumber)) buttonStates[btn] = !buttonStates[btn];
+	return buttonStates[btn];
 }
 }
