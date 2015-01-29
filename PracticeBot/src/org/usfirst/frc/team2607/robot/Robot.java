@@ -31,6 +31,7 @@ public class Robot extends IterativeRobot {
 	SmoothedEncoder encFL, encFR, encBL, encBR;
 	SmoothedEncoder encVator;
 	Gyro gyroPyro;
+	double x, y, z;
 	boolean Saul;
 	/**
      * This function is run when the robot is first started up and should be
@@ -39,20 +40,24 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	sticktoriaJustice = new robovikingStick(0);
     	comPreston = new Compressor(1);
-    	FrontL = new Talon(1);
-    	FrontR = new Talon(0);
-    	BackL = new Talon(3);
-    	BackR = new Talon(2);
-    	Hellovator1 = new Talon(4);
-    	Hellovator2 = new Talon(5);
-    	Saulenoid = new Solenoid(1, 0);
+    	FrontL = new Talon(Constants.talonFrontLeft);
+    	FrontR = new Talon(Constants.talonFrontRight);
+    	BackL = new Talon(Constants.talonBackLeft);
+    	BackR = new Talon(Constants.talonBackRight);
+    	Hellovator1 = new Talon(Constants.Elevator1);
+    	Hellovator2 = new Talon(Constants.Elevator2);
+    	Saulenoid = new Solenoid(Constants.solenoidChannel);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
     	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
-    	gyroPyro = new Gyro(0);
+    	DriveRobot.setInvertedMotor(FrontL, true);
+    	DriveRobot.setInvertedMotor(BackL, true);
+    	gyroPyro = new Gyro(Constants.gyroChannel);
+    	
+    	comPreston.start();
     }
 
     /**
@@ -68,6 +73,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
 
+    	
+    	
     	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
 
     }
@@ -76,6 +83,33 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+    	
+
+        if (xboxSpeedRacer.getRawButton(4)) {
+            y = -.5;
+            x = 0.0;
+            z = 0.0;
+        } else if (xboxSpeedRacer.getRawButton(1)) {
+            y = .5;
+            x = 0.0;
+            z = 0.0;
+        } else if (xboxSpeedRacer.getRawButton(3)) {
+            y = 0.0;
+            x = -.5;
+            z = 0.0;
+        } else if (xboxSpeedRacer.getRawButton(2)) {
+            y = 0.0;
+            x = .5;
+            z = 0.0;
+        } else {
+            y = 0.0;
+            x = 0.0;
+            z = 0.0;
+            
+            DriveRobot.mecanumDrive_Cartesian(x, y, z, 0);
+        }
+
+    }
     
     }
     
