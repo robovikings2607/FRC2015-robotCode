@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Gyro;
 
 
 /**
@@ -29,7 +30,8 @@ public class Robot extends IterativeRobot {
 	RobotDrive DriveRobot;
 	SmoothedEncoder encFL, encFR, encRL, encRR;
 	SmoothedEncoder encVator;
-	
+	Gyro gyroPyro;
+	boolean Saul;
 	/**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -37,18 +39,20 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	sticktoriaJustice = new Joystick(0);
     	comPreston = new Compressor(1);
-    	FrontL = new Talon(1);
-    	FrontR = new Talon(0);
-    	BackL = new Talon(3);
-    	BackR = new Talon(2);
+    	FL = new Talon(1);
+    	FR = new Talon(0);
+    	BL = new Talon(3);
+    	BR = new Talon(2);
     	Hellovator1 = new Talon(4);
     	Hellovator2 = new Talon(5);
     	Saulenoid = new Solenoid(1, 0);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
-    	encRR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
-    	encRL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
+    	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
+    	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
+    	DriveRobot = new robotDrive(FL, BL, FR, BR);
+    	gyroPyro = new Gyro(0);
     }
 
     /**
@@ -62,7 +66,12 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+    	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX, sticktoriaJustice.getY, gyroPyro.getRotation, gyroPyro.getAngle);
+    	
+    	if(sticktoriaJustice.getRawButton(2)){
+    		
+    		Saulenoid.set(!Saul);
+    	}
     }
     
     /**
