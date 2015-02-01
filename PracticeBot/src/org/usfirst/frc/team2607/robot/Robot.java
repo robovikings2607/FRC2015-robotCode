@@ -1,9 +1,11 @@
 
 package org.usfirst.frc.team2607.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -19,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick sticktoriaJustice; 
+	robovikingStick sticktoriaJustice; 
 	Compressor comPreston; 
 	Talon FrontL;
 	Talon FrontR;
@@ -48,8 +50,8 @@ public class Robot extends IterativeRobot {
     	FrontR = new Talon(Constants.talonFrontRight);
     	BackL = new Talon(Constants.talonBackLeft);
     	BackR = new Talon(Constants.talonBackRight);
-    	Hellovator1 = new Talon(Constants.Elevator1);
-    	Hellovator2 = new Talon(Constants.Elevator2);
+    	Hellovator1 = new Talon(Constants.talonElevator1);
+    	Hellovator2 = new Talon(Constants.talonElevator2);
     	Saulenoid = new Solenoid(Constants.solenoidChannel);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
@@ -57,10 +59,10 @@ public class Robot extends IterativeRobot {
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
     	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
-    	DriveRobot.setInvertedMotor(FrontL, true);
-    	DriveRobot.setInvertedMotor(BackL, true);
+    	DriveRobot.setInvertedMotor(MotorType.kFrontLeft, true);
+    	DriveRobot.setInvertedMotor(MotorType.kRearLeft, true);
     	gyroPyro = new Gyro(Constants.gyroChannel);
-    	iDash5s = new SmartDashboard
+    	iDash5s = new SmartDashboard();
     	comPreston.start();
     }
 
@@ -82,16 +84,16 @@ public class Robot extends IterativeRobot {
     	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4));
     	
     	for (int i = 0; i < 2; i++) {
-    		if (Math.abs(driveValerie[i]) <= deadZones[i]) {
+    		if (Math.abs(driveValerie[i]) <= DeadZones[i]) {
     			driveValerie[i] = 0;
     		}
-    		if (driveValerie[i] > deadZones[i] && driveValerie[i] <= deadZones[i] * 2) {
+    		if (driveValerie[i] > DeadZones[i] && driveValerie[i] <= DeadZones[i] * 2) {
     			driveValerie[i] = (driveValerie[i] - .15) * 2;
     		}
-    		if (driveValerie[i] < -deadZones[i] >= driveValerie[i] >= -2 * deadZones[i]) {
-    			driveValerie[i] = (driveValerie)[i] + .15) * 2;
+    		if (driveValerie[i] < -DeadZones[i] && driveValerie[i] >= -2 * DeadZones[i]) {
+    			driveValerie[i] = (driveValerie[i] + .15) * 2;
     		}
-    		DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
+    	//	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
     	
     	if(sticktoriaJustice.getRawButton(4)){
     		
@@ -103,6 +105,7 @@ public class Robot extends IterativeRobot {
     		Hellovator1.set(lower);
     		Hellovator2.set(lower);
     	}
+    	
     	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
 
     	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
@@ -110,6 +113,7 @@ public class Robot extends IterativeRobot {
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
+    }
     }
     
     /**
@@ -124,19 +128,19 @@ public class Robot extends IterativeRobot {
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
     	
-        if (xboxSpeedRacer.getRawButton(4)) {
+        if (sticktoriaJustice.getRawButton(4)) {
             y = -.5;
             x = 0.0;
             z = 0.0;
-        } else if (xboxSpeedRacer.getRawButton(1)) {
+        } else if (sticktoriaJustice.getRawButton(1)) {
             y = .5;
             x = 0.0;
             z = 0.0;
-        } else if (xboxSpeedRacer.getRawButton(3)) {
+        } else if (sticktoriaJustice.getRawButton(3)) {
             y = 0.0;
             x = -.5;
             z = 0.0;
-        } else if (xboxSpeedRacer.getRawButton(2)) {
+        } else if (sticktoriaJustice.getRawButton(2)) {
             y = 0.0;
             x = .5;
             z = 0.0;
@@ -152,4 +156,4 @@ public class Robot extends IterativeRobot {
     
     }
     
-}
+
