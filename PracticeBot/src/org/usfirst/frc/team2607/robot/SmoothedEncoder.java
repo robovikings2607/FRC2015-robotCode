@@ -38,7 +38,7 @@ public class SmoothedEncoder extends Encoder implements Runnable {
             sampleValues[i] = sampleValues[i-1];
         }
         sampleValues[0] = getRate();
-        double[] median = Arrays.copy(sampleValues, 0, numSamples, 0, numSamples);
+        double[] median = Arrays.copyOfRange(sampleValues, 0, numSamples);
         Arrays.sort(median);
         currentRate = median[median.length/2];       
         try { Thread.sleep(5); } catch (Exception e) {}

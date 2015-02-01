@@ -12,22 +12,22 @@ public class Constants {
 	public static int talonElevator2 = 5;
 	
 	public static int solenoidChannel = 0;
-	public static in gyroChannel = 0;
+	public static int gyroChannel = 0;
 	
 	public static int encoderFrontRightChannelA = 0;
 	public static int encoderFrontRightChannelB = 1;
-	public static int encoderFrontBoolean = false;
+	public static boolean encoderFrontBoolean = false;
 	
 	public static int encoderFrontLeftChannelA = 2;
 	public static int encoderFrontLeftChannelB = 3;
-	public static int encoderFrontLeftBoolean = false;
+	public static boolean encoderFrontLeftBoolean = false;
 	
 	public static int encoderBackRightChannelA = 4;
-	public static int encoderBackRightChannelA = 5;
-	public static int encoderBackRightBoolean = false;
+	public static int encoderBackRightChannelB = 5;
+	public static boolean encoderBackRightBoolean = false;
 	
 	public static int encoderBackLeftChannelA = 6;
-	public static int encoderBackLeftChannelA = 7;
-	public static int encoderBackLeftBoolean = false;
+	public static int encoderBackLeftChannelB = 7;
+	public static boolean encoderBackLeftBoolean = false;
 	
 }
