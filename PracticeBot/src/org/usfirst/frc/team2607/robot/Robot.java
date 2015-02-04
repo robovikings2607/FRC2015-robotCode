@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
     	BackR = new Talon(Constants.talonBackRight);
     	Hellovator1 = new Talon(Constants.talonElevator1);
     	Hellovator2 = new Talon(Constants.talonElevator2);
-    	Saulenoid = new Solenoid(Constants.solenoidChannel);
+    	Saulenoid = new Solenoid(1, Constants.solenoidChannel);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
