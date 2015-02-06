@@ -13,6 +13,8 @@ public class Constants {
 	
 	public static int solenoidChannel = 0;
 	public static int gyroChannel = 0;
+	public static int bottomSwitchPort = 10;
+	public static int topSwitchPort = 11;
 	
 	public static int encoderFrontRightChannelA = 0;
 	public static int encoderFrontRightChannelB = 1;

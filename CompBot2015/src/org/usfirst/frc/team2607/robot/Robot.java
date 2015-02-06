@@ -2,6 +2,7 @@
 package org.usfirst.frc.team2607.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -35,6 +36,7 @@ public class Robot extends IterativeRobot {
 	SmartDashboard smartDash;
 	SmoothedEncoder encElevator;
 	SmoothedEncoder encFL, encFR, encBL, encBR;
+	DigitalInput topSwitch, bottomSwitch;
 	
 	boolean arms = false;
 	double x, y, z;
@@ -42,6 +44,8 @@ public class Robot extends IterativeRobot {
 	double lower = -0.75;
 	double[] driveValue = new double[3];
 	double[] deadZones = new double[]{0.15, 0.15, 0.15};
+	double liftSpeed = .75;
+	int currentHeight = 0;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -67,6 +71,9 @@ public class Robot extends IterativeRobot {
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
     	gyro = new Gyro(Constants.gyroChannel);
     	smartDash = new SmartDashboard();
+    	topSwitch = new DigitalInput(Constants.topSwitchPort);
+    	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
+    	
     	compressor.start();
     }
 
@@ -99,12 +106,12 @@ public class Robot extends IterativeRobot {
     		}
     		robotDrive.mecanumDrive_Cartesian(xboxSupremeController.getX(), xboxSupremeController.getY(), -xboxSupremeController.getRawAxis(4), 0);
 	    	
-	    	if(xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)){
+	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && topSwitch.get()){
 	    		
 	    		elevator1.set(lift);
 	    		elevator2.set(lift);
 	    		
-	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)){
+	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4) && bottomSwitch.get()){
 	    		
 	    		elevator1.set(lower);
 	    		elevator2.set(lower);
@@ -160,13 +167,13 @@ public class Robot extends IterativeRobot {
         robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
     }
     
-    public void liftElevator(int height){
+    /* public void liftElevator(int height){
     	switch(height){
     	
+    	
+    	
     	case 0:
-    		while (encElevator.getDistance() > 2){
-    			
-    		}
+    		
     		break;
     	case 1:
     		
@@ -181,9 +188,52 @@ public class Robot extends IterativeRobot {
     		
     		break;
     	case 5: 
+    		
+    		break;
     	}
     	
+    	currentHeight = height;
+    	
+    } */
+    
+   /* public void driveForwardAuton(){
+    	
     }
+    
+    public void strafeLeftAuton(int stage){
+    	
+    }
+    
+    
+    public void strafeRightAuton(){
+    	
+    }
+    
+    public void stackTotesAuton(){
+    	
+    }
+    
+    public void pickUpTotesAuton(){
+    	
+    }
+    */
+    
+    
+    /* Auton Steps:
+     * 1. pick up tote                 we have one tote
+     * 2. strafeRightAuton()
+     * 3. driveForwardAuton()
+     * 4. strafeLeftAuton(1)
+     * 5. stackTotesAuton()
+     * 6. pickUpTotesAtuon()           we have two totes
+     * 7. strafeRightAuton()
+     * 8. driveForwardAuton()
+     * 9. strafeLeftAuton(1)
+     * 10. stackTotesAuton()
+     * 11. pickUpTotesAtuon() 		   we have three totes
+     * 12. strafeLeftAuton(2) 
+     * 13. drop totes
+     */
     
     
 }
