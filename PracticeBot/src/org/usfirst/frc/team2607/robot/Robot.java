@@ -35,8 +35,8 @@ public class Robot extends IterativeRobot {
 	Gyro gyroPyro;
 	SmartDashboard iDash5s;
 	double x, y, z;
-	double lift = .5;
-	double lower = -.5;
+	double lift = .80;
+	double lower = -.80;
 	double[] driveValerie = new double[3];
 	double[] DeadZones = new double[]{0.25, 0.25, 0.25};
 	/**
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
     	BackR = new Talon(Constants.talonBackRight);
     	Hellovator1 = new Talon(Constants.talonElevator1);
     	Hellovator2 = new Talon(Constants.talonElevator2);
-    	Saulenoid = new Solenoid(Constants.solenoidChannel);
+    	Saulenoid = new Solenoid(1,Constants.solenoidChannel);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
@@ -79,31 +79,36 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
     	
-    	driveValerie[0] = sticktoriaJustice.getX();
-    	driveValerie[1] = sticktoriaJustice.getY();
+    	driveValerie[0] = -sticktoriaJustice.getX();
+    	driveValerie[1] = -sticktoriaJustice.getY();
     	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4));
     	
-    	for (int i = 0; i < 2; i++) {
+    	for (int i = 0; i < 3; i++) {
     		if (Math.abs(driveValerie[i]) <= DeadZones[i]) {
     			driveValerie[i] = 0;
     		}
     		if (driveValerie[i] > DeadZones[i] && driveValerie[i] <= DeadZones[i] * 2) {
-    			driveValerie[i] = (driveValerie[i] - .15) * 2;
+    			driveValerie[i] = (driveValerie[i] - .10) * 2;
     		}
     		if (driveValerie[i] < -DeadZones[i] && driveValerie[i] >= -2 * DeadZones[i]) {
-    			driveValerie[i] = (driveValerie[i] + .15) * 2;
+    			driveValerie[i] = (driveValerie[i] + .10) * 2;
     		}
+    	}
     	//	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
     	
-    	if(sticktoriaJustice.getRawButton(4)){
+    	if(sticktoriaJustice.getRawButton(1)){
     		
     		Hellovator1.set(lift);
     		Hellovator2.set(lift);
     		
-    	}else if(sticktoriaJustice.getRawButton(1)){
+    	}else{ if(sticktoriaJustice.getRawButton(4)){
     		
     		Hellovator1.set(lower);
     		Hellovator2.set(lower);
+    	} else {
+    		Hellovator1.set(0);
+    		Hellovator2.set(0);
+    	}
     	}
     	
     	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
@@ -113,7 +118,7 @@ public class Robot extends IterativeRobot {
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
-    }
+    
     }
     
     /**
@@ -128,30 +133,46 @@ public class Robot extends IterativeRobot {
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
     	
-        if (sticktoriaJustice.getRawButton(4)) {
-            y = -.5;
+       /* if (sticktoriaJustice.getRawButton(4)) {
+            y = .5;
             x = 0.0;
             z = 0.0;
         } else if (sticktoriaJustice.getRawButton(1)) {
-            y = .5;
+            y = -.5;
             x = 0.0;
             z = 0.0;
         } else if (sticktoriaJustice.getRawButton(3)) {
             y = 0.0;
-            x = -.5;
+            x = .5;
             z = 0.0;
         } else if (sticktoriaJustice.getRawButton(2)) {
             y = 0.0;
-            x = .5;
+            x = -.5;
             z = 0.0;
         } else {
             y = 0.0;
             x = 0.0;
             z = 0.0;
             
-            DriveRobot.mecanumDrive_Cartesian(x, y, z, 0);
-        }
-
+            
+        } */
+if(sticktoriaJustice.getRawButton(1)){
+    		
+    		Hellovator1.set(lift);
+    		Hellovator2.set(lift);
+    		
+    	}else{ if(sticktoriaJustice.getRawButton(4)){
+    		
+    		Hellovator1.set(lower);
+    		Hellovator2.set(lower);
+    	} else {
+    		Hellovator1.set(0);
+    		Hellovator2.set(0);
+    	}
+    	}
+    	
+    	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
+DriveRobot.mecanumDrive_Cartesian(x, y, z, 0);
     }
     
     }
