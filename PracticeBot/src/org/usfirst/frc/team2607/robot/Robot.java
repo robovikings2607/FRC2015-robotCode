@@ -131,10 +131,10 @@ public class Robot extends IterativeRobot {
     
     public void testPeriodic() {
     	
-    	double angler = gyroPyro.getAngle();
     	if(sticktoriaJustice.getOneShotButton(7)){
     		gyroPyro.reset();
     	}
+    	double angler = gyroPyro.getAngle();
     	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
