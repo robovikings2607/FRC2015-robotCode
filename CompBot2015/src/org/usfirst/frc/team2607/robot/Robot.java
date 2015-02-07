@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot {
 	    		elevator2.set(0);
 	    	}
 	    	
-	    if(xboxSupremeController.getRawButton(2) || (xboxMinor.getRawButton(2))){
+	    if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
 	    	solenoid.set(!arms);
 	    	}
 	    
