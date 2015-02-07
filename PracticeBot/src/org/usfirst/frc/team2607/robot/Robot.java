@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
 	SmartDashboard iDash5s;
 	double x, y, z;
 	double lift = .80;
-	double lower = -.80;
+	double lower = -.50;
 	double[] driveValerie = new double[3];
 	double[] DeadZones = new double[]{0.25, 0.25, 0.25};
 	/**
@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
     	
     	driveValerie[0] = -sticktoriaJustice.getX();
     	driveValerie[1] = -sticktoriaJustice.getY();
-    	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4));
+    	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4)/2);
     	
     	for (int i = 0; i < 3; i++) {
     		if (Math.abs(driveValerie[i]) <= DeadZones[i]) {
