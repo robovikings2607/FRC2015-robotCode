@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
 	SmoothedEncoder encElevator;
-	DigitalInput topSwitch, bottomSwitch;
+	//DigitalInput topSwitch, bottomSwitch;
 	
 	
 	boolean arms = false;
@@ -125,12 +125,12 @@ public class Robot extends IterativeRobot {
     		gyro.reset();
     	}
     	
-	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && topSwitch.get()){
+	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){ //&& topSwitch.get()){
 	    		
 	    		elevator1.set(lift);
 	    		elevator2.set(lift);
 	    		
-	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4) && bottomSwitch.get()){
+	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)){ //&& bottomSwitch.get()){
 	    		
 	    		elevator1.set(lower);
 	    		elevator2.set(lower);
