@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	robovikingStick sticktoriaJustice; 
+	robovikingStick sticktoriaJustice, xboxMinor; 
 	Compressor comPreston; 
 	Talon FrontL;
 	Talon FrontR;
@@ -35,16 +35,18 @@ public class Robot extends IterativeRobot {
 	Gyro gyroPyro;
 	SmartDashboard iDash5s;
 	double x, y, z;
-	double lift = -1;
+	double lift = -.80;
 	double lower = .50;
 	double[] driveValerie = new double[3];
-	double[] DeadZones = new double[]{0.25, 0.25, 0.25};
+	double[] DeadZones = new double[]{0.15, 0.15, 0.15};
+	boolean arms = false;
 	/**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
     	sticktoriaJustice = new robovikingStick(0);
+    	xboxMinor = new robovikingStick(1);
     	comPreston = new Compressor(1);
     	FrontL = new Talon(Constants.talonFrontLeft);
     	FrontR = new Talon(Constants.talonFrontRight);
@@ -78,11 +80,16 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
     	
-    	driveValerie[0] = -sticktoriaJustice.getX();
-    	driveValerie[1] = -sticktoriaJustice.getY();
-    	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4)/3);
+    	if(sticktoriaJustice.getOneShotButton(7)){
+    		gyroPyro.reset();
+    	}
+    	
+    	double angler = gyroPyro.getAngle();
+    	
+    	driveValerie[0] = -(sticktoriaJustice.getX() * .65);
+    	driveValerie[1] = -(sticktoriaJustice.getY() * .65);
+    	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4)/2);
     	
     	for (int i = 0; i < 3; i++) {
     		if (Math.abs(driveValerie[i]) <= DeadZones[i]) {
@@ -97,12 +104,12 @@ public class Robot extends IterativeRobot {
     	}
     	//	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
     	
-    	if(sticktoriaJustice.getRawButton(1)){
+    	if(sticktoriaJustice.getRawButton(1) || xboxMinor.getRawButton(1)){
     		
     		Hellovator1.set(lower);
     		Hellovator2.set(lower);
     		
-    	}else{ if(sticktoriaJustice.getRawButton(4)){
+    	}else{ if(sticktoriaJustice.getRawButton(4) || xboxMinor.getRawButton(4)){
     		
     		Hellovator1.set(lift);
     		Hellovator2.set(lift);
@@ -112,13 +119,23 @@ public class Robot extends IterativeRobot {
     	}
     	}
     	
-    	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
+    	if (driveValerie[2] == 0){
+    		driveValerie[2] = angler * .004;
+    	} else {
+    		gyroPyro.reset();
+    	}
+    	
+    	if (sticktoriaJustice.getOneShotButton(2) || xboxMinor.getOneShotButton(2)){
+    	Saulenoid.set(!arms);
+    	}
 
     	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
+    	
+    	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
     
     }
     
@@ -126,6 +143,10 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testInit(){
+    	gyroPyro.reset();
+    }
+    
+    public void teleopInit(){
     	gyroPyro.reset();
     }
     
