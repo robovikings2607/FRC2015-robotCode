@@ -171,23 +171,23 @@ public class Robot extends IterativeRobot {
         if (xboxSupremeController.getRawButton(4)) {
             y = .5;
             x = 0.0;
-            z = angler * .004;
+            z = angler * .005;
         } else if (xboxSupremeController.getRawButton(1)) {
             y = -.5;
             x = 0.0;
-            z = angler * .004;
+            z = angler * .005;
         } else if (xboxSupremeController.getRawButton(3)) {
             y = 0.0;
             x = .5;
-            z = angler * .004;
+            z = angler * .005;
         } else if (xboxSupremeController.getRawButton(2)) {
             y = 0.0;
             x = -.5;
-            z = 0.0;
+            z = angler * .005;
         } else {
             y = 0.0;
             x = 0.0;
-            z = angler * .004;
+            z = 0.0;
         }
         robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
     }
