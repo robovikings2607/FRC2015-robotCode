@@ -79,6 +79,7 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
+	private double correctedZ = 0.0;
     public void teleopPeriodic() {
     	
     	if(sticktoriaJustice.getOneShotButton(7)){
@@ -86,6 +87,7 @@ public class Robot extends IterativeRobot {
     	}
     	
     	double angler = gyroPyro.getAngle();
+
     	
     	driveValerie[0] = -(sticktoriaJustice.getX() * .65);
     	driveValerie[1] = -(sticktoriaJustice.getY() * .65);
@@ -120,7 +122,7 @@ public class Robot extends IterativeRobot {
     	}
     	
     	if (driveValerie[2] == 0){
-    		driveValerie[2] = angler * .004;
+    		driveValerie[2] = angler * .006;
     		iDash5s.putNumber("Angle ", gyroPyro.getAngle());
     		iDash5s.putNumber("Adjustment speed ", driveValerie[2]);
     	} else {
@@ -149,16 +151,19 @@ public class Robot extends IterativeRobot {
      */
     public void testInit(){
     	gyroPyro.reset();
+    	correctedZ = 0.0;
     }
     
     public void teleopInit(){
     	gyroPyro.reset();
+    	correctedZ = 0.0;
     }
     
     public void testPeriodic() {
     	
     	if(sticktoriaJustice.getOneShotButton(7)){
     		gyroPyro.reset();
+    		correctedZ = 0.0;
     	}
     	double angler = gyroPyro.getAngle();
     	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
@@ -168,28 +173,22 @@ public class Robot extends IterativeRobot {
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
     	iDash5s.getNumber("Angle of the Bot", gyroPyro.getAngle());
     	
+    	correctedZ = angler * .006;
        if (sticktoriaJustice.getRawButton(4)) {
             y = .5;
             x = 0.0;
-            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(1)) {
             y = -.5;
             x = 0.0;
-            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(3)) {
             y = 0.0;
             x = .5;
-            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(2)) {
             y = 0.0;
             x = -.5;
-            z = angler*.004;
         } else {
             y = 0.0;
             x = 0.0;
-            z = 0.0;
-            
-            
         } 
 /*if(sticktoriaJustice.getRawButton(1)){
     		
@@ -207,7 +206,11 @@ public class Robot extends IterativeRobot {
     	}*/
     	
     	//Saulenoid.set(sticktoriaJustice.getToggleButton(2));
-DriveRobot.mecanumDrive_Cartesian(x, y, z, 0);
+DriveRobot.mecanumDrive_Cartesian(x, y, correctedZ, 0);
+    }
+    
+    public void disabledPeriodic(){
+    	iDash5s.putNumber("Angle of the Bot", gyroPyro.getAngle());
     }
     
     }
