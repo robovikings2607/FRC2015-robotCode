@@ -35,8 +35,8 @@ public class Robot extends IterativeRobot {
 	Gyro gyroPyro;
 	SmartDashboard iDash5s;
 	double x, y, z;
-	double lift = .80;
-	double lower = -.50;
+	double lift = -1;
+	double lower = .50;
 	double[] driveValerie = new double[3];
 	double[] DeadZones = new double[]{0.25, 0.25, 0.25};
 	/**
@@ -64,6 +64,7 @@ public class Robot extends IterativeRobot {
     	gyroPyro = new Gyro(Constants.gyroChannel);
     	iDash5s = new SmartDashboard();
     	comPreston.start();
+    	gyroPyro.initGyro();
     }
 
     /**
@@ -98,13 +99,13 @@ public class Robot extends IterativeRobot {
     	
     	if(sticktoriaJustice.getRawButton(1)){
     		
-    		Hellovator1.set(lift);
-    		Hellovator2.set(lift);
+    		Hellovator1.set(lower);
+    		Hellovator2.set(lower);
     		
     	}else{ if(sticktoriaJustice.getRawButton(4)){
     		
-    		Hellovator1.set(lower);
-    		Hellovator2.set(lower);
+    		Hellovator1.set(lift);
+    		Hellovator2.set(lift);
     	} else {
     		Hellovator1.set(0);
     		Hellovator2.set(0);
@@ -124,39 +125,47 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during test mode
      */
+    public void testInit(){
+    	gyroPyro.reset();
+    }
+    
     public void testPeriodic() {
     	
-
+    	double angler = gyroPyro.getAngle();
+    	if(sticktoriaJustice.getOneShotButton(7)){
+    		gyroPyro.reset();
+    	}
     	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
+    	iDash5s.getNumber("Angle of the Bot", gyroPyro.getAngle());
     	
-       /* if (sticktoriaJustice.getRawButton(4)) {
+       if (sticktoriaJustice.getRawButton(4)) {
             y = .5;
             x = 0.0;
-            z = 0.0;
+            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(1)) {
             y = -.5;
             x = 0.0;
-            z = 0.0;
+            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(3)) {
             y = 0.0;
             x = .5;
-            z = 0.0;
+            z = angler*.004;
         } else if (sticktoriaJustice.getRawButton(2)) {
             y = 0.0;
             x = -.5;
-            z = 0.0;
+            z = angler*.004;
         } else {
             y = 0.0;
             x = 0.0;
             z = 0.0;
             
             
-        } */
-if(sticktoriaJustice.getRawButton(1)){
+        } 
+/*if(sticktoriaJustice.getRawButton(1)){
     		
     		Hellovator1.set(lift);
     		Hellovator2.set(lift);
@@ -169,9 +178,9 @@ if(sticktoriaJustice.getRawButton(1)){
     		Hellovator1.set(0);
     		Hellovator2.set(0);
     	}
-    	}
+    	}*/
     	
-    	Saulenoid.set(sticktoriaJustice.getToggleButton(2));
+    	//Saulenoid.set(sticktoriaJustice.getToggleButton(2));
 DriveRobot.mecanumDrive_Cartesian(x, y, z, 0);
     }
     
