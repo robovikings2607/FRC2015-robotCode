@@ -59,7 +59,10 @@ public class Robot extends IterativeRobot {
     	elevator1 = new Talon(Constants.talonElevator1);
     	elevator2 = new Talon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
-    	encElevator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
+    	encElevator = new SmoothedEncoder(Constants.encoderElevatorChannelA, 
+    									  Constants.encoderElevatorChannelB, 
+    									  Constants.encoderElevatorReversed, 
+    									  Encoder.EncodingType.k1X);
     	robotDrive = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);

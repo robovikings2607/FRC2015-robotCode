@@ -33,6 +33,10 @@ public class Constants {
 	public static int encoderBackLeftChannelA = 6;
 	public static int encoderBackLeftChannelB = 7;
 	public static boolean encoderBackLeftBoolean = false;
+
+	public static int encoderElevatorChannelA = 8;
+	public static int encoderElevatorChannelB = 9;
+	public static boolean encoderElevatorReversed = false;
 	
 	public static int[][] encoders = {
 		{encoderFrontLeftChannelA, encoderFrontLeftChannelB},
