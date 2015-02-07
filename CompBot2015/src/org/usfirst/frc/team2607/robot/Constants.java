@@ -8,6 +8,8 @@ public class Constants {
 	public static int talonFrontRight = 0;
 	public static int talonBackRight = 2;
 	public static int talonBackLeft = 3;
+	public static int[] talonCANAddresses = {talonFrontLeft, talonFrontRight, talonBackLeft, talonBackLeft};
+	
 	public static int talonElevator1 = 4;
 	public static int talonElevator2 = 5;
 	
@@ -32,4 +34,33 @@ public class Constants {
 	public static int encoderBackLeftChannelB = 7;
 	public static boolean encoderBackLeftBoolean = false;
 	
+	public static int[][] encoders = {
+		{encoderFrontLeftChannelA, encoderFrontLeftChannelB},
+		{encoderFrontRightChannelA, encoderFrontRightChannelB},
+		{encoderBackLeftChannelA, encoderBackLeftChannelB},
+		{encoderBackRightChannelA, encoderBackRightChannelB}
+		};
+	
+	
+	  final static double[][] talonHighGearPIDGains = {
+		  
+              {.000026, .000015, 0.0},  // leftFrontPID Gains
+              {.000026, .000015, 0.0},  // rightFrontPID Gains
+              {.000026, .000015, 0.0},  // leftRearPID Gains
+              {.000026, .000015, 0.0}   // rightRearPID Gains
+};
+
+	  final static double[][] talonLowGearPIDGains = {
+              {.000058, .000036, 0.0},  // leftFrontPID Gains
+              {.000058, .000036, 0.0},  // rightFrontPID Gains
+              {.000058, .000036, 0.0},  // leftRearPID Gains 
+              {.000058, .000036, 0.0}  // rightRearPID Gains                                      
+};
+	  
+	  final static double  talonHighGearMaxSpeed = 18100;
+		  	  
+
+	  final static double talonLowGearMaxSpeed =  8100;
+	  
 }
+	

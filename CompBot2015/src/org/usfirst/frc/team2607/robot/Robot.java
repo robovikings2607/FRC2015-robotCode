@@ -21,30 +21,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	Talon FrontL;
-	Talon FrontR;
-	Talon BackL;
-	Talon BackR;
+	WheelRPMController FrontL;
+	WheelRPMController FrontR;
+	WheelRPMController BackL;
+	WheelRPMController BackR;
 	
 	Talon elevator1, elevator2;
 	
 	Gyro gyro;
 	Solenoid solenoid;
 	RobotDrive robotDrive;
-	Compressor compressor;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
 	SmoothedEncoder encElevator;
-	SmoothedEncoder encFL, encFR, encBL, encBR;
 	DigitalInput topSwitch, bottomSwitch;
+	
 	
 	boolean arms = false;
 	double x, y, z;
 	double lift = 0.75;
 	double lower = -0.75;
 	double[] driveValue = new double[3];
-	double[] deadZones = new double[]{0.15, 0.15, 0.15};
-	double liftSpeed = .75;
+	double[] deadZones = {0.15, 0.15, 0.15};
 	int currentHeight = 0;
     /**
      * This function is run when the robot is first started up and should be
@@ -53,28 +51,22 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
-    	compressor = new Compressor(1);
-    	FrontL = new Talon(Constants.talonFrontLeft);
-    	FrontR = new Talon(Constants.talonFrontRight);
-    	BackL = new Talon(Constants.talonBackLeft);
-    	BackR = new Talon(Constants.talonBackRight);
+    	FrontL = new WheelRPMController("FrontLeft",0);
+    	FrontR = new WheelRPMController("FrontRight",1);
+    	BackL = new WheelRPMController("BackLeft", 2);
+    	BackR = new WheelRPMController("BackRight", 3);
     	elevator1 = new Talon(Constants.talonElevator1);
     	elevator2 = new Talon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
-    	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
-    	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
-    	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
-    	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encElevator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
     	robotDrive = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
     	gyro = new Gyro(Constants.gyroChannel);
     	smartDash = new SmartDashboard();
-    	topSwitch = new DigitalInput(Constants.topSwitchPort);
+    	/* topSwitch = new DigitalInput(Constants.topSwitchPort);
     	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
-    	
-    	compressor.start();
+    	*/
     }
 
     /**
@@ -90,9 +82,14 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
     	
+    	FrontL.setGearPID(xboxSupremeController.getToggleButton(3));
+    	FrontR.setGearPID(xboxSupremeController.getToggleButton(3));
+    	BackL.setGearPID(xboxSupremeController.getToggleButton(3));
+    	BackR.setGearPID(xboxSupremeController.getToggleButton(3));
+    	
     	driveValue[0] = -xboxSupremeController.getX();
     	driveValue[1] = -xboxSupremeController.getY();
-    	driveValue[2] = -(xboxSupremeController.getRawAxis(4));
+    	driveValue[2] = -(xboxSupremeController.getRawAxis(4)/2);
     	
     	for (int i = 0; i <= 2; i++) {
     		if (Math.abs(driveValue[i]) <= deadZones[i]) {
@@ -104,7 +101,6 @@ public class Robot extends IterativeRobot {
     		if (driveValue[i] < -deadZones[i] && driveValue[i] >= -2 * deadZones[i]) {
     			driveValue[i] = (driveValue[i] + .10) * 2;
     		}
-    		robotDrive.mecanumDrive_Cartesian(xboxSupremeController.getX(), xboxSupremeController.getY(), -xboxSupremeController.getRawAxis(4), 0);
 	    	
 	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && topSwitch.get()){
 	    		
@@ -115,6 +111,9 @@ public class Robot extends IterativeRobot {
 	    		
 	    		elevator1.set(lower);
 	    		elevator2.set(lower);
+	    	} else {
+	    		elevator1.set(0);
+	    		elevator2.set(0);
 	    	}
 	    	
 	    if(xboxSupremeController.getRawButton(2) || (xboxMinor.getRawButton(2))){
@@ -122,14 +121,6 @@ public class Robot extends IterativeRobot {
 	    	}
 	    
 	    	
-	    	
-	    	
-	    	
-	    	smartDash.putNumber("Front Right Rate ", encFR.getRate());
-	    	smartDash.putNumber("Front Left Rate ", encFL.getRate());
-	    	smartDash.putNumber("Back Right Rate ", encBR.getRate());
-	    	smartDash.putNumber("Back Left Rate ", encBL.getRate());
-	    	smartDash.getNumber("Vator Rate ", encElevator.getRate());
     	}
     }
     
@@ -137,12 +128,6 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    	smartDash.putNumber("Front Right Rate ", encFR.getRate());
-    	smartDash.putNumber("Front Left Rate ", encFL.getRate());
-    	smartDash.putNumber("Back Right Rate ", encBR.getRate());
-    	smartDash.putNumber("Back Left Rate ", encBL.getRate());
-    	smartDash.getNumber("Vator Rate ", encElevator.getRate());
-    	
         if (xboxSupremeController.getRawButton(4)) {
             y = .5;
             x = 0.0;
