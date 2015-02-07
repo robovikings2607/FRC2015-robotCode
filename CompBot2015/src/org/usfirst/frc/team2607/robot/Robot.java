@@ -44,6 +44,7 @@ public class Robot extends IterativeRobot {
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
 	int currentHeight = 0;
+	double tempAngle = 0;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -63,6 +64,7 @@ public class Robot extends IterativeRobot {
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
     	gyro = new Gyro(Constants.gyroChannel);
+    	gyro.initGyro();
     	smartDash = new SmartDashboard();
     	/* topSwitch = new DigitalInput(Constants.topSwitchPort);
     	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
@@ -75,11 +77,26 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
 
     }
+    
+    public void testInit(){
+    	gyro.reset();
+    }
+    
+    /*public void teleopInit(){
+    	gyro.reset();
+    }
+    */
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	
+    	if (xboxSupremeController.getOneShotButton(7)){
+    		gyro.reset();
+    	}
+    	
+    	double angler = gyro.getAngle();
     	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -101,6 +118,13 @@ public class Robot extends IterativeRobot {
     			driveValue[i] = (driveValue[i] + .10) * 2;
     		}
 	    	}
+    	
+    	if (driveValue[2] == 0){
+    		driveValue[2] = angler * .004;
+    	} else {
+    		gyro.reset();
+    	}
+    	
 	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && topSwitch.get()){
 	    		
 	    		elevator1.set(lift);
@@ -129,6 +153,12 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
     	
+    	double angler = gyro.getAngle();
+    	
+    	if (xboxSupremeController.getOneShotButton(7)){
+    		gyro.reset();
+    	}
+    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
     	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -137,15 +167,15 @@ public class Robot extends IterativeRobot {
         if (xboxSupremeController.getRawButton(4)) {
             y = .5;
             x = 0.0;
-            z = 0.0;
+            z = angler * .004;
         } else if (xboxSupremeController.getRawButton(1)) {
             y = -.5;
             x = 0.0;
-            z = 0.0;
+            z = angler * .004;
         } else if (xboxSupremeController.getRawButton(3)) {
             y = 0.0;
             x = .5;
-            z = 0.0;
+            z = angler * .004;
         } else if (xboxSupremeController.getRawButton(2)) {
             y = 0.0;
             x = -.5;
@@ -153,7 +183,7 @@ public class Robot extends IterativeRobot {
         } else {
             y = 0.0;
             x = 0.0;
-            z = 0.0;
+            z = angler * .004;
         }
         robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
     }
