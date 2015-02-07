@@ -121,20 +121,25 @@ public class Robot extends IterativeRobot {
     	
     	if (driveValerie[2] == 0){
     		driveValerie[2] = angler * .004;
+    		iDash5s.putNumber("Angle ", gyroPyro.getAngle());
+    		iDash5s.putNumber("Adjustment speed ", driveValerie[2]);
     	} else {
     		gyroPyro.reset();
+    		iDash5s.putNumber("fail Angle ", gyroPyro.getAngle());
+    		iDash5s.putNumber("fail Adjustment speed ", driveValerie[2]);
     	}
     	
     	if (sticktoriaJustice.getOneShotButton(2) || xboxMinor.getOneShotButton(2)){
-    	Saulenoid.set(!arms);
+    		arms = !arms;
+    	Saulenoid.set(arms);
     	}
 
-    	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
+    	/*iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
-    	
+    	*/
     	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
     
     }
