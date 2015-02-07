@@ -103,8 +103,8 @@ public class Robot extends IterativeRobot {
     	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
     	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
     	
-    	driveValue[0] = -xboxSupremeController.getX();
-    	driveValue[1] = -xboxSupremeController.getY();
+    	driveValue[0] = -(xboxSupremeController.getX() * .65);
+    	driveValue[1] = -(xboxSupremeController.getY() * .65);
     	driveValue[2] = -(xboxSupremeController.getRawAxis(4)/2);
     	
     	for (int i = 0; i <= 2; i++) {
@@ -112,15 +112,15 @@ public class Robot extends IterativeRobot {
     			driveValue[i] = 0;
     		}
     		if (driveValue[i] > deadZones[i] && driveValue[i] <= deadZones[i] * 2) {
-    			driveValue[i] = (driveValue[i] - .10) * 2;
+    			driveValue[i] = (driveValue[i] - .30) * 2;
     		}
     		if (driveValue[i] < -deadZones[i] && driveValue[i] >= -2 * deadZones[i]) {
-    			driveValue[i] = (driveValue[i] + .10) * 2;
+    			driveValue[i] = (driveValue[i] + .30) * 2;
     		}
 	    	}
     	
     	if (driveValue[2] == 0){
-    		driveValue[2] = angler * .004;
+    		driveValue[2] = angler * .005;
     	} else {
     		gyro.reset();
     	}
@@ -140,7 +140,8 @@ public class Robot extends IterativeRobot {
 	    	}
 	    	
 	    if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
-	    	solenoid.set(!arms);
+	    	arms = !arms;
+	    	solenoid.set(arms);
 	    	}
 	    
 	    	
