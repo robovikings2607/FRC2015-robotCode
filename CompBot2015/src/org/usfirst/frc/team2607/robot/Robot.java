@@ -81,10 +81,10 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	
-    	FrontL.setGearPID(xboxSupremeController.getToggleButton(3));
-    	FrontR.setGearPID(xboxSupremeController.getToggleButton(3));
-    	BackL.setGearPID(xboxSupremeController.getToggleButton(3));
-    	BackR.setGearPID(xboxSupremeController.getToggleButton(3));
+    	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
+    	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
+    	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
+    	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
     	
     	driveValue[0] = -xboxSupremeController.getX();
     	driveValue[1] = -xboxSupremeController.getY();
@@ -128,6 +128,12 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+    	
+    	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
+    	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
+    	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
+    	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
+    	
         if (xboxSupremeController.getRawButton(4)) {
             y = .5;
             x = 0.0;
