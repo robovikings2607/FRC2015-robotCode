@@ -22,22 +22,26 @@ public class WheelRPMController implements SpeedController {
     private boolean forceOff = false;
     public static boolean off;
     private short errorCount = 0;
-    public WheelRPMController(String name, int index) {
+    private boolean encodersFlag = false;
+    public WheelRPMController(String name, int index, boolean useEncoders) {
 //        motors = new TalonPair(pwmMecanumAddresses[index][0], 
 //                               pwmMecanumAddresses[index][1]);
+    	encodersFlag = useEncoders;
         motor = new CANTalon(Constants.talonCANAddresses[index], 0);  // 2nd parameter = 0 when 
                                                                    // using the Y-splitter
-        
+        if (encodersFlag){
         enc = new SmoothedEncoder(Constants.encoders[index][0], Constants.encoders[index][1],
                                   true, Encoder.EncodingType.k1X);
         pidLoop = new PIDController(Constants.talonHighGearPIDGains[index][0],
         							Constants.talonHighGearPIDGains[index][1],
         							Constants.talonHighGearPIDGains[index][2],
                                     enc, motor);
-        wheelIndex = index;
-        deviceName = name;
         curMaxSpeed = Constants.talonHighGearMaxSpeed;
         pidLoop.setInputRange(-curMaxSpeed, curMaxSpeed);
+        }
+        wheelIndex = index;
+        deviceName = name;
+        
         
     }
 
@@ -47,6 +51,9 @@ public class WheelRPMController implements SpeedController {
     }
     
     public void setGearPID(boolean highGear) {
+    	if (!encodersFlag){
+    		return;
+    	}
         if (highGear) {
             
             pidLoop.setPID(Constants.talonHighGearPIDGains[wheelIndex][0],
@@ -64,6 +71,9 @@ public class WheelRPMController implements SpeedController {
     }
     
     public double get() {
+    	if (!encodersFlag){
+    		return motor.get();
+    	}
         return pidLoop.getSetpoint();
     }
 
@@ -81,6 +91,10 @@ public class WheelRPMController implements SpeedController {
     }
     
     public void set(double d) {
+    	if (!encodersFlag){
+    		motor.set(d);
+    		return;
+    	}
         if (d == 0&&off)
         {
             pidLoop.reset();

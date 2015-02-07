@@ -51,10 +51,10 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
-    	FrontL = new WheelRPMController("FrontLeft",0);
-    	FrontR = new WheelRPMController("FrontRight",1);
-    	BackL = new WheelRPMController("BackLeft", 2);
-    	BackR = new WheelRPMController("BackRight", 3);
+    	FrontL = new WheelRPMController("FrontLeft",0,false);
+    	FrontR = new WheelRPMController("FrontRight",1,false);
+    	BackL = new WheelRPMController("BackLeft", 2,false);
+    	BackR = new WheelRPMController("BackRight", 3,false);
     	elevator1 = new Talon(Constants.talonElevator1);
     	elevator2 = new Talon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
@@ -80,7 +80,6 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
     	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(3));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(3));
@@ -101,7 +100,7 @@ public class Robot extends IterativeRobot {
     		if (driveValue[i] < -deadZones[i] && driveValue[i] >= -2 * deadZones[i]) {
     			driveValue[i] = (driveValue[i] + .10) * 2;
     		}
-	    	
+	    	}
 	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && topSwitch.get()){
 	    		
 	    		elevator1.set(lift);
@@ -121,7 +120,8 @@ public class Robot extends IterativeRobot {
 	    	}
 	    
 	    	
-    	}
+    	
+    	robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
     }
     
     /**
