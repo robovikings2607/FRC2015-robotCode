@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 	IMUAdvanced navx;
 	SerialPort comPort;
 	Solenoid solenoid;
-	RobotDrive robotDrive;
+	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
 	SmoothedEncoder encElevator;
@@ -68,7 +68,7 @@ public class Robot extends IterativeRobot {
     									  Constants.encoderElevatorChannelB, 
     									  Constants.encoderElevatorReversed, 
     									  Encoder.EncodingType.k1X);
-    	robotDrive = new RobotDrive(FrontL, BackL, FrontR, BackR);
+    	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
     	FrontL.enable();
@@ -221,7 +221,8 @@ public class Robot extends IterativeRobot {
             x = 0.0;
             z = 0.0;
         }
-        robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
+//        robotDrive.mecanumDrive_Cartesian(x, y, z, 0);
+        robotDrive.correctedMecanumDrive(x, y, z, 0.0, -.15);
     }
 	    
     
