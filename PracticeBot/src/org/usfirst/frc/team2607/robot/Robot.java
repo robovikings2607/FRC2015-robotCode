@@ -122,7 +122,7 @@ public class Robot extends IterativeRobot {
     	}
     	
     	if (driveValerie[2] == 0){
-    		driveValerie[2] = angler * .006;
+    		driveValerie[2] = angler * .005;
     		iDash5s.putNumber("Angle ", gyroPyro.getAngle());
     		iDash5s.putNumber("Adjustment speed ", driveValerie[2]);
     	} else {
@@ -173,7 +173,7 @@ public class Robot extends IterativeRobot {
     	iDash5s.getNumber("Vator Rate ", encVator.getRate());
     	iDash5s.getNumber("Angle of the Bot", gyroPyro.getAngle());
     	
-    	correctedZ = angler * .006;
+    	correctedZ = angler * .005;
        if (sticktoriaJustice.getRawButton(4)) {
             y = .5;
             x = 0.0;
