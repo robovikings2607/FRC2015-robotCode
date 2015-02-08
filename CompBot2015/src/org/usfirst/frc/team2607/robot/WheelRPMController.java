@@ -45,6 +45,10 @@ public class WheelRPMController implements SpeedController {
         
     }
 
+    public double getRate() {
+    	return enc.getCurrentRate();
+    }
+    
     public void displayWheelRPM() {
         System.out.print(deviceName + ": ");
         System.out.print(enc.getCurrentRate() + " ");

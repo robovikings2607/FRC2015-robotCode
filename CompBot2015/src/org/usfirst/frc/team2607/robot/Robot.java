@@ -67,6 +67,10 @@ public class Robot extends IterativeRobot {
     	robotDrive = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
+    	FrontL.enable();
+    	BackL.enable();
+    	FrontR.enable();
+    	BackR.enable();
     	gyro = new Gyro(Constants.gyroChannel);
     	gyro.initGyro();
     	smartDash = new SmartDashboard();
@@ -84,6 +88,7 @@ public class Robot extends IterativeRobot {
     
     public void testInit(){
     	gyro.reset();
+    	testTick = 0;
     }
     
     /*public void teleopInit(){
@@ -152,12 +157,27 @@ public class Robot extends IterativeRobot {
     	
     	robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
     }
-    
+     
     /**
      * This function is called periodically during test mode
      */
+    private int testTick;
+    
     public void testPeriodic() {
+    
+    	FrontL.setGearPID(false);
+    	if (xboxSupremeController.getRawButton(4)) {
+    		FrontL.set(.5);
+    	} else {
+    		FrontL.set(0);
+    	}
     	
+    	if (++testTick >= 30) {
+    		FrontL.displayWheelRPM();
+    		testTick = 0;
+    	}
+    }
+ /*   	
     	double angler = gyro.getAngle();
     	
     	if (xboxSupremeController.getOneShotButton(7)){
@@ -192,7 +212,7 @@ public class Robot extends IterativeRobot {
         }
         robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
     }
-    
+*/    
     /* public void liftElevator(int height){
     	switch(height){
     	
