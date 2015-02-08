@@ -112,9 +112,9 @@ public class Robot extends IterativeRobot {
     	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
     	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
     	
-    	driveValue[0] = -(xboxSupremeController.getX() * .65);
-    	driveValue[1] = -(xboxSupremeController.getY() * .65);
-    	driveValue[2] = -(xboxSupremeController.getRawAxis(4)/2);
+    	driveValue[0] = xboxSupremeController.getX() * .65;
+    	driveValue[1] = xboxSupremeController.getY() * .65;
+    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
     	
     	for (int i = 0; i <= 2; i++) {
     		if (Math.abs(driveValue[i]) <= deadZones[i]) {
