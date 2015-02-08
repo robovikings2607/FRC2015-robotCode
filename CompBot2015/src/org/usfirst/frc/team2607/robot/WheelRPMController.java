@@ -46,10 +46,12 @@ public class WheelRPMController implements SpeedController {
     }
 
     public double getRate() {
+    	if (!encodersFlag) return 0.0;
     	return enc.getCurrentRate();
     }
     
     public void displayWheelRPM() {
+    	if (!encodersFlag) return;
         System.out.print(deviceName + ": ");
         System.out.print(enc.getCurrentRate() + " ");
     }
@@ -124,11 +126,13 @@ public class WheelRPMController implements SpeedController {
     }
 
     public void disable() {
+    	if (!encodersFlag) return;
         enc.reset();
         pidLoop.disable();
     }
 
     public void enable() {
+    	if (!encodersFlag) return;
         enc.setPIDSourceParameter(PIDSource.PIDSourceParameter.kRate);
         pidLoop.enable();
     }

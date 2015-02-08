@@ -53,10 +53,10 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
-    	FrontL = new WheelRPMController("FrontLeft",0,true);
-    	FrontR = new WheelRPMController("FrontRight",1,true);
-    	BackL = new WheelRPMController("BackLeft", 2,true);
-    	BackR = new WheelRPMController("BackRight", 3,true);
+    	FrontL = new WheelRPMController("FrontLeft",0,false);
+    	FrontR = new WheelRPMController("FrontRight",1,false);
+    	BackL = new WheelRPMController("BackLeft", 2,false);
+    	BackR = new WheelRPMController("BackRight", 3,false);
     	elevator1 = new CANTalon(Constants.talonElevator1);
     	elevator2 = new CANTalon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
