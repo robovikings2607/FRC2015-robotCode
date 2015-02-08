@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team2607.robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -26,7 +27,7 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackL;
 	WheelRPMController BackR;
 	
-	Talon elevator1, elevator2;
+	CANTalon elevator1, elevator2;
 	
 	Gyro gyro;
 	Solenoid solenoid;
@@ -52,12 +53,12 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
-    	FrontL = new WheelRPMController("FrontLeft",0,false);
-    	FrontR = new WheelRPMController("FrontRight",1,false);
-    	BackL = new WheelRPMController("BackLeft", 2,false);
-    	BackR = new WheelRPMController("BackRight", 3,false);
-    	elevator1 = new Talon(Constants.talonElevator1);
-    	elevator2 = new Talon(Constants.talonElevator2);
+    	FrontL = new WheelRPMController("FrontLeft",0,true);
+    	FrontR = new WheelRPMController("FrontRight",1,true);
+    	BackL = new WheelRPMController("BackLeft", 2,true);
+    	BackR = new WheelRPMController("BackRight", 3,true);
+    	elevator1 = new CANTalon(Constants.talonElevator1);
+    	elevator2 = new CANTalon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
     	encElevator = new SmoothedEncoder(Constants.encoderElevatorChannelA, 
     									  Constants.encoderElevatorChannelB, 
@@ -123,7 +124,7 @@ public class Robot extends IterativeRobot {
 	    	}
     	
     	if (driveValue[2] == 0){
-    		driveValue[2] = angler * .005;
+//    		driveValue[2] = angler * .005;
     	} else {
     		gyro.reset();
     	}

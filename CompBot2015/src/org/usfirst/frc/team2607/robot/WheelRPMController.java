@@ -32,11 +32,11 @@ public class WheelRPMController implements SpeedController {
         if (encodersFlag){
         enc = new SmoothedEncoder(Constants.encoders[index][0], Constants.encoders[index][1],
                                   true, Encoder.EncodingType.k1X);
-        pidLoop = new PIDController(Constants.talonHighGearPIDGains[index][0],
-        							Constants.talonHighGearPIDGains[index][1],
-        							Constants.talonHighGearPIDGains[index][2],
+        pidLoop = new PIDController(Constants.talonLowGearPIDGains[index][0],
+        							Constants.talonLowGearPIDGains[index][1],
+        							Constants.talonLowGearPIDGains[index][2],
                                     enc, motor);
-        curMaxSpeed = Constants.talonHighGearMaxSpeed;
+        curMaxSpeed = Constants.talonLowGearMaxSpeed;
         pidLoop.setInputRange(-curMaxSpeed, curMaxSpeed);
         }
         wheelIndex = index;
