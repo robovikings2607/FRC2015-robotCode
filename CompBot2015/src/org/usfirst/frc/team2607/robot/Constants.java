@@ -8,7 +8,7 @@ public class Constants {
 	public static int talonFrontRight = 2;
 	public static int talonBackRight = 3;
 	public static int talonBackLeft = 4;
-	public static int[] talonCANAddresses = {talonFrontLeft, talonFrontRight, talonBackLeft, talonBackLeft};
+	public static int[] talonCANAddresses = {talonFrontLeft, talonFrontRight, talonBackLeft, talonBackRight};
 	
 	public static int talonElevator1 = 5;
 	public static int talonElevator2 = 6;
