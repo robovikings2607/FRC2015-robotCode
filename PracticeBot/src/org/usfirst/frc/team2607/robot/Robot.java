@@ -97,12 +97,14 @@ public class Robot extends IterativeRobot {
     		if (Math.abs(driveValerie[i]) <= DeadZones[i]) {
     			driveValerie[i] = 0;
     		}
-    		if (driveValerie[i] > DeadZones[i] && driveValerie[i] <= DeadZones[i] * 2) {
-    			driveValerie[i] = (driveValerie[i] - .30) * 2;
-    		}
     		if (driveValerie[i] < -DeadZones[i] && driveValerie[i] >= -2 * DeadZones[i]) {
-    			driveValerie[i] = (driveValerie[i] + .30) * 2;
+    			driveValerie[i] = (driveValerie[i] + .15) * 1.5;
     		}
+    		if (driveValerie[i] > DeadZones[i] && driveValerie[i] <= DeadZones[i] * 2) {
+    			driveValerie[i] = (driveValerie[i] - .15) * 1.5;
+    		} 
+    		
+    		
     	}
     	//	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
     	
