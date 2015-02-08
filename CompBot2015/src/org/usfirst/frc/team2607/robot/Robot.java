@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 	boolean arms = false;
 	double x, y, z;
 	double lift = 0.75;
-	double lower = -0.75;
+	double lower = -0.5;
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
 	int currentHeight = 0;
@@ -115,10 +115,10 @@ public class Robot extends IterativeRobot {
     			driveValue[i] = 0;
     		}
     		if (driveValue[i] > deadZones[i] && driveValue[i] <= deadZones[i] * 2) {
-    			driveValue[i] = (driveValue[i] - .30) * 2;
+    			driveValue[i] = (driveValue[i] - .15) * 1.5;
     		}
     		if (driveValue[i] < -deadZones[i] && driveValue[i] >= -2 * deadZones[i]) {
-    			driveValue[i] = (driveValue[i] + .30) * 2;
+    			driveValue[i] = (driveValue[i] + .15) * 1.5;
     		}
 	    	}
     	
