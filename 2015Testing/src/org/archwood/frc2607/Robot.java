@@ -7,10 +7,12 @@ import java.io.PrintWriter;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -29,7 +31,7 @@ public class Robot extends IterativeRobot {
 	// min = -18200, max = 18200 (shifter out)
 	Solenoid fork;
 	Joystick driveStick;
-	CANTalon motor;
+	CANTalon motor,follower;
 	Encoder enc;
 	PIDController pid;
     PrintWriter logFile = null;
@@ -37,10 +39,20 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
     	fork = new Solenoid(1,0);
     	driveStick = new Joystick(0);
-    	motor = new CANTalon(4);
-    	enc = new SmoothedEncoder(0, 1, true, EncodingType.k1X);
-    	pid = new PIDController(0.0, 0.0, 0.0, enc, motor);
+    	motor = new CANTalon(5);
+    	follower = new CANTalon(6);
+//    	enc = new SmoothedEncoder(0, 1, true, EncodingType.k1X);
+    	enc = new Encoder(0, 1, true, EncodingType.k1X);
     	logFile = null;
+    	follower.changeControlMode(ControlMode.Follower);
+    	follower.set(5);
+    	motor.enableBrakeMode(true);
+    	follower.enableBrakeMode(true);
+    	enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
+    	enc.setDistancePerPulse(1.043/256);
+    	pid = new PIDController(0.0, 0.0, 0.0, enc, motor);
+    	pid.setOutputRange(-.4, .2);
+    	pid.setInputRange(-50, 0);
     }
 
     /**
@@ -50,6 +62,9 @@ public class Robot extends IterativeRobot {
 
     }
 
+    /* with encoder reversed, negative voltage gives negative encoder direction (good, it matches)
+     * negative voltage = raise elevator;  positive voltage = lower elevator
+     */
     
     public void disabledInit() {
     	if (logFile != null) {
@@ -57,9 +72,35 @@ public class Robot extends IterativeRobot {
     		logFile = null;
     	}
     }
+    
+    public void teleopInit() {
+    	enc.reset();
+    	pid.setPID(.079, 0.0002, 0.0006);
+    }
+    
+    public void teleopPeriodic() {
+    	if (driveStick.getRawButton(4)) {
+//    		motor.set(-.3);
+    		pid.setSetpoint(-15.0);
+    		pid.enable();
+    	} else if (driveStick.getRawButton(1)) {
+//    		motor.set(.3);
+    		motor.set(.3);
+    	} else {
+    		motor.set(0);
+    		pid.disable();
+    	}
+    	SmartDashboard.putNumber("Ele Encoder", enc.get());
+    	SmartDashboard.putNumber("Ele Dist", enc.getDistance());
+    	SmartDashboard.putNumber("SP", pid.getSetpoint());
+    	SmartDashboard.putNumber("MV", pid.get());
+    	SmartDashboard.putNumber("Err", pid.getError());
+    }
+    
     /**
      * This function is called periodically during operator control
      */
+/*
     double minRate, maxRate;    
     public void teleopInit() {
     	enc.reset();
@@ -119,7 +160,7 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putBoolean("Stopped", enc.getStopped());
     	SmartDashboard.putBoolean("Direction", enc.getDirection());
    }
-    
+*/    
     /**
      * This function is called periodically during test mode
      */
