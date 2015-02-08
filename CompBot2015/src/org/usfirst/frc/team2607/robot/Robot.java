@@ -1,6 +1,8 @@
 
 package org.usfirst.frc.team2607.robot;
 
+import com.kauailabs.nav6.frc.IMUAdvanced;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +32,8 @@ public class Robot extends IterativeRobot {
 	
 	CANTalon elevator1, elevator2;
 	
-	Gyro gyro;
+	IMUAdvanced navx;
+	SerialPort comPort;
 	Solenoid solenoid;
 	RobotDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
@@ -53,10 +57,10 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
-    	FrontL = new WheelRPMController("FrontLeft",0,false);
-    	FrontR = new WheelRPMController("FrontRight",1,false);
-    	BackL = new WheelRPMController("BackLeft", 2,false);
-    	BackR = new WheelRPMController("BackRight", 3,false);
+    	FrontL = new WheelRPMController("FrontLeft",0,true);
+    	FrontR = new WheelRPMController("FrontRight",1,true);
+    	BackL = new WheelRPMController("BackLeft", 2,true);
+    	BackR = new WheelRPMController("BackRight", 3,true);
     	elevator1 = new CANTalon(Constants.talonElevator1);
     	elevator2 = new CANTalon(Constants.talonElevator2);
     	solenoid = new Solenoid(1, Constants.solenoidChannel);
@@ -71,8 +75,27 @@ public class Robot extends IterativeRobot {
     	BackL.enable();
     	FrontR.enable();
     	BackR.enable();
-    	gyro = new Gyro(Constants.gyroChannel);
-    	gyro.initGyro();
+    	try {
+            comPort = new SerialPort(57600, SerialPort.Port.kMXP);
+                    
+                    // You can add a second parameter to modify the 
+                    // update rate (in hz) from 4 to 100.  The default is 100.
+                    // If you need to minimize CPU load, you can set it to a
+                    // lower value, as shown here, depending upon your needs.
+                    
+                    // You can also use the IMUAdvanced class for advanced
+                    // features.
+                    
+                    byte update_rate_hz = 50;
+                    //imu = new IMU(serial_port,update_rate_hz);
+                    navx = new IMUAdvanced(comPort, update_rate_hz);
+                	while (navx.isCalibrating()) {
+                		Thread.sleep(5);
+                	}
+            } catch( Exception ex ) {
+                    
+            }
+    	
     	smartDash = new SmartDashboard();
     	/* topSwitch = new DigitalInput(Constants.topSwitchPort);
     	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
@@ -87,7 +110,7 @@ public class Robot extends IterativeRobot {
     }
     
     public void testInit(){
-    	gyro.reset();
+    	navx.zeroYaw();
     	testTick = 0;
     }
     
@@ -102,10 +125,10 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	if (xboxSupremeController.getOneShotButton(7)){
-    		gyro.reset();
+    		navx.zeroYaw();
     	}
     	
-    	double angler = gyro.getAngle();
+    	float angler = navx.getYaw();
     	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -129,9 +152,9 @@ public class Robot extends IterativeRobot {
 	    	}
     	
     	if (driveValue[2] == 0){
-//    		driveValue[2] = angler * .005;
+    		driveValue[2] = angler * -.005;
     	} else {
-    		gyro.reset();
+    		navx.zeroYaw();
     	}
     	
 	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){ //&& topSwitch.get()){
@@ -164,47 +187,35 @@ public class Robot extends IterativeRobot {
     private int testTick;
     
     public void testPeriodic() {
-    
-    	FrontL.setGearPID(false);
-    	if (xboxSupremeController.getRawButton(4)) {
-    		FrontL.set(.5);
-    	} else {
-    		FrontL.set(0);
-    	}
-    	
-    	if (++testTick >= 30) {
-    		FrontL.displayWheelRPM();
-    		testTick = 0;
-    	}
-    }
- /*   	
-    	double angler = gyro.getAngle();
+       	
+    	double angler = xboxSupremeController.getToggleButton(8) ? navx.getYaw() : 0.0;
     	
     	if (xboxSupremeController.getOneShotButton(7)){
-    		gyro.reset();
+    		navx.zeroYaw();
     	}
     	
-    	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
-    	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
-    	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
-    	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
+    	solenoid.set(false);
+    	FrontL.setGearPID(false);
+    	FrontR.setGearPID(false);
+    	BackL.setGearPID(false);
+    	BackR.setGearPID(false);
     	
         if (xboxSupremeController.getRawButton(4)) {
-            y = .5;
+            y = .4;
             x = 0.0;
-            z = angler * .005;
+            z = angler * -.008;
         } else if (xboxSupremeController.getRawButton(1)) {
-            y = -.5;
+            y = -.4;
             x = 0.0;
-            z = angler * .005;
+            z = angler * -.008;
         } else if (xboxSupremeController.getRawButton(3)) {
             y = 0.0;
-            x = .5;
-            z = angler * .005;
+            x = .4;
+            z = angler * -.008;
         } else if (xboxSupremeController.getRawButton(2)) {
             y = 0.0;
-            x = -.5;
-            z = angler * .005;
+            x = -.4;
+            z = angler * -.008;
         } else {
             y = 0.0;
             x = 0.0;
@@ -212,7 +223,8 @@ public class Robot extends IterativeRobot {
         }
         robotDrive.mecanumDrive_Cartesian(x, y, z, 0);   
     }
-*/    
+	    
+    
     /* public void liftElevator(int height){
     	switch(height){
     	
