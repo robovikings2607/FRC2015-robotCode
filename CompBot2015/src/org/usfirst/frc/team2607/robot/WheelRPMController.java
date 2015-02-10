@@ -1,6 +1,9 @@
 package org.usfirst.frc.team2607.robot;
 
 
+import java.io.File;
+import java.io.PrintWriter;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -23,6 +26,9 @@ public class WheelRPMController implements SpeedController {
     public static boolean off;
     private short errorCount = 0;
     private boolean encodersFlag = false;
+    private PrintWriter logFile = null;
+    private boolean loggingEnabled = false;
+    
     public WheelRPMController(String name, int index, boolean useEncoders) {
 //        motors = new TalonPair(pwmMecanumAddresses[index][0], 
 //                               pwmMecanumAddresses[index][1]);
@@ -45,6 +51,30 @@ public class WheelRPMController implements SpeedController {
         
     }
 
+    public void enableLogging(boolean enable) {
+    	if (enable && !loggingEnabled) {
+    		if (logFile != null) {
+    			logFile.close();
+    			logFile = null;
+    		}
+    		try {
+    			String s = "/home/lvuser/" + deviceName + "." + System.currentTimeMillis() + ".csv";
+    			logFile = new PrintWriter(new File(s));
+    			logFile.printf("Kp %.8f Ki %.8f Kd %.8f ff %.8f\n", pidLoop.getP(), pidLoop.getI(), pidLoop.getD(), pidLoop.getF());
+    			logFile.println("Time,SP,PV,Err,MV");
+    		} catch (Exception e) {}
+    	} 
+    	
+    	if (!enable && loggingEnabled) {
+    		if (logFile != null) {
+    			logFile.close();
+    			logFile = null;
+    		}
+    	}
+    	
+    	loggingEnabled = enable;
+    }
+    
     public double getRate() {
     	if (!encodersFlag) return 0.0;
     	return enc.getCurrentRate();
@@ -86,6 +116,7 @@ public class WheelRPMController implements SpeedController {
     public void set(double d, byte b) {
         set(d);
     }
+    
     public int getError()
     {
         if (errorCount>10)
@@ -122,6 +153,10 @@ public class WheelRPMController implements SpeedController {
             {
                 errorCount = 0;
             }
+        }
+        if (loggingEnabled) {
+        	logFile.println(System.currentTimeMillis() + "," + pidLoop.getSetpoint() + "," +
+        			        enc.getCurrentRate() + "," + pidLoop.getError() + "," + pidLoop.get());
         }
     }
 

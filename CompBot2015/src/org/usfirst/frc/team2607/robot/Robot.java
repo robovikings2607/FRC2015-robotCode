@@ -185,10 +185,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     private int testTick;
-    
     public void testPeriodic() {
        	
-    	double angler = xboxSupremeController.getToggleButton(8) ? navx.getYaw() : 0.0;
+    	double angler = 0.0; //xboxSupremeController.getToggleButton(8) ? navx.getYaw() : 0.0;
     	
     	if (xboxSupremeController.getOneShotButton(7)){
     		navx.zeroYaw();
@@ -199,8 +198,12 @@ public class Robot extends IterativeRobot {
     	FrontR.setGearPID(false);
     	BackL.setGearPID(false);
     	BackR.setGearPID(false);
-    	
-        if (xboxSupremeController.getRawButton(4)) {
+    	FrontL.enableLogging(xboxSupremeController.getToggleButton(8));
+    	FrontR.enableLogging(xboxSupremeController.getToggleButton(8));
+    	BackL.enableLogging(xboxSupremeController.getToggleButton(8));
+    	BackR.enableLogging(xboxSupremeController.getToggleButton(8));
+
+    	if (xboxSupremeController.getRawButton(4)) {
             y = .4;
             x = 0.0;
             z = angler * -.008;
@@ -221,8 +224,9 @@ public class Robot extends IterativeRobot {
             x = 0.0;
             z = 0.0;
         }
-//        robotDrive.mecanumDrive_Cartesian(x, y, z, 0);
-        robotDrive.correctedMecanumDrive(x, y, z, 0.0, -.15);
+
+    	robotDrive.mecanumDrive_Cartesian(x, y, z, 0);
+        //robotDrive.correctedMecanumDrive(x, y, z, 0.0, -.15);
     }
 	    
     
