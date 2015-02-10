@@ -154,9 +154,12 @@ public class WheelRPMController implements SpeedController {
                 errorCount = 0;
             }
         }
+    }
+
+    public void logEntry() {
         if (loggingEnabled) {
-        	logFile.println(System.currentTimeMillis() + "," + pidLoop.getSetpoint() + "," +
-        			        enc.getCurrentRate() + "," + pidLoop.getError() + "," + pidLoop.get());
+        	logFile.printf("%d,%.4f,%.4f,%.4f,%.4f\n",System.currentTimeMillis(),
+        					pidLoop.getSetpoint(), enc.getCurrentRate(), pidLoop.getError(), pidLoop.get());
         }
     }
 

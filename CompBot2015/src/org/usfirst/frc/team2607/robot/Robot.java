@@ -152,7 +152,7 @@ public class Robot extends IterativeRobot {
 	    	}
     	
     	if (driveValue[2] == 0){
-    		driveValue[2] = angler * -.005;
+    		driveValue[2] = angler * -.015;
     	} else {
     		navx.zeroYaw();
     	}
@@ -178,7 +178,8 @@ public class Robot extends IterativeRobot {
 	    
 	    	
     	
-    	robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
+    	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
+	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
     }
      
     /**
@@ -227,6 +228,10 @@ public class Robot extends IterativeRobot {
 
     	robotDrive.mecanumDrive_Cartesian(x, y, z, 0);
         //robotDrive.correctedMecanumDrive(x, y, z, 0.0, -.15);
+    	FrontL.logEntry();
+    	FrontR.logEntry();
+    	BackL.logEntry();
+    	BackR.logEntry();
     }
 	    
     
