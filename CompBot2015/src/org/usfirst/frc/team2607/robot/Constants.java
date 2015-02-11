@@ -64,9 +64,34 @@ public class Constants {
 };
 	  
 	  final static double  talonHighGearMaxSpeed = 18100;
-		 final static double kFHighGear = .000055; 	  
+			  
 
 	  final static double talonLowGearMaxSpeed =  8100;
-	  	  final static double kFLowGear = .000123;
+	  
+	  final static double kFHighGear = .000028;       // kf = .5 * (1/maxSPeed)
+	  final static double kFLowGear = .000065;    // kf = .5 * (1/maxSpeed)            (low speed)
+	  
+	  
+	  //final static double kFHighGear = .000055;       // kf = 1/maxSPeed
+	  	//  final static double kFLowGear = .000123;    // kf = 1/maxSpeed (low speed)
+	  	  
+//		  final static double[][] talonHighGearPIDGains = {
+//		  
+//              {.000026, .000015, 0.0},  // leftFrontPID Gains
+//              {.000026, .000015, 0.0},  // rightFrontPID Gains
+//              {.000026, .000015, 0.0},  // leftRearPID Gains
+//              {.000026, .000015, 0.0}   // rightRearPID Gains
+//};
+//
+//	  final static double[][] talonLowGearPIDGains = {
+//              {.000058, .000036, 0.0},  // leftFrontPID Gains
+////		  {.000075, .000050, 0.0},
+//		      {.000058, .000036, 0.0},  // rightFrontPID Gains
+//              {.000058, .000036, 0.0},  // leftRearPID Gains 
+//              {.000058, .000036, 0.0}  // rightRearPID Gains      
+	
+
+	  
 }
+
 	
