@@ -41,6 +41,7 @@ public class WheelRPMController implements SpeedController {
         pidLoop = new PIDController(Constants.talonLowGearPIDGains[index][0],
         							Constants.talonLowGearPIDGains[index][1],
         							Constants.talonLowGearPIDGains[index][2],
+        							Constants.kFHighGear,
                                     enc, motor);
         curMaxSpeed = Constants.talonLowGearMaxSpeed;
         pidLoop.setInputRange(-curMaxSpeed, curMaxSpeed);
@@ -94,13 +95,17 @@ public class WheelRPMController implements SpeedController {
             
             pidLoop.setPID(Constants.talonHighGearPIDGains[wheelIndex][0],
             			Constants.talonHighGearPIDGains[wheelIndex][1],
-            			Constants.talonHighGearPIDGains[wheelIndex][2]);
+            			Constants.talonHighGearPIDGains[wheelIndex][2]
+            			,Constants.kFHighGear
+            			);
             curMaxSpeed = Constants.talonHighGearMaxSpeed;
             pidLoop.setInputRange(-curMaxSpeed, curMaxSpeed);                       
         } else {
             pidLoop.setPID(Constants.talonLowGearPIDGains[wheelIndex][0],
             			Constants.talonLowGearPIDGains[wheelIndex][1],
-            			Constants.talonLowGearPIDGains[wheelIndex][2]);
+            			Constants.talonLowGearPIDGains[wheelIndex][2]
+            			,Constants.kFLowGear	
+            		);
             curMaxSpeed = Constants.talonLowGearMaxSpeed;
             pidLoop.setInputRange(-curMaxSpeed, curMaxSpeed);                                   
         }

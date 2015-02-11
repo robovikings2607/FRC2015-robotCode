@@ -53,6 +53,7 @@ public class Constants {
               {.000026, .000015, 0.0},  // leftRearPID Gains
               {.000026, .000015, 0.0}   // rightRearPID Gains
 };
+	  
 
 	  final static double[][] talonLowGearPIDGains = {
               {.000058, .000036, 0.0},  // leftFrontPID Gains
@@ -63,9 +64,9 @@ public class Constants {
 };
 	  
 	  final static double  talonHighGearMaxSpeed = 18100;
-		  	  
+		 final static double kFHighGear = .000055; 	  
 
 	  final static double talonLowGearMaxSpeed =  8100;
-	  
+	  	  final static double kFLowGear = .000123;
 }
 	
