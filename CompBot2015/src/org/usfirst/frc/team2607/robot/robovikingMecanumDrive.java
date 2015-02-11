@@ -30,7 +30,7 @@ public class robovikingMecanumDrive extends RobotDrive {
         double yIn = y;
         // Negate y for the joystick.
         yIn = -yIn;
-        // Compenstate for gyro angle.
+        // Compensate for gyro angle.
         double rotated[] = rotateVector(xIn, yIn, gyroAngle);
         xIn = rotated[0];
         yIn = rotated[1];

@@ -68,12 +68,12 @@ public class Constants {
 
 	  final static double talonLowGearMaxSpeed =  8100;
 	  
-	  final static double kFHighGear = .000028;       // kf = .5 * (1/maxSPeed)
-	  final static double kFLowGear = .000065;    // kf = .5 * (1/maxSpeed)            (low speed)
+	 // final static double kFHighGear = .000028;       // kf = .5 * (1/maxSPeed)
+	 // final static double kFLowGear = .000065;    // kf = .5 * (1/maxSpeed)            (low speed)
 	  
 	  
-	  //final static double kFHighGear = .000055;       // kf = 1/maxSPeed
-	  	//  final static double kFLowGear = .000123;    // kf = 1/maxSpeed (low speed)
+	  final static double kFHighGear = .000055;       // kf = 1/maxSPeed
+	  final static double kFLowGear = .000123;    // kf = 1/maxSpeed (low speed)
 	  	  
 //		  final static double[][] talonHighGearPIDGains = {
 //		  
