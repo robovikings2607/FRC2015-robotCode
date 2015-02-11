@@ -13,10 +13,14 @@ public class Constants {
 	public static int talonElevator1 = 5;
 	public static int talonElevator2 = 6;
 	
-	public static int solenoidChannel = 0;
 	public static int gyroChannel = 0;
 	public static int bottomSwitchPort = 10;
 	public static int topSwitchPort = 11;
+	
+	public static int gearShiftChannel = 0;
+	public static int winchChannel = 1;
+	public static int breaksChannel = 2;
+	public static int armsChannel = 3;
 	
 	public static int encoderFrontRightChannelA = 2;
 	public static int encoderFrontRightChannelB = 3;

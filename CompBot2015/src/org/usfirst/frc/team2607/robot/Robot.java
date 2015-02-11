@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 	
 	IMUAdvanced navx;
 	SerialPort comPort;
-	Solenoid solenoid;
+	Solenoid gearShiftSolenoid, winchSolenoid, breaksSolenoid, armsSolenoid ;
 	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
@@ -63,7 +63,13 @@ public class Robot extends IterativeRobot {
     	BackR = new WheelRPMController("BackRight", 3,true);
     	elevator1 = new CANTalon(Constants.talonElevator1);
     	elevator2 = new CANTalon(Constants.talonElevator2);
-    	solenoid = new Solenoid(1, Constants.solenoidChannel);
+    	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
+    	winchSolenoid = new Solenoid(1, Constants.winchChannel);
+    	armsSolenoid = new Solenoid(1, Constants.armsChannel);
+    	breaksSolenoid = new Solenoid(1, Constants.breaksChannel);
+    	
+    	
+    	
     	encElevator = new SmoothedEncoder(Constants.encoderElevatorChannelA, 
     									  Constants.encoderElevatorChannelB, 
     									  Constants.encoderElevatorReversed, 
@@ -124,6 +130,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	
+    	winchSolenoid.set(false);
+    	
     	if (xboxSupremeController.getOneShotButton(7)){
     		navx.zeroYaw();
     	}
@@ -158,23 +166,26 @@ public class Robot extends IterativeRobot {
     	}
     	
 	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){ //&& topSwitch.get()){
-	    		
+	    		breaksSolenoid.set(false);
 	    		elevator1.set(lift);
 	    		elevator2.set(lift);
 	    		
 	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)){ //&& bottomSwitch.get()){
-	    		
+	    		breaksSolenoid.set(false);
 	    		elevator1.set(lower);
 	    		elevator2.set(lower);
 	    	} else {
 	    		elevator1.set(0);
 	    		elevator2.set(0);
+	    		breaksSolenoid.set(true);
 	    	}
 	    	
 	    if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
 	    	arms = !arms;
-	    	solenoid.set(arms);
+	    	armsSolenoid.set(arms);
 	    	}
+	    
+	    
 	    
 	    	
     	
@@ -194,7 +205,7 @@ public class Robot extends IterativeRobot {
     		navx.zeroYaw();
     	}
     	
-    	solenoid.set(false);
+    	gearShiftSolenoid.set(false);
     	FrontL.setGearPID(false);
     	FrontR.setGearPID(false);
     	BackL.setGearPID(false);
