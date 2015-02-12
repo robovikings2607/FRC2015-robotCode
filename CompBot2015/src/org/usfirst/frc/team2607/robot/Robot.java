@@ -39,13 +39,14 @@ public class Robot extends IterativeRobot {
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
 	SmoothedEncoder encElevator;
-	//DigitalInput topSwitch, bottomSwitch;
+
+	DigitalInput topSwitch, bottomSwitch;
 	
 	
 	boolean arms = false;
 	double x, y, z;
-	double lift = 0.75;
-	double lower = -0.5;
+	double lowerPower = 0.4;
+	double raisePower = -0.4;
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
 	int currentHeight = 0;
@@ -103,9 +104,9 @@ public class Robot extends IterativeRobot {
             }
     	
     	smartDash = new SmartDashboard();
-    	/* topSwitch = new DigitalInput(Constants.topSwitchPort);
+    	topSwitch = new DigitalInput(Constants.topSwitchPort);
     	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
-    	*/
+    	
     }
 
     /**
@@ -165,15 +166,15 @@ public class Robot extends IterativeRobot {
     		navx.zeroYaw();
     	}
     	
-	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){ //&& topSwitch.get()){
+	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && bottomSwitch.get()){
 	    		breaksSolenoid.set(false);
-	    		elevator1.set(lift);
-	    		elevator2.set(lift);
+	    		elevator1.set(lowerPower);
+	    		elevator2.set(lowerPower);
 	    		
-	    	}else if(xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)){ //&& bottomSwitch.get()){
+	    	}else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)) && topSwitch.get()){
 	    		breaksSolenoid.set(false);
-	    		elevator1.set(lower);
-	    		elevator2.set(lower);
+	    		elevator1.set(raisePower);
+	    		elevator2.set(raisePower);
 	    	} else {
 	    		elevator1.set(0);
 	    		elevator2.set(0);
