@@ -58,14 +58,6 @@ public class robovikingMecanumDrive extends RobotDrive {
 
         }
         
-        if (m_isCANInitialized) {
-            try {
-                CANJaguar.updateSyncGroup(syncGroup);
-            } catch (CANNotInitializedException e) {
-                m_isCANInitialized = false;
-            }
-        }
-
         if (m_safetyHelper != null) m_safetyHelper.feed();
 	}
 

@@ -137,7 +137,7 @@ public class Robot extends IterativeRobot {
     		navx.zeroYaw();
     	}
     	
-    	float angler = navx.getYaw();
+    	float angler = 0;//navx.getYaw();
     	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
