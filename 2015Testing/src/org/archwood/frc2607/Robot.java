@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -35,12 +36,14 @@ public class Robot extends IterativeRobot {
 	Encoder enc;
 	PIDController pid;
     PrintWriter logFile = null;
+    PowerDistributionPanel pdp = null;
     
 	public void robotInit() {
     	fork = new Solenoid(1,0);
     	driveStick = new Joystick(0);
     	motor = new CANTalon(5);
     	follower = new CANTalon(6);
+    	pdp = new PowerDistributionPanel();
 //    	enc = new SmoothedEncoder(0, 1, true, EncodingType.k1X);
     	enc = new Encoder(8, 9, true, EncodingType.k1X);
     	logFile = null;
@@ -51,7 +54,7 @@ public class Robot extends IterativeRobot {
     	enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(1.043/256);
     	pid = new PIDController(0.0, 0.0, 0.0, enc, motor);
-    	pid.setOutputRange(-.4, .2);
+    	pid.setOutputRange(-.8, .2);
     	pid.setInputRange(-50, 0);
     }
 
@@ -75,13 +78,13 @@ public class Robot extends IterativeRobot {
     
     public void teleopInit() {
     	enc.reset();
-    	pid.setPID(.079, 0.0002, 0.0006);
+    	pid.setPID(.079, 0.0004, 0.0006);
     }
     
     public void teleopPeriodic() {
     	if (driveStick.getRawButton(4)) {
 //    		motor.set(-.3);
-    		pid.setSetpoint(-15.0);
+    		pid.setSetpoint(-45.0);
     		pid.enable();
     	} else if (driveStick.getRawButton(2)) {
     		motor.set(.3);
@@ -96,6 +99,9 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putNumber("SP", pid.getSetpoint());
     	SmartDashboard.putNumber("MV", pid.get());
     	SmartDashboard.putNumber("Err", pid.getError());
+    	SmartDashboard.putNumber("motorACurrent", pdp.getCurrent(0));
+    	SmartDashboard.putNumber("motorBCurrent", pdp.getCurrent(1));
+    	SmartDashboard.putNumber("totalCurrent", pdp.getTotalCurrent());
     }
     
     /**
