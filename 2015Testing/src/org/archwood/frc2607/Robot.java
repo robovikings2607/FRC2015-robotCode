@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
     	motor = new CANTalon(5);
     	follower = new CANTalon(6);
 //    	enc = new SmoothedEncoder(0, 1, true, EncodingType.k1X);
-    	enc = new Encoder(0, 1, true, EncodingType.k1X);
+    	enc = new Encoder(8, 9, true, EncodingType.k1X);
     	logFile = null;
     	follower.changeControlMode(ControlMode.Follower);
     	follower.set(5);
