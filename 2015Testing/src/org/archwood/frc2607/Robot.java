@@ -83,9 +83,10 @@ public class Robot extends IterativeRobot {
 //    		motor.set(-.3);
     		pid.setSetpoint(-15.0);
     		pid.enable();
-    	} else if (driveStick.getRawButton(1)) {
-//    		motor.set(.3);
+    	} else if (driveStick.getRawButton(2)) {
     		motor.set(.3);
+    	} else if (driveStick.getRawButton(1)) {
+    		motor.set(-.3);
     	} else {
     		motor.set(0);
     		pid.disable();
