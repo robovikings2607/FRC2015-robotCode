@@ -30,51 +30,41 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackL;
 	WheelRPMController BackR;
 	
-	CANTalon elevator1, elevator2;
+	elevator motaVator; // this is the elevator....
+	
 	
 	IMUAdvanced navx;
 	SerialPort comPort;
-	Solenoid gearShiftSolenoid, winchSolenoid, breaksSolenoid, armsSolenoid ;
+	Solenoid gearShiftSolenoid;
 	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
-	SmoothedEncoder encElevator;
 
-	DigitalInput topSwitch, bottomSwitch;
+
 	
 	
-	boolean arms = false;
 	double x, y, z;
-	double lowerPower = 0.4;
-	double raisePower = -0.4;
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
-	int currentHeight = 0;
 	double tempAngle = 0;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	motaVator = new elevator();
+    	new Thread(motaVator).start();
+    	
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
     	FrontL = new WheelRPMController("FrontLeft",0,true);
     	FrontR = new WheelRPMController("FrontRight",1,true);
     	BackL = new WheelRPMController("BackLeft", 2,true);
     	BackR = new WheelRPMController("BackRight", 3,true);
-    	elevator1 = new CANTalon(Constants.talonElevator1);
-    	elevator2 = new CANTalon(Constants.talonElevator2);
+
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
-    	winchSolenoid = new Solenoid(1, Constants.winchChannel);
-    	armsSolenoid = new Solenoid(1, Constants.armsChannel);
-    	breaksSolenoid = new Solenoid(1, Constants.breaksChannel);
     	
-    	
-    	
-    	encElevator = new SmoothedEncoder(Constants.encoderElevatorChannelA, 
-    									  Constants.encoderElevatorChannelB, 
-    									  Constants.encoderElevatorReversed, 
-    									  Encoder.EncodingType.k1X);
+    		
     	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
     	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
@@ -104,8 +94,6 @@ public class Robot extends IterativeRobot {
             }
     	
     	smartDash = new SmartDashboard();
-    	topSwitch = new DigitalInput(Constants.topSwitchPort);
-    	bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
     	
     }
 
@@ -131,7 +119,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	
-    	winchSolenoid.set(false);
+
     	
     	if (xboxSupremeController.getOneShotButton(7)){
     		navx.zeroYaw();
@@ -166,27 +154,24 @@ public class Robot extends IterativeRobot {
     		navx.zeroYaw();
     	}
     	
-	    	if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1)) && bottomSwitch.get()){
-	    		breaksSolenoid.set(false);
-	    		elevator1.set(lowerPower);
-	    		elevator2.set(lowerPower);
+	    	if((xboxSupremeController.getOneShotButton(1) || xboxMinor.getOneShotButton(1))){
 	    		
-	    	}else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4)) && topSwitch.get()){
-	    		breaksSolenoid.set(false);
-	    		elevator1.set(raisePower);
-	    		elevator2.set(raisePower);
-	    	} else {
-	    		elevator1.set(0);
-	    		elevator2.set(0);
-	    		breaksSolenoid.set(true);
-	    	}
+	    		motaVator.lower(); // lowers elevator
+	    	}else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
+	    		motaVator.raise();  // raises elevator
+	    	} 
 	    	
 	    if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
-	    	arms = !arms;
-	    	armsSolenoid.set(arms);
+	    	motaVator.grab(); // open or close arms
 	    	}
 	    
-	    
+	   /* if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
+    		
+    		motaVator.lowerManual(); // lowers elevator
+    	}else if((xboxSupremeController.getRawButton() || xboxMinor.getRawButton(4))){
+    		motaVator.raiseManual();  // raises elevator
+    	} 
+    	*/
 	    
 	    	
     	
