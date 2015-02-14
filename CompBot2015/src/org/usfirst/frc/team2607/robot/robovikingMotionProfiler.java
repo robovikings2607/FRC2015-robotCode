@@ -179,6 +179,7 @@ public class robovikingMotionProfiler implements Runnable{
 	public void driveUntilDistance (int distance, Vector<Double> motion, boolean thread){
 		running = true;
 		dsDistance = distance;
+		dsDirection = motion;
 		if (!thread){
 			try {
 				driveUntilDistanceCode();
