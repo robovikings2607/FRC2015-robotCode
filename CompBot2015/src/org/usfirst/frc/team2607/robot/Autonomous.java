@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Autonomous {
+public class Autonomous implements Runnable {
 	Timer autoTimer;
 	DigitalInput autoEye;
 	Robot theBot;
@@ -21,7 +21,7 @@ public class Autonomous {
 		theBot.FrontL.setGearPID(false);
 		theBot.BackR.setGearPID(false);
 		theBot.FrontR.setGearPID(false);
-		
+		new Thread(this).start();
 	}
 	
 	public void resetDriveValues(){
@@ -42,7 +42,7 @@ public class Autonomous {
 	}
 	
 	public void driveDistance(long count, double x, double y, double rotate){
-		while (theBot.FrontL.get() < Math.abs(count)){
+		while (theBot.FrontL.get() < Math.abs(count) || theBot.FrontR.get() < Math.abs(count)){
 			theBot.robotDrive.mecanumDrive_Cartesian(x,y,rotate, 0);
 		}
 	}
@@ -82,6 +82,12 @@ public class Autonomous {
 			nextAutoStep();
 			break;
 			}
+		}
+
+		@Override
+		public void run() {
+			
+			
 		}
 		
 

@@ -29,9 +29,9 @@ public class elevator implements Runnable {
 		elevatorTalon2 = new CANTalon(Constants.talonElevator2);
 		topSwitch = new DigitalInput(Constants.topSwitchPort);
 		bottomSwitch = new DigitalInput(Constants.bottomSwitchPort);
-		arms = new Solenoid(Constants.armsChannel);
-		breaks = new Solenoid(Constants.breaksChannel);
-		shifter = new Solenoid(Constants.winchChannel);
+		arms = new Solenoid(1, Constants.armsChannel);
+		breaks = new Solenoid(1, Constants.breaksChannel);
+		shifter = new Solenoid(1, Constants.winchChannel);
 		shifter.set(false);
 		elevatorTalon2.changeControlMode(ControlMode.Follower);
 		elevatorTalon2.set(Constants.talonElevator1);
