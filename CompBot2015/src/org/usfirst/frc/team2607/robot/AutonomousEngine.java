@@ -37,6 +37,11 @@ public class AutonomousEngine implements Runnable {
 		Vector<Double> strafeRight = new Vector<Double>();
 		strafeRight.add(.4);
 		strafeRight.add(0.0);
+		
+		Vector<Double> forward = new Vector<Double>();
+		strafeRight.add(0.0);
+		strafeRight.add(-.5);
+		
 		theBot.robotDrive.resetDistance();
 		try {
 			// close the hooks
@@ -44,11 +49,11 @@ public class AutonomousEngine implements Runnable {
 			// set elevator to carrying position
 			theBot.motaVator.goToCarryingPos();
 			// strafe right 
-			motion.driveUntilDistance(30 / 7,  strafeRight, false);
+			motion.driveUntilDistance(30,  strafeRight, false);
 			
-		
-		
-		
+			motion.driveUntilDistance(60,  forward, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		} catch (Exception e) {}
 	}
 	

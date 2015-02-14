@@ -98,14 +98,13 @@ public class Robot extends IterativeRobot {
     public void disabledInit() {
     	
     }
-    
+
     public void disabledPeriodic(){
     	if (xboxSupremeController.getOneShotButton(8)){
     		// increment auto mode
     		auto.selectMode();
     	}
     }
-
     
     /**
      * This function is called periodically during autonomous
