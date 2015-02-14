@@ -39,8 +39,8 @@ public class AutonomousEngine implements Runnable {
 		strafeRight.add(0.0);
 		
 		Vector<Double> forward = new Vector<Double>();
-		strafeRight.add(0.0);
-		strafeRight.add(-.5);
+		forward.add(0.0); 
+		forward.add(-.5);
 		
 		theBot.robotDrive.resetDistance();
 		try {
@@ -60,6 +60,7 @@ public class AutonomousEngine implements Runnable {
 	private void autoModeTwo() {
 		
 	}
+	
 	
 	@Override
 	public void run() {
