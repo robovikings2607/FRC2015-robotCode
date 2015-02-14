@@ -9,8 +9,8 @@ public class Autonomous implements Runnable {
 	DigitalInput autoEye;
 	Robot theBot;
 	
-	double driveValue[] = new double[3];
 	int step;
+	int autoMode;
 	
 	public Autonomous(Robot robot){
 		theBot = robot;
@@ -22,10 +22,11 @@ public class Autonomous implements Runnable {
 		theBot.BackR.setGearPID(false);
 		theBot.FrontR.setGearPID(false);
 		new Thread(this).start();
+		autoMode = 0;
 	}
 	
 	public void resetDriveValues(){
-		theBot.robotDrive.mecanumDrive_Cartesian(0,0,0, 0);
+		theBot.robotDrive.mecanumDrive_Cartesian(0,0,0,0);
 		}
 	
 	public void nextAutoStep(){
@@ -61,7 +62,7 @@ public class Autonomous implements Runnable {
 	 
 
 	public void moveToZoneAuto(){
-		driveValue[1] = .25;
+		
 		driveTime(10, 0, .25, 0);
 		resetDriveValues();
 		}
@@ -83,9 +84,42 @@ public class Autonomous implements Runnable {
 			break;
 			}
 		}
+		
+		public void reset(){
+			
+		}
+		
+		public void changeAuto(){
+			autoMode += 1;
+			if (autoMode > 2){
+				autoMode = 0;
+			}
+		}
+		
+		public void setMode(int mode){
+			switch(mode){
+			
+			case 0:
+				
+				break;
+			
+			case 1:
+				moveToZoneAuto();
+				break;
+			case 2:
+				moveOneToteAuto();
+				break;
+			
+			}
+		}
+		
+		
 
 		@Override
 		public void run() {
+			while (true){
+				setMode(autoMode);
+			}
 			
 			
 		}
