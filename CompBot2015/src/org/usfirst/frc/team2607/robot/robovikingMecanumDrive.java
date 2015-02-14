@@ -74,13 +74,13 @@ public class robovikingMecanumDrive extends RobotDrive {
 		if (m_frontLeftMotor instanceof WheelRPMController){
 			switch (i){
 			case 0:
-				return ((WheelRPMController) m_frontLeftMotor).getDistance();
+				return ((WheelRPMController) m_frontLeftMotor).getDistance() * Constants.driveDistancePerPulse;
 			case 1:
-				return ((WheelRPMController) m_frontRightMotor).getDistance();
+				return ((WheelRPMController) m_frontRightMotor).getDistance() * Constants.driveDistancePerPulse;
 			case 2:
-				return ((WheelRPMController) m_rearLeftMotor).getDistance();
+				return ((WheelRPMController) m_rearLeftMotor).getDistance() * Constants.driveDistancePerPulse;
 			case 3: 
-				return ((WheelRPMController) m_rearRightMotor).getDistance();
+				return ((WheelRPMController) m_rearRightMotor).getDistance() * Constants.driveDistancePerPulse;
 			default:
 				return 0.0;
 			}

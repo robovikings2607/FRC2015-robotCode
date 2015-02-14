@@ -31,7 +31,8 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackR;
 	
 	elevator motaVator; // this is the elevator....
-	Autonomous auto;
+	AutonomousEngine auto;
+	Thread autoThread = null;
 	
 	IMUAdvanced navx;
 	SerialPort comPort;
@@ -39,9 +40,6 @@ public class Robot extends IterativeRobot {
 	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
-	Thread autoThread = null;
-
-	
 	
 	double x, y, z;
 	double[] driveValue = new double[3];
@@ -54,7 +52,6 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	motaVator = new elevator();
     //	new Thread(motaVator).start();
-    	auto = new Autonomous(this);
     	
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
@@ -98,33 +95,34 @@ public class Robot extends IterativeRobot {
     	
     }
 
+    public void disabledInit() {
+    	
+    }
+    
+    public void disabledPeriodic(){
+    	if (xboxSupremeController.getOneShotButton(8)){
+    		// increment auto mode
+    		auto.selectMode();
+    	}
+    }
+
+    
     /**
      * This function is called periodically during autonomous
      */
     
     
-    public void autoInit(){
-    	auto.setMode(0);
+    public void autonomousInit(){
     	autoThread = new Thread(auto);
-    	autoThread.start();
-    }
-    
-    public void disabledPeriodic(){
-    	auto.setMode(0);
-    	autoThread.stop();
-    	if (xboxSupremeController.getOneShotButton(8)){
-    		auto.changeAuto();
-    	}
+    	
     }
     
     public void autonomousPeriodic() {
+    	
+    }
 
-    }
     
-    public void testInit(){
-    	navx.zeroYaw();
-    	testTick = 0;
-    }
+    
     
     /*public void teleopInit(){
     	gyro.reset();
@@ -136,7 +134,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	
-
     	
     	if (xboxSupremeController.getOneShotButton(7)){
     		navx.zeroYaw();
@@ -202,9 +199,11 @@ public class Robot extends IterativeRobot {
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
     }
      
-    /**
-     * This function is called periodically during test mode
-     */
+    public void testInit(){
+    	navx.zeroYaw();
+    	testTick = 0;
+    }
+        
     private int testTick;
     public void testPeriodic() {
        	

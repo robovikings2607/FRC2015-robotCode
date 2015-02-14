@@ -46,6 +46,12 @@ public class elevator implements Runnable {
     	disablePID();
 	}
 	
+	public void goToCarryingPos() {
+		pid.setSetpoint(-3.0);
+		enablePID();
+	}
+	
+	
 	public void disablePID() {
 		if (!pidDisabled) {
 			pid.disable();

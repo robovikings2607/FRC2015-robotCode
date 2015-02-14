@@ -3,8 +3,9 @@ package org.usfirst.frc.team2607.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Autonomous implements Runnable {
+public class AutonomousOld implements Runnable {
 	Timer autoTimer;
 	DigitalInput autoEye;
 	Robot theBot;
@@ -12,7 +13,7 @@ public class Autonomous implements Runnable {
 	int step;
 	int autoMode;
 	
-	public Autonomous(Robot robot){
+	public AutonomousOld(Robot robot){
 		theBot = robot;
 		autoEye = new DigitalInput(12); //not necessarily 12
 		autoTimer = new Timer();
@@ -21,7 +22,6 @@ public class Autonomous implements Runnable {
 		theBot.FrontL.setGearPID(false);
 		theBot.BackR.setGearPID(false);
 		theBot.FrontR.setGearPID(false);
-		new Thread(this).start();
 		autoMode = 0;
 	}
 	
@@ -84,28 +84,27 @@ public class Autonomous implements Runnable {
 			break;
 			}
 		}
-		
-		public void reset(){
-			
-		}
-		
+				
 		public void changeAuto(){
 			autoMode += 1;
 			if (autoMode > 2){
 				autoMode = 0;
 			}
+			SmartDashboard.putNumber("Auto Mode", autoMode);
 		}
 		
 		public void setMode(int mode){
 			switch(mode){
 			
 			case 0:
-				
+				resetDriveValues();
 				break;
 			
 			case 1:
 				moveToZoneAuto();
+				autoMode = 0;
 				break;
+				
 			case 2:
 				moveOneToteAuto();
 				break;

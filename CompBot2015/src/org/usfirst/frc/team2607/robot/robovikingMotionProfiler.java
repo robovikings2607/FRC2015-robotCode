@@ -17,8 +17,7 @@ public class robovikingMotionProfiler implements Runnable{
 	int usDistance = 0;
 	Ultrasonic usSensor = null;
 	int usAcceptableRange = 5;
-	
-	Encoder[] dsEncoders = null;
+
 	int dsDistance = 0;
 	Vector<Double> dsDirection = null;
 	int dsAcceptableRange = 5;
@@ -121,9 +120,8 @@ public class robovikingMotionProfiler implements Runnable{
 					running = false;
 				}
 				
-				if (dsDistance > 0 && dsEncoders != null){
+				if (dsDistance > 0){
 					driveUntilDistanceCode();
-					dsEncoders = null;
 					dsDistance = 0;
 					dsDirection = null;
 					running = false;
@@ -157,8 +155,10 @@ public class robovikingMotionProfiler implements Runnable{
 	/**The robot is not stopped after this method concludes!
 	 * @param s Valid Ultrasonic Sensor object
 	 * @param distance Distance to operate until
-	 * @param motion A Vector object with the x (0) and y (1) drive speed to use to get to the target distance. If
-	 * the robot is farther away then the specified distance, the robot will use the power values specified. If it is 
+	 * @param motion A Vector object with the x (0) and y (1) drive speed to use to get to the target distance.
+	 * X-Positive = Right
+	 * Y-Negative = Forward
+	 * If the robot is farther away then the specified distance, the robot will use the power values specified. If it is 
 	 * too close, it will use the negative of the specified value.
 	 */
 	public void driveUntilUltrasonic (Ultrasonic s, int distance, Vector<Double> motion, boolean thread){
@@ -176,9 +176,8 @@ public class robovikingMotionProfiler implements Runnable{
 		}
 	}
 	
-	public void driveUntilDistance (Encoder[] es, int distance, Vector<Double> motion, boolean thread){
+	public void driveUntilDistance (int distance, Vector<Double> motion, boolean thread){
 		running = true;
-		dsEncoders = es;
 		dsDistance = distance;
 		if (!thread){
 			try {
