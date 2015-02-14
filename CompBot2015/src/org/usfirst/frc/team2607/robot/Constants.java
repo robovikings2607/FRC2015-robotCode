@@ -42,6 +42,8 @@ public class Constants {
 	public static int encoderElevatorChannelB = 9;
 	public static boolean encoderElevatorReversed = false;
 	
+	public static double distancePerPulse = 1.043/256;
+	
 	public static int[][] encoders = {
 		{encoderFrontLeftChannelA, encoderFrontLeftChannelB},
 		{encoderFrontRightChannelA, encoderFrontRightChannelB},
