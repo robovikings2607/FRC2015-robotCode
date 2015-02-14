@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2607.robot;
 
+import com.kauailabs.nav6.frc.IMUAdvanced;
+
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -7,17 +9,23 @@ import edu.wpi.first.wpilibj.can.CANNotInitializedException;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class robovikingMecanumDrive extends RobotDrive {
     static final int kFrontLeft_val = 0;
     static final int kFrontRight_val = 1;
     static final int kRearLeft_val = 2;
     static final int kRearRight_val = 3;
-
+    private IMUAdvanced navx;
+    private boolean needGyroReset;
+    
 	public robovikingMecanumDrive(SpeedController frontLeftMotor,
 			SpeedController rearLeftMotor, SpeedController frontRightMotor,
-			SpeedController rearRightMotor) {
+			SpeedController rearRightMotor,
+			IMUAdvanced n) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+		navx = n;
+		needGyroReset = true;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -34,7 +42,18 @@ public class robovikingMecanumDrive extends RobotDrive {
         double rotated[] = rotateVector(xIn, yIn, gyroAngle);
         xIn = rotated[0];
         yIn = rotated[1];
-
+        
+        if ((xIn != 0.0 || yIn != 0.0) && rotation == 0.0) {
+        	if (needGyroReset) {
+        		navx.zeroYaw();
+        		needGyroReset = false;
+        	}
+        	rotation = navx.getYaw() * -.005;
+        } else {
+        	needGyroReset = true;
+        }
+        
+        
         double wheelSpeeds[] = new double[kMaxNumberOfMotors];
         wheelSpeeds[kFrontLeft_val] = xIn + yIn + rotation;
         wheelSpeeds[kFrontRight_val] = -xIn + yIn - rotation;
@@ -71,6 +90,7 @@ public class robovikingMecanumDrive extends RobotDrive {
 	}
 	
 	public double getWheelDistance(int i){
+		SmartDashboard.putNumber("Lower Distance Test 1", ((WheelRPMController) m_frontLeftMotor).getDistance()  * Constants.driveDistancePerPulse);
 		if (m_frontLeftMotor instanceof WheelRPMController){
 			switch (i){
 			case 0:

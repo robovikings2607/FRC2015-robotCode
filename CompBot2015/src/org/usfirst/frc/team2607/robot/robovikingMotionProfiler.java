@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class robovikingMotionProfiler implements Runnable{
 	
@@ -78,18 +79,21 @@ public class robovikingMotionProfiler implements Runnable{
 		
 		drive.resetDistance();
 		
-		while (System.currentTimeMillis() < startTime + 3000){
+		while (System.currentTimeMillis() < startTime + 10000){
 			int averageDistance = 0;
 			for (int i = 0; i < 4; i++){
 				averageDistance +=  Math.abs(drive.getWheelDistance(i));
+				SmartDashboard.putNumber("Wheel 1 Dist", drive.getWheelDistance(1));
 				
 			}
 			averageDistance /= 4;
 			
+			SmartDashboard.putNumber("Wheel distance", averageDistance);
+			
 			if (averageDistance > dsDistance + dsAcceptableRange){
-				drive.correctedMecanumDrive(-dsDirection.get(0), -dsDirection.get(1), 0, 0, 0);
+				drive.correctedMecanumDrive(-dsDirection.get(0), -dsDirection.get(1), 0, 0, Constants.ftbCorrectionNoTote);
 			} else if (averageDistance < dsDistance - dsAcceptableRange){
-				drive.correctedMecanumDrive(dsDirection.get(0), dsDirection.get(1), 0, 0, 0);
+				drive.correctedMecanumDrive(dsDirection.get(0), dsDirection.get(1), 0, 0, Constants.ftbCorrectionNoTote);
 			}
 			if (averageDistance < dsDistance + dsAcceptableRange &&
 					averageDistance > dsDistance - dsAcceptableRange){

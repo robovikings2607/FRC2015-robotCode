@@ -63,9 +63,6 @@ public class Robot extends IterativeRobot {
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
     	
     		
-    	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR);
-    	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
-    	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
     	FrontL.enable();
     	BackL.enable();
     	FrontR.enable();
@@ -90,9 +87,13 @@ public class Robot extends IterativeRobot {
             } catch( Exception ex ) {
                     
             }
-    	
+
+    	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR, navx);
+    	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
+    	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);    	
     	smartDash = new SmartDashboard();
     	
+    	auto = new AutonomousEngine(this);
     }
 
     public void disabledInit() {
@@ -113,6 +114,7 @@ public class Robot extends IterativeRobot {
     
     public void autonomousInit(){
     	autoThread = new Thread(auto);
+    	autoThread.start();
     	
     }
     
@@ -132,14 +134,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	
-    	
-    	if (xboxSupremeController.getOneShotButton(7)){
-    		navx.zeroYaw();
-    	}
-    	
-    	float angler = 0;//navx.getYaw();
-    	
+    	    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
     	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -160,12 +155,6 @@ public class Robot extends IterativeRobot {
     			driveValue[i] = (driveValue[i] + .15) * 1.5;
     		}
 	    	}
-    	
-    	if (driveValue[2] == 0){
-    		driveValue[2] = angler * -.015;
-    	} else {
-    		navx.zeroYaw();
-    	}
     	
     	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
     	
@@ -191,9 +180,7 @@ public class Robot extends IterativeRobot {
     	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
     	motaVator.grab(); // open or close arms
     	}
-
-	    	
-    	
+	    	   	
     	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
     }

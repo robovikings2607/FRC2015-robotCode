@@ -43,7 +43,7 @@ public class Constants {
 	public static boolean encoderElevatorReversed = false;
 	
 	public static double distancePerPulse = 1.043/256;
-	public static double driveDistancePerPulse = (1/(256 * 3 * (60/24))) * (6 * Math.PI); 
+	public static double driveDistancePerPulse = (1/(256 * 3 * (60.0/24.0))) * (6 * Math.PI); 
 	
 	public static int[][] encoders = {
 		{encoderFrontLeftChannelA, encoderFrontLeftChannelB},
@@ -71,9 +71,9 @@ public class Constants {
 };
 	  
 	  final static double  talonHighGearMaxSpeed = 18100;
-			  
-
 	  final static double talonLowGearMaxSpeed =  8100;
+	  
+	  final static double ftbCorrectionNoTote = -.13; //.15 is really the no tote
 	  
 	 // final static double kFHighGear = .000028;       // kf = .5 * (1/maxSPeed)
 	 // final static double kFLowGear = .000065;    // kf = .5 * (1/maxSpeed)            (low speed)
