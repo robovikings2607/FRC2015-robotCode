@@ -53,7 +53,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	motaVator = new elevator();
-    	new Thread(motaVator).start();
+    //	new Thread(motaVator).start();
     	
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
@@ -154,25 +154,31 @@ public class Robot extends IterativeRobot {
     		navx.zeroYaw();
     	}
     	
+    	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
+    	
 	    	if((xboxSupremeController.getOneShotButton(1) || xboxMinor.getOneShotButton(1))){
-	    		
 	    		motaVator.lower(); // lowers elevator
-	    	}else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
+	    		
+	    	} else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
 	    		motaVator.raise();  // raises elevator
 	    	} 
-	    	
-	    if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
-	    	motaVator.grab(); // open or close arms
-	    	}
+	    		    
+    	} else {
 	    
-	   /* if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
+	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
     		
     		motaVator.lowerManual(); // lowers elevator
-    	}else if((xboxSupremeController.getRawButton() || xboxMinor.getRawButton(4))){
+    	} else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4))){
     		motaVator.raiseManual();  // raises elevator
-    	} 
-    	*/
-	    
+    	} else {
+    		motaVator.equilibrium();
+    	}
+    	}
+    	
+    	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
+    	motaVator.grab(); // open or close arms
+    	}
+
 	    	
     	
     	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);

@@ -20,10 +20,11 @@ public class elevator implements Runnable {
 	double lowerSpeed = .4;
 	boolean armsFlag = false;
 	boolean override = false;
+	boolean pidDisabled = false;
 	
 	public elevator(){
-		shifter.set(false);
-		enc = new Encoder(Constants.encoderElevatorChannelA,  Constants.encoderBackRightChannelB, true, EncodingType.k1X);
+		
+		enc = new Encoder(Constants.encoderElevatorChannelA,  Constants.encoderElevatorChannelB, true, EncodingType.k1X);
 		elevatorTalon1 = new CANTalon(Constants.talonElevator1);
 		elevatorTalon2 = new CANTalon(Constants.talonElevator2);
 		topSwitch = new DigitalInput(Constants.topSwitchPort);
@@ -31,20 +32,33 @@ public class elevator implements Runnable {
 		arms = new Solenoid(Constants.armsChannel);
 		breaks = new Solenoid(Constants.breaksChannel);
 		shifter = new Solenoid(Constants.winchChannel);
-		pid = new PIDController(0.079, 0.0004, 0.0006, enc, elevatorTalon1);
+		shifter.set(false);
 		elevatorTalon2.changeControlMode(ControlMode.Follower);
 		elevatorTalon2.set(Constants.talonElevator1);
 		elevatorTalon1.enableBrakeMode(true);
 		elevatorTalon2.enableBrakeMode(true);
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(Constants.distancePerPulse);
-    	pid.setOutputRange(-.8, .2);
-    	pid.setInputRange(-50, 0);
     	enc.reset();
-    	
-    	
+    	pid = new PIDController(0.079, 0.0004, 0.0006, enc, elevatorTalon1);
+    	pid.setOutputRange(-.6, .2);
+    	pid.setInputRange(-50, 0);
+    	disablePID();
 	}
 	
+	public void disablePID() {
+		if (!pidDisabled) {
+			pid.disable();
+			pidDisabled = true;
+		}
+	}
+	
+	public void enablePID() {
+		if (pidDisabled) {
+			pid.enable();
+			pidDisabled = false;
+		}
+	}
 	
 	public double getHeight(){
 		return enc.getDistance();
@@ -60,26 +74,26 @@ public class elevator implements Runnable {
 	
 	public void raise(){
 		pid.setSetpoint(getHeight() - 12.1);
-		pid.enable();
+		enablePID();
 	}
 	
 	public void lower(){
 		pid.setSetpoint(getHeight() + 12.1);
-		pid.enable();
+		enablePID();
 	}
 	
 	public void raiseManual(){
-		pid.disable();
+		disablePID();
 		elevatorTalon1.set(raiseSpeed);
 	}
 	
 	public void lowerManual(){
-		pid.disable();
+		disablePID();
 		elevatorTalon1.set(lowerSpeed);
 	}
 	
 	public void equilibrium(){
-		pid.disable();
+		disablePID();
 		elevatorTalon1.set(0.0);
 	}
 	
