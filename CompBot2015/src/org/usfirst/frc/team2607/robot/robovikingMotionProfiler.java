@@ -82,6 +82,7 @@ public class robovikingMotionProfiler implements Runnable{
 			int averageDistance = 0;
 			for (int i = 0; i < 4; i++){
 				averageDistance +=  Math.abs(drive.getWheelDistance(i));
+				
 			}
 			averageDistance /= 4;
 			
@@ -100,6 +101,8 @@ public class robovikingMotionProfiler implements Runnable{
 		}
 		
 	}
+	
+	
 
 	@Override
 	public void run() {
