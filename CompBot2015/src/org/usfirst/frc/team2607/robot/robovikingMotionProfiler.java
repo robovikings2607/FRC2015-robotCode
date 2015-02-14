@@ -21,14 +21,13 @@ public class robovikingMotionProfiler implements Runnable{
 	Encoder[] dsEncoders = null;
 	int dsDistance = 0;
 	Vector<Double> dsDirection = null;
+	int dsAcceptableRange = 5;
 	
 	public robovikingMotionProfiler(robovikingMecanumDrive someDrive){
 		drive = someDrive;
-		
-		new Thread(this).start();
 	}
 	
-	private void path (int[][] steps) throws InterruptedException{
+	private void drivePathCode (int[][] steps) throws InterruptedException{
 		
 		for (int i = 1; i < steps.length; i++){
 			long startTime = System.currentTimeMillis();
@@ -56,7 +55,7 @@ public class robovikingMotionProfiler implements Runnable{
 		return timeProgressedFromStart/target; 
 	}
 	
-	private void driveUltrasonic(){
+	private void driveUntilUltrasonicCode() throws InterruptedException{
 		long startTime = System.currentTimeMillis();
 		
 		while (System.currentTimeMillis() < startTime + 3000){
@@ -69,23 +68,35 @@ public class robovikingMotionProfiler implements Runnable{
 					usSensor.getRangeInches() > usDistance - usAcceptableRange){
 				break;
 			}
+			
+			Thread.sleep(3);
 				
 		}
 	}
 	
-	private void driveEncoderDistance(){
+	private void driveUntilDistanceCode() throws InterruptedException{
 		long startTime = System.currentTimeMillis();
 		
+		drive.resetDistance();
+		
 		while (System.currentTimeMillis() < startTime + 3000){
-			if (usSensor.getRangeInches() > usDistance + usAcceptableRange){
-				drive.correctedMecanumDrive(usDirection.get(0), usDirection.get(1), 0, 0, 0);
-			} else if (usSensor.getRangeInches() < usDistance - usAcceptableRange){
-				drive.correctedMecanumDrive(-usDirection.get(0), -usDirection.get(1), 0, 0, 0);
+			int averageDistance = 0;
+			for (int i = 0; i < 4; i++){
+				averageDistance +=  Math.abs(drive.getWheelDistance(i));
 			}
-			if (usSensor.getRangeInches() < usDistance + usAcceptableRange &&
-					usSensor.getRangeInches() > usDistance - usAcceptableRange){
+			averageDistance /= 4;
+			
+			if (averageDistance > dsDistance + dsAcceptableRange){
+				drive.correctedMecanumDrive(-dsDirection.get(0), -dsDirection.get(1), 0, 0, 0);
+			} else if (averageDistance < dsDistance - dsAcceptableRange){
+				drive.correctedMecanumDrive(dsDirection.get(0), dsDirection.get(1), 0, 0, 0);
+			}
+			if (averageDistance < dsDistance + dsAcceptableRange &&
+					averageDistance > dsDistance - dsAcceptableRange){
 				break;
 			}
+			
+			Thread.sleep(3);
 				
 		}
 		
@@ -98,20 +109,20 @@ public class robovikingMotionProfiler implements Runnable{
 				Thread.sleep(5);
 
 				if (pathToExecute != null){
-					path(pathToExecute);
+					drivePathCode(pathToExecute);
 					pathToExecute = null;
 					running = false;
 				}
 				
 				if (usDistance > 0 && usSensor != null){
-					driveUltrasonic();
+					driveUntilUltrasonicCode();
 					usDistance = 0;
 					usSensor = null;
 					running = false;
 				}
 				
 				if (dsDistance > 0 && dsEncoders != null){
-					driveEncoderDistance();
+					driveUntilDistanceCode();
 					dsEncoders = null;
 					dsDistance = 0;
 					dsDirection = null;
@@ -130,9 +141,17 @@ public class robovikingMotionProfiler implements Runnable{
 	 * @param path 2-D array with the profile points. Arrays should hold {x speed, y speed, total time since profile start}
 	 * The first elements time should be 0
 	 */
-	public void drivePath (int[][] path){
+	public void drivePath (int[][] path, boolean thread){
 		running = true;
 		pathToExecute = path;
+		if (!thread){
+			try {
+				drivePathCode(pathToExecute);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**The robot is not stopped after this method concludes!
@@ -142,17 +161,32 @@ public class robovikingMotionProfiler implements Runnable{
 	 * the robot is farther away then the specified distance, the robot will use the power values specified. If it is 
 	 * too close, it will use the negative of the specified value.
 	 */
-	public void driveUntilUltrasonic(Ultrasonic s, int distance, Vector<Double> motion){
+	public void driveUntilUltrasonic (Ultrasonic s, int distance, Vector<Double> motion, boolean thread){
 		running = true;
 		usDirection = motion;
 		usDistance = distance;
 		usSensor = s;
+		if (!thread){
+			try {
+				driveUntilUltrasonicCode();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	public void driveUntilDistance(Encoder[] es, int distance, Vector<Double> motion){
+	public void driveUntilDistance (Encoder[] es, int distance, Vector<Double> motion, boolean thread){
 		running = true;
 		dsEncoders = es;
 		dsDistance = distance;
-		dsDirection = motion;
+		if (!thread){
+			try {
+				driveUntilDistanceCode();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

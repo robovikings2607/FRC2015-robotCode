@@ -60,5 +60,34 @@ public class robovikingMecanumDrive extends RobotDrive {
         
         if (m_safetyHelper != null) m_safetyHelper.feed();
 	}
+	
+	public void resetDistance(){
+		if (m_frontLeftMotor instanceof WheelRPMController){
+			((WheelRPMController) m_frontLeftMotor).resetDistance();
+			((WheelRPMController) m_frontRightMotor).resetDistance();
+			((WheelRPMController) m_rearLeftMotor).resetDistance();
+			((WheelRPMController) m_rearRightMotor).resetDistance();
+		}
+	}
+	
+	public double getWheelDistance(int i){
+		if (m_frontLeftMotor instanceof WheelRPMController){
+			switch (i){
+			case 0:
+				return ((WheelRPMController) m_frontLeftMotor).getDistance();
+			case 1:
+				return ((WheelRPMController) m_frontRightMotor).getDistance();
+			case 2:
+				return ((WheelRPMController) m_rearLeftMotor).getDistance();
+			case 3: 
+				return ((WheelRPMController) m_rearRightMotor).getDistance();
+			default:
+				return 0.0;
+			}
+		}
+		return 0.0;
+	}
+	
+	
 
 }

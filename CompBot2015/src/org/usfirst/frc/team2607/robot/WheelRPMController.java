@@ -183,4 +183,12 @@ public class WheelRPMController implements SpeedController {
     public void pidWrite(double d) {
         
     } 
+    
+    public void resetDistance(){
+    	enc.reset();
+    }
+    
+    public double getDistance(){
+    	return enc.getDistance();
+    }
 }
