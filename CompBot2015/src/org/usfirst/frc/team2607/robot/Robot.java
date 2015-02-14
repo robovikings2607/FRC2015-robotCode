@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackR;
 	
 	elevator motaVator; // this is the elevator....
-	
+	Autonomous auto;
 	
 	IMUAdvanced navx;
 	SerialPort comPort;
@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
 	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
-
+	Thread autoThread = null;
 
 	
 	
@@ -54,6 +54,7 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	motaVator = new elevator();
     //	new Thread(motaVator).start();
+    	auto = new Autonomous(this);
     	
     	xboxSupremeController = new robovikingStick(0);
     	xboxMinor = new robovikingStick(1);
@@ -100,6 +101,22 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during autonomous
      */
+    
+    
+    public void autoInit(){
+    	auto.setMode(0);
+    	autoThread = new Thread(auto);
+    	autoThread.start();
+    }
+    
+    public void disabledPeriodic(){
+    	auto.setMode(0);
+    	autoThread.stop();
+    	if (xboxSupremeController.getOneShotButton(8)){
+    		auto.changeAuto();
+    	}
+    }
+    
     public void autonomousPeriodic() {
 
     }
@@ -238,73 +255,7 @@ public class Robot extends IterativeRobot {
     }
 	    
     
-    /* public void liftElevator(int height){
-    	switch(height){
-    	
-    	
-    	
-    	case 0:
-    		
-    		break;
-    	case 1:
-    		
-    		break;
-    	case 2:
-    		
-    		break;
-    	case 3:
-    		
-    		break;
-    	case 4:
-    		
-    		break;
-    	case 5: 
-    		
-    		break;
-    	}
-    	
-    	currentHeight = height;
-    	
-    } */
-    
-   /* public void driveForwardAuton(){
-    	
-    }
-    
-    public void strafeLeftAuton(int stage){
-    	
-    }
-    
-    
-    public void strafeRightAuton(){
-    	
-    }
-    
-    public void stackTotesAuton(){
-    	
-    }
-    
-    public void pickUpTotesAuton(){
-    	
-    }
-    */
-    
-    
-    /* Auton Steps:
-     * 1. pick up tote                 we have one tote
-     * 2. strafeRightAuton()
-     * 3. driveForwardAuton()
-     * 4. strafeLeftAuton(1)
-     * 5. stackTotesAuton()
-     * 6. pickUpTotesAtuon()           we have two totes
-     * 7. strafeRightAuton()
-     * 8. driveForwardAuton()
-     * 9. strafeLeftAuton(1)
-     * 10. stackTotesAuton()
-     * 11. pickUpTotesAtuon() 		   we have three totes
-     * 12. strafeLeftAuton(2) 
-     * 13. drop totes
-     */
+   
     
     
 }
