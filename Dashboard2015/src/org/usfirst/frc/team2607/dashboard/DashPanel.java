@@ -36,6 +36,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class DashPanel extends JFrame {
 
 	private JPanel contentPane;
+	
+	private static JPanel pnlArms;
+	
 	static NetworkTable t;
 
 	static double elevatorHeight = 0.0;
@@ -66,7 +69,7 @@ public class DashPanel extends JFrame {
 			@Override
 			public void run() {
 				elevatorHeight = t.getNumber("elevatorHeight", 0.0);
-				
+				pnlArms.setLocation(0, (int) elevatorHeight);
 			}
 			
 		}).start();
@@ -166,7 +169,7 @@ public class DashPanel extends JFrame {
 		contentPane.add(pnlElevator);
 		pnlElevator.setLayout(null);
 		
-		JPanel pnlArms = new JPanel();
+		pnlArms = new JPanel();
 		pnlArms.setBounds(12, 457, 87, 81);
 		pnlElevator.add(pnlArms);
 		pnlArms.setLayout(null);
