@@ -31,7 +31,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	public void selectMode() {
-		if (++mode > 2) mode = 0;	
+		if (++mode > 6) mode = 0;	
 		
 		SmartDashboard.putNumber("autoMode", mode);
 	}
@@ -128,6 +128,114 @@ public class AutonomousEngine implements Runnable {
 		
 	}
 	
+	//Stacks a Recycling container on a tote, then rotates and drives to auto zone
+	public void autoModeThree(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0); 
+		forward.add(-.3);
+		
+		theBot.robotDrive.resetDistance();
+		theBot.navx.zeroYaw();
+		
+		try {
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(300);
+		 //set elevator to carrying position
+		theBot.motaVator.goToHeight(-18.5);
+		
+		motion.driveUntilDistance(18, forward, false); // drive forward the distance of a recycling container
+		
+		theBot.motaVator.lowerManual();
+		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+		theBot.motaVator.equilibrium();
+		
+		theBot.motaVator.arms.set(false);
+		Thread.sleep(100);
+		
+		theBot.motaVator.goToHeight(-.5);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(500);
+		
+		motion.rotateUntilDegree(90, false);
+		Thread.sleep(300);
+		
+		motion.driveUntilDistance(100, forward, false);
+		
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		
+		} catch (InterruptedException e) {
+
+		}
+		
+	}
+	
+	// Just Drives Forward
+	public void autoModeFour(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0); 
+		forward.add(-.3);
+		
+		theBot.robotDrive.resetDistance();
+		
+		motion.driveUntilDistance(75, forward, false);
+		
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+	}
+	
+	//Grabs recycling container, rotates 90 degrees, and drives to auto zone
+	public void autoModeFive(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0); 
+		forward.add(-.3);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try {
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(300);
+		
+		motion.rotateUntilDegree(90, false);
+		Thread.sleep(300);
+		
+		motion.driveUntilDistance(150, forward, false);
+		
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			
+		} catch (InterruptedException e) {
+
+		}
+		
+		
+	}
+	
+	//One Tote Auto
+	public void autoModeSix(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0); 
+		forward.add(-.3);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try {
+		theBot.motaVator.arms.set(true);
+		
+		motion.rotateUntilDegree(90, false);
+		
+		Thread.sleep(300);
+			
+		motion.driveUntilDistance(150, forward, false);
+			
+		} catch (InterruptedException e) {
+		}
+		
+		
+	}
+	
 	
 	@Override
 	public void run() {
@@ -147,6 +255,31 @@ public class AutonomousEngine implements Runnable {
 					autoModeTwo();	// only exits when done, or interrupted
 					mode = 0;
 					break;
+					
+				case 3: 
+					System.out.println("Running Auto 3");
+					autoModeThree();
+					mode = 0;
+					break;
+					
+				case 4:
+					System.out.println("Running Auto 4");
+					autoModeFour();
+					mode = 0;
+					break;
+					
+				case 5:
+					System.out.println("Running Auto 5");
+					autoModeFive();
+					mode = 0;
+					break;
+					
+				case 6:
+					System.out.println("Running Auto 6");
+					autoModeSix();
+					mode = 0;
+					break;
+					
 				default:
 			}
 		System.out.println("Exiting Auto");

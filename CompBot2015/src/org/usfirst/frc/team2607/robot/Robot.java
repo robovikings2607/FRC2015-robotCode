@@ -30,6 +30,9 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackL;
 	WheelRPMController BackR;
 	
+	Logger logger;
+	Thread loggerThread = null;
+	
 	elevator motaVator; // this is the elevator....
 	AutonomousEngine auto;
 	Thread autoThread = null;
@@ -45,6 +48,7 @@ public class Robot extends IterativeRobot {
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
 	double tempAngle = 0;
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -62,7 +66,8 @@ public class Robot extends IterativeRobot {
 
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
     	
-    		
+    	logger = new Logger(this);
+    	
     	FrontL.enable();
     	BackL.enable();
     	FrontR.enable();
@@ -125,17 +130,18 @@ public class Robot extends IterativeRobot {
     
     
     
-    /*public void teleopInit(){
-    	gyro.reset();
+    public void teleopInit(){
+    	loggerThread = new Thread(logger);
+    	loggerThread.start();
     }
-    */
+    
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
     	
-    	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
+    	logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -188,7 +194,7 @@ public class Robot extends IterativeRobot {
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
 	    
 
-    	BackL.logEntry();
+    	logger.logEntry();
 
     }
      

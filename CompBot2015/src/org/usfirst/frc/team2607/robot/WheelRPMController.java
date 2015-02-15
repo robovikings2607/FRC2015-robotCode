@@ -191,4 +191,8 @@ public class WheelRPMController implements SpeedController {
     public double getDistance(){
     	return enc.getDistance();
     }
+    
+    public PIDController getPID(){
+    return pidLoop;
+    }
 }

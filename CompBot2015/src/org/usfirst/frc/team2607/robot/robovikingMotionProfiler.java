@@ -2,6 +2,8 @@ package org.usfirst.frc.team2607.robot;
 
 import java.util.Vector;
 
+import com.kauailabs.nav6.frc.IMUAdvanced;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,8 +25,15 @@ public class robovikingMotionProfiler implements Runnable{
 	Vector<Double> dsDirection = null;
 	int dsAcceptableRange = 5;
 	
+	double dgDegree = 0;
+	Vector<Double> dgDirection = null;
+	int dgAcceptableRange = 5;
+	IMUAdvanced navX;
+	
+	
 	public robovikingMotionProfiler(robovikingMecanumDrive someDrive){
 		drive = someDrive;
+		navX = drive.getnavX();
 	}
 	
 	private void drivePathCode (int[][] steps) throws InterruptedException{
@@ -106,6 +115,23 @@ public class robovikingMotionProfiler implements Runnable{
 		
 	}
 	
+	public void rotateUntilDegreeCode() throws InterruptedException{
+		long startTime = System.currentTimeMillis();
+		navX.zeroYaw();
+		
+		while (System.currentTimeMillis() < startTime + 5000){
+			if (navX.getYaw() > dgDegree + dgAcceptableRange){
+				drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * -.004), 0, Constants.ftbCorrectionNoTote);
+			} else if(navX.getYaw() < dgDegree - dgAcceptableRange){
+				drive.correctedMecanumDrive(0,0, (dgDegree - navX.getYaw() * .004), 0, Constants.ftbCorrectionNoTote);
+			}
+			if (navX.getYaw() < dgDegree + dgAcceptableRange && navX.getYaw() > dgDegree - dgAcceptableRange){
+				break;
+			}
+			Thread.sleep(3);
+		}
+	}
+	
 	
 
 	@Override
@@ -131,6 +157,12 @@ public class robovikingMotionProfiler implements Runnable{
 					driveUntilDistanceCode();
 					dsDistance = 0;
 					dsDirection = null;
+					running = false;
+				}
+				
+				if (dgDegree > 0){
+					rotateUntilDegreeCode();
+					dgDegree = 0;
 					running = false;
 				}
 
@@ -195,5 +227,19 @@ public class robovikingMotionProfiler implements Runnable{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void rotateUntilDegree(double degree, boolean thread){
+		running = true;
+		dgDegree = degree;
+		if (!thread){
+			try{
+				rotateUntilDegreeCode();
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

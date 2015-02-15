@@ -108,6 +108,10 @@ public class robovikingMecanumDrive extends RobotDrive {
 		return 0.0;
 	}
 	
+	public IMUAdvanced getnavX(){
+		return navx;
+	}
+	
 	
 
 }
