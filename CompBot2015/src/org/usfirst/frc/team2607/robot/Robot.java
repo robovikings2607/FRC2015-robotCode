@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackL;
 	WheelRPMController BackR;
 	
-	Logger logger;
+	//Logger logger;
 	Thread loggerThread = null;
 	
 	elevator motaVator; // this is the elevator....
@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
     	
-    	logger = new Logger(this);
+    	//logger = new Logger(this);
     	
     	FrontL.enable();
     	BackL.enable();
@@ -131,8 +131,8 @@ public class Robot extends IterativeRobot {
     
     
     public void teleopInit(){
-    	loggerThread = new Thread(logger);
-    	loggerThread.start();
+    	//loggerThread = new Thread(logger);
+    	//loggerThread.start();
     }
     
 
@@ -141,7 +141,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	
-    	logger.enableLogging(xboxSupremeController.getToggleButton(7));
+    	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -194,7 +194,7 @@ public class Robot extends IterativeRobot {
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
 	    
 
-    	logger.logEntry();
+    	//logger.logEntry();
 
     }
      
