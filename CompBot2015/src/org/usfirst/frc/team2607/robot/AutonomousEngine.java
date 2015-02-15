@@ -87,6 +87,38 @@ public class AutonomousEngine implements Runnable {
 			motion.driveUntilDistance(30,  strafeRight, false);
 			
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			/*motion.driveUntilDistance(82.5,  forward, false);
+			// Stop so mecanum wheels can accelerate together
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			Thread.sleep(600);
+			// strafe left 
+			motion.driveUntilDistance(40,  strafeLeft, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.lowerManual();
+			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			theBot.motaVator.equilibrium();
+			
+			theBot.motaVator.arms.set(false);
+			Thread.sleep(100);
+			
+			theBot.motaVator.goToHeight(-.5);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(500);
+			
+			theBot.motaVator.goToHeight(-18.5);
+			
+			// strafe right 
+			motion.driveUntilDistance(30,  strafeRight, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			 * 
+			 * 
+			 */
 		} catch (Exception e) {}
 	}
 	

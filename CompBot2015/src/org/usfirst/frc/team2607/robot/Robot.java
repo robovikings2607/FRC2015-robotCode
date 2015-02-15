@@ -134,6 +134,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	
+    	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
     	    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -180,9 +182,14 @@ public class Robot extends IterativeRobot {
     	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
     	motaVator.grab(); // open or close arms
     	}
+    	
 	    	   	
     	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
+	    
+
+    	BackL.logEntry();
+
     }
      
     public void testInit(){
