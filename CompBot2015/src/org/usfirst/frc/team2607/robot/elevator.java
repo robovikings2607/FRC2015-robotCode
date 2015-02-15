@@ -40,10 +40,12 @@ public class elevator implements Runnable {
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(Constants.distancePerPulse);
     	enc.reset();
-    	pid = new PIDController(0.079, 0.0004, 0.0006, enc, elevatorTalon1);
-    	pid.setOutputRange(-.6, .2);
+    	pid = new PIDController(0.079, 0.0011, 0.0006, enc, elevatorTalon1);
+    	pid.setOutputRange(-.6, .45);
     	pid.setInputRange(-50, 0);
     	disablePID();
+    	
+    	pid.setAbsoluteTolerance(.3);
 	}
 	
 	public void goToCarryingPos() {
@@ -51,6 +53,10 @@ public class elevator implements Runnable {
 		enablePID();
 	}
 	
+	public void goToHeight(double h) {
+		pid.setSetpoint(-Math.abs(h));
+		enablePID();
+	}
 	
 	public void disablePID() {
 		if (!pidDisabled) {

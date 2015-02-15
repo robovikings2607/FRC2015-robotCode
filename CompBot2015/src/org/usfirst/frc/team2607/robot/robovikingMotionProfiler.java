@@ -19,7 +19,7 @@ public class robovikingMotionProfiler implements Runnable{
 	Ultrasonic usSensor = null;
 	int usAcceptableRange = 5;
 
-	int dsDistance = 0;
+	double dsDistance = 0;
 	Vector<Double> dsDirection = null;
 	int dsAcceptableRange = 5;
 	
@@ -80,7 +80,7 @@ public class robovikingMotionProfiler implements Runnable{
 		drive.resetDistance();
 		
 		while (System.currentTimeMillis() < startTime + 10000){
-			int averageDistance = 0;
+			double averageDistance = 0;
 			for (int i = 0; i < 4; i++){
 				averageDistance +=  Math.abs(drive.getWheelDistance(i));
 				SmartDashboard.putNumber("Wheel 1 Dist", drive.getWheelDistance(1));
@@ -183,7 +183,7 @@ public class robovikingMotionProfiler implements Runnable{
 		}
 	}
 	
-	public void driveUntilDistance (int distance, Vector<Double> motion, boolean thread){
+	public void driveUntilDistance (double distance, Vector<Double> motion, boolean thread){
 		running = true;
 		dsDistance = distance;
 		dsDirection = motion;

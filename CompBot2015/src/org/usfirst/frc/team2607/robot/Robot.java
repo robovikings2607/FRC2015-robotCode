@@ -191,6 +191,44 @@ public class Robot extends IterativeRobot {
     }
         
     private int testTick;
+  
+    public void testPeriodic() {
+
+    	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
+        	
+	    	if((xboxSupremeController.getOneShotButton(1) || xboxMinor.getOneShotButton(1))){
+	    		motaVator.goToHeight(-12.0); // lowers elevator
+	    		
+	    	} else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
+	    		motaVator.goToHeight(-18.5);  // raises elevator
+	    	} 
+	    		    
+    	} else {
+	    
+	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
+    		
+    		motaVator.lowerManual(); // lowers elevator
+    	} else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4))){
+    		motaVator.raiseManual();  // raises elevator
+    	} else {
+    		motaVator.equilibrium();
+    	}
+    	}
+    	
+    	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
+    		motaVator.grab(); // open or close arms
+    	}
+    	
+    	if (++testTick >= 20) {
+    		System.out.printf("SP: %.8f PV: %.8f, Err: %.8f MV: %.8f\n", motaVator.pid.getSetpoint(), 
+    															motaVator.enc.getDistance(), 
+    															motaVator.pid.getError(), 
+    															motaVator.pid.get());
+    		testTick = 0;
+    	}
+    }
+    
+/*    
     public void testPeriodic() {
        	
     	double angler = 0.0; //xboxSupremeController.getToggleButton(8) ? navx.getYaw() : 0.0;
@@ -238,7 +276,7 @@ public class Robot extends IterativeRobot {
     	BackL.logEntry();
     	BackR.logEntry();
     }
-	    
+*/	    
     
    
     

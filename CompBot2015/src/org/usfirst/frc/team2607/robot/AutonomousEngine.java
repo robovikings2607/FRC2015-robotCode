@@ -45,17 +45,46 @@ public class AutonomousEngine implements Runnable {
 		forward.add(0.0); 
 		forward.add(-.3);
 		
+		Vector<Double> strafeLeft = new Vector<Double>();
+		strafeLeft.add(-.35); 
+		strafeLeft.add(-.14);
+		
 		theBot.robotDrive.resetDistance();
 		try {
 			// close the hooks
 			theBot.motaVator.arms.set(true);
-			Thread.sleep(250);
+			Thread.sleep(300);
 			// set elevator to carrying position
-			theBot.motaVator.raise();
+			theBot.motaVator.goToHeight(-18.5);
 			// strafe right 
-			motion.driveUntilDistance(29,  strafeRight, false);
+			motion.driveUntilDistance(30,  strafeRight, false);
+			// drive forward to next tote
+			motion.driveUntilDistance(82.5,  forward, false);
+			// Stop so mecanum wheels can accelerate together
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			Thread.sleep(600);
+			// strafe left 
+			motion.driveUntilDistance(40,  strafeLeft, false);
 			
-			motion.driveUntilDistance(80,  forward, false);
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.lowerManual();
+			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			theBot.motaVator.equilibrium();
+			
+			theBot.motaVator.arms.set(false);
+			Thread.sleep(100);
+			
+			theBot.motaVator.goToHeight(-.5);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(500);
+			
+			theBot.motaVator.goToHeight(-18.5);
+			
+			// strafe right 
+			motion.driveUntilDistance(30,  strafeRight, false);
 			
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		} catch (Exception e) {}
