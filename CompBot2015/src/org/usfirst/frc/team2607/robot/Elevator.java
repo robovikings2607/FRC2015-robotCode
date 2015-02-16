@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class elevator implements Runnable {
+public class Elevator implements Runnable {
 	
 	CANTalon elevatorTalon1, elevatorTalon2;
 	DigitalInput topSwitch, bottomSwitch;
@@ -22,7 +22,7 @@ public class elevator implements Runnable {
 	boolean override = false;
 	boolean pidDisabled = false;
 	
-	public elevator(){
+	public Elevator(){
 		
 		enc = new Encoder(Constants.encoderElevatorChannelA,  Constants.encoderElevatorChannelB, true, EncodingType.k1X);
 		elevatorTalon1 = new CANTalon(Constants.talonElevator1);
@@ -94,6 +94,33 @@ public class elevator implements Runnable {
 		enablePID();
 	}
 	
+	/**
+	 * @param i Level to set elevator to (0 - 4)
+	 */
+	public void goToLevel(int i){
+		switch (i){
+		case 0:
+			goToHeight(-0);
+			break;
+		case 1:
+			goToHeight(-18);
+			break;
+		case 2:
+			goToHeight(-30);
+			break;
+		case 3:
+			goToHeight(-42);
+			break;
+		case 4:
+			goToHeight(-54);
+			break;
+		default:
+			System.err.println("Seriously?");
+		}
+		
+		enablePID();
+	}
+	
 	public void raiseManual(){
 		disablePID();
 		elevatorTalon1.set(raiseSpeed);
@@ -101,12 +128,22 @@ public class elevator implements Runnable {
 	
 	public void lowerManual(){
 		disablePID();
-		elevatorTalon1.set(lowerSpeed);
+		if (bottomSwitch.get()) {
+			elevatorTalon1.set(lowerSpeed);
+		} else {
+			elevatorTalon1.set(0.0);
+		}
 	}
 	
 	public void equilibrium(){
 		disablePID();
 		elevatorTalon1.set(0.0);
+	}
+	
+	public void holdCurrentPosition() {
+		double curPos = enc.getDistance();
+		pid.setSetpoint(curPos);
+		enablePID();
 	}
 	
 	public void grab(){
@@ -125,20 +162,21 @@ public class elevator implements Runnable {
 
 	@Override
 	public void run() {
-		while(true){
-			if (!getOverride()){
-		if (!bottomSwitch.get() && (elevatorTalon1.get() < 0)){
-			elevatorTalon1.set(0.0);	
-		}
-		if (!topSwitch.get() && (elevatorTalon1.get() > 0)){
-			elevatorTalon1.set(0.0);	
-		}
+		while(true) {
+			if (!bottomSwitch.get() && (elevatorTalon1.get() > 0)){
+				disablePID();
+				elevatorTalon1.set(0.0);	
 			}
-	try {
-		Thread.sleep(10);
-	} catch (InterruptedException e) {
-	}
-		}
+			if (!topSwitch.get() && (elevatorTalon1.get() < 0)){
+				disablePID();
+				elevatorTalon1.set(0.0);	
+			}
+			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {}
+		
+		}	
 	}
 		
 		

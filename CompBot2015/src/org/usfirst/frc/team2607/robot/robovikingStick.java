@@ -15,10 +15,9 @@ public robovikingStick(int port) {
     for (int i = 0; i < buttonStates.length; i++) buttonStates[i] = false;
 }
 
-public boolean getOneShotButton(int buttonNumber) {
+public boolean getButtonPressedOneShot(int buttonNumber) {
     int bitValue = 0x1 << (buttonNumber - 1);
     boolean retValue = false;
-    
     boolean buttonWasOff = (bitValue & previousState) == 0;
     boolean buttonIsOn = getRawButton(buttonNumber);
     
@@ -29,9 +28,22 @@ public boolean getOneShotButton(int buttonNumber) {
     return retValue;
 }
 
+public boolean getButtonReleasedOneShot(int buttonNumber) {
+    int bitValue = 0x1 << (buttonNumber - 1);
+    boolean retValue = false;
+    boolean buttonWasOn = (bitValue & previousState) != 0;
+    boolean buttonIsOff = !getRawButton(buttonNumber);
+	
+    if (buttonWasOn && buttonIsOff) retValue = true;
+    if (buttonIsOff) previousState = previousState & ~bitValue;
+    if (!buttonIsOff) previousState = previousState | bitValue; 
+    
+    return retValue;
+}
+
 public boolean getToggleButton(int buttonNumber) {
 	int btn = buttonNumber - 1;
-	if (getOneShotButton(buttonNumber)) buttonStates[btn] = !buttonStates[btn];
+	if (getButtonPressedOneShot(buttonNumber)) buttonStates[btn] = !buttonStates[btn];
 	return buttonStates[btn];
 }
 }

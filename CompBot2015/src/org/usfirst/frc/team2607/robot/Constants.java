@@ -14,8 +14,8 @@ public class Constants {
 	public static int talonElevator2 = 6;
 	
 	public static int gyroChannel = 0;
-	public static int bottomSwitchPort = 24;
-	public static int topSwitchPort = 23;
+	public static int bottomSwitchPort = 23;
+	public static int topSwitchPort = 22;
 	
 	public static int gearShiftChannel = 0;
 	public static int winchChannel = 1;

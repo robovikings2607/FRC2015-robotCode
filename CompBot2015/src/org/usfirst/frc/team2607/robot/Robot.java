@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 	//Logger logger;
 	Thread loggerThread = null;
 	
-	elevator motaVator; // this is the elevator....
+	Elevator motaVator; // this is the elevator....
 	AutonomousEngine auto;
 	Thread autoThread = null;
 	
@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	motaVator = new elevator();
+    	motaVator = new Elevator();
     //	new Thread(motaVator).start();
     	
     	xboxSupremeController = new robovikingStick(0);
@@ -106,7 +106,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void disabledPeriodic(){
-    	if (xboxSupremeController.getOneShotButton(8)){
+    	if (xboxSupremeController.getButtonPressedOneShot(8)){
     		// increment auto mode
     		auto.selectMode();
     	}
@@ -144,11 +144,11 @@ public class Robot extends IterativeRobot {
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
     	
-    	gearShiftSolenoid.set(xboxSupremeController.getToggleButton(8));    	    	
-    	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
-    	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
-    	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
-    	BackR.setGearPID(xboxSupremeController.getToggleButton(8));
+    	gearShiftSolenoid.set(xboxSupremeController.getToggleButton(9));    	    	
+    	FrontL.setGearPID(xboxSupremeController.getToggleButton(9));
+    	FrontR.setGearPID(xboxSupremeController.getToggleButton(9));
+    	BackL.setGearPID(xboxSupremeController.getToggleButton(9));
+    	BackR.setGearPID(xboxSupremeController.getToggleButton(9));
     	
     	driveValue[0] = xboxSupremeController.getX() * .65;
     	driveValue[1] = xboxSupremeController.getY() * .65;
@@ -166,31 +166,56 @@ public class Robot extends IterativeRobot {
     		}
 	    	}
     	
-    	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
-    	
-	    	if((xboxSupremeController.getOneShotButton(1) || xboxMinor.getOneShotButton(1))){
-	    		motaVator.lower(); // lowers elevator
-	    		
-	    	} else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
-	    		motaVator.raise();  // raises elevator
-	    	} 
-	    		    
-    	} else {
-	    
 	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
     		
     		motaVator.lowerManual(); // lowers elevator
     	} else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4))){
     		motaVator.raiseManual();  // raises elevator
-    	} else {
-    		motaVator.equilibrium();
+    	} 
+    		
+	    if (xboxSupremeController.getButtonReleasedOneShot(1) || xboxMinor.getButtonReleasedOneShot(1) || 
+	    	xboxSupremeController.getButtonReleasedOneShot(4) || xboxMinor.getButtonReleasedOneShot(4)) {
+    			motaVator.holdCurrentPosition();
     	}
-    	}
+    
     	
-    	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
+    	if(xboxSupremeController.getButtonPressedOneShot(2) || (xboxMinor.getButtonPressedOneShot(2))){
     	motaVator.grab(); // open or close arms
     	}
     	
+    	switch (xboxSupremeController.getPOV(0)){
+    		case 0:
+    			motaVator.goToLevel(1);
+    			break;
+    		case 90:
+    			motaVator.goToLevel(2);
+    			break;
+    		case 180:
+    			motaVator.goToLevel(3);
+    			break;
+    		case 270:
+    			motaVator.goToLevel(4);
+    			break;
+    	}
+    	
+    	switch (xboxMinor.getPOV(0)){
+			case 0:
+				motaVator.goToLevel(1);
+				break;
+			case 90:
+				motaVator.goToLevel(2);
+				break;
+			case 180:
+				motaVator.goToLevel(3);
+				break;
+			case 270:
+				motaVator.goToLevel(4);
+				break;
+    	}
+    	
+    	if (xboxSupremeController.getButtonPressedOneShot(3) || xboxMinor.getButtonPressedOneShot(3)){
+    		motaVator.goToLevel(0);
+    	}
 	    	   	
     	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
@@ -212,10 +237,10 @@ public class Robot extends IterativeRobot {
 
     	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
         	
-	    	if((xboxSupremeController.getOneShotButton(1) || xboxMinor.getOneShotButton(1))){
+	    	if((xboxSupremeController.getButtonPressedOneShot(1) || xboxMinor.getButtonPressedOneShot(1))){
 	    		motaVator.goToHeight(-12.0); // lowers elevator
 	    		
-	    	} else if((xboxSupremeController.getOneShotButton(4) || xboxMinor.getOneShotButton(4))){
+	    	} else if((xboxSupremeController.getButtonPressedOneShot(4) || xboxMinor.getButtonPressedOneShot(4))){
 	    		motaVator.goToHeight(-18.5);  // raises elevator
 	    	} 
 	    		    
@@ -231,7 +256,7 @@ public class Robot extends IterativeRobot {
     	}
     	}
     	
-    	if(xboxSupremeController.getOneShotButton(2) || (xboxMinor.getOneShotButton(2))){
+    	if(xboxSupremeController.getButtonPressedOneShot(2) || (xboxMinor.getButtonPressedOneShot(2))){
     		motaVator.grab(); // open or close arms
     	}
     	

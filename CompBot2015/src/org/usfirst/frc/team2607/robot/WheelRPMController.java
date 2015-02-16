@@ -23,7 +23,7 @@ public class WheelRPMController implements SpeedController {
     private int wheelIndex;
     private String deviceName;
     private boolean forceOff = false;
-    public static boolean off;
+    public static boolean off = true;
     private short errorCount = 0;
     private boolean encodersFlag = false;
     private PrintWriter logFile = null;
