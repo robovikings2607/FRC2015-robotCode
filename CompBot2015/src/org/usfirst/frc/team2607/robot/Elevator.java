@@ -15,12 +15,13 @@ public class Elevator implements Runnable {
 	DigitalInput topSwitch, bottomSwitch;
 	Encoder enc;
 	Solenoid arms, breaks, shifter;
-	PIDController pid;
+	robovikingPIDController pid;
 	double raiseSpeed = -.4;
 	double lowerSpeed = .4;
 	boolean armsFlag = false;
 	boolean override = false;
 	boolean pidDisabled = false;
+	double lastHeight = -100000;
 	
 	public Elevator(){
 		
@@ -40,21 +41,25 @@ public class Elevator implements Runnable {
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(Constants.distancePerPulse);
     	enc.reset();
-    	pid = new PIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1);
+    	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch);
     	pid.setOutputRange(-.6, .45);
-    	pid.setInputRange(-50, 0);
+    	pid.setInputRange(-60, 0);
     	disablePID();
     	
     	pid.setAbsoluteTolerance(.6);
 	}
 	
 	public void goToCarryingPos() {
-		pid.setSetpoint(-3.0);
+		goToHeight(-3.0);
 		enablePID();
 	}
 	
 	public void goToHeight(double h) {
 		pid.setSetpoint(-Math.abs(h));
+		if(h != lastHeight){
+			pid.resetAccumulatedError();
+			lastHeight = h;
+		}
 		enablePID();
 	}
 	
@@ -84,11 +89,13 @@ public class Elevator implements Runnable {
 		enc.reset();
 	}
 	
+	@Deprecated
 	public void raise(){
 		pid.setSetpoint(getHeight() - 12.1);
 		enablePID();
 	}
 	
+	@Deprecated
 	public void lower(){
 		pid.setSetpoint(getHeight() + 12.1);
 		enablePID();
@@ -142,8 +149,7 @@ public class Elevator implements Runnable {
 	
 	public void holdCurrentPosition() {
 		double curPos = enc.getDistance();
-		pid.setSetpoint(curPos);
-		enablePID();
+		goToHeight(curPos);
 	}
 	
 	public void grab(){

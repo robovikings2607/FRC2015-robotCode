@@ -144,12 +144,14 @@ public class Robot extends IterativeRobot {
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
     	
+    	//Shifting Management - Button 9
     	gearShiftSolenoid.set(xboxSupremeController.getToggleButton(9));    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(9));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(9));
     	BackL.setGearPID(xboxSupremeController.getToggleButton(9));
     	BackR.setGearPID(xboxSupremeController.getToggleButton(9));
     	
+    	//Some dead-zone stuff that nobody understands anymore, but hey, it works
     	driveValue[0] = xboxSupremeController.getX() * .65;
     	driveValue[1] = xboxSupremeController.getY() * .65;
     	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
@@ -166,23 +168,25 @@ public class Robot extends IterativeRobot {
     		}
 	    	}
     	
+    	//Manual Elevator Control - Button 1 & 4
 	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
-    		
-    		motaVator.lowerManual(); // lowers elevator
+    		motaVator.lowerManual();
     	} else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4))){
-    		motaVator.raiseManual();  // raises elevator
+    		motaVator.raiseManual();
     	} 
-    		
+    	
+	    //Hold position for manual control
 	    if (xboxSupremeController.getButtonReleasedOneShot(1) || xboxMinor.getButtonReleasedOneShot(1) || 
 	    	xboxSupremeController.getButtonReleasedOneShot(4) || xboxMinor.getButtonReleasedOneShot(4)) {
     			motaVator.holdCurrentPosition();
     	}
     
-    	
+    	//Actuate arms - Button 2
     	if(xboxSupremeController.getButtonPressedOneShot(2) || (xboxMinor.getButtonPressedOneShot(2))){
-    	motaVator.grab(); // open or close arms
+    	motaVator.grab();
     	}
     	
+    	//Move to various tote heights - D-Pad
     	switch (xboxSupremeController.getPOV(0)){
     		case 0:
     			motaVator.goToLevel(1);
@@ -197,7 +201,6 @@ public class Robot extends IterativeRobot {
     			motaVator.goToLevel(4);
     			break;
     	}
-    	
     	switch (xboxMinor.getPOV(0)){
 			case 0:
 				motaVator.goToLevel(1);
@@ -213,12 +216,12 @@ public class Robot extends IterativeRobot {
 				break;
     	}
     	
+    	//Move to zero position - Button 3
     	if (xboxSupremeController.getButtonPressedOneShot(3) || xboxMinor.getButtonPressedOneShot(3)){
     		motaVator.goToLevel(0);
     	}
 	    	   	
-    	//robotDrive.mecanumDrive_Cartesian(driveValue[0], driveValue[1], driveValue[2], 0);
-	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, -.15);
+	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, Constants.ftbCorrectionNoTote);
 	    
 
     	//logger.logEntry();
