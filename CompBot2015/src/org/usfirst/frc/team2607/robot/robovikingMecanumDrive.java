@@ -48,7 +48,7 @@ public class robovikingMecanumDrive extends RobotDrive {
         		navx.zeroYaw();
         		needGyroReset = false;
         	}
-        	rotation = navx.getYaw() * -.007;
+        	rotation = navx.getYaw() * -.009;
         } else {
         	needGyroReset = true;
         }

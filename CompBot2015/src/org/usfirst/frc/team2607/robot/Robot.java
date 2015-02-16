@@ -142,7 +142,9 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
-    	    	    	
+    	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
+    	
+    	gearShiftSolenoid.set(xboxSupremeController.getToggleButton(8));    	    	
     	FrontL.setGearPID(xboxSupremeController.getToggleButton(8));
     	FrontR.setGearPID(xboxSupremeController.getToggleButton(8));
     	BackL.setGearPID(xboxSupremeController.getToggleButton(8));
@@ -195,6 +197,7 @@ public class Robot extends IterativeRobot {
 	    
 
     	//logger.logEntry();
+	    BackL.logEntry();
 
     }
      

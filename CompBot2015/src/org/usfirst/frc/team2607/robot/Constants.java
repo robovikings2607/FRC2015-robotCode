@@ -73,7 +73,9 @@ public class Constants {
 	  final static double  talonHighGearMaxSpeed = 18100;
 	  final static double talonLowGearMaxSpeed =  8100;
 	  
-	  final static double ftbCorrectionNoTote = -.13; //.15 is really the no tote
+	  final static double ftbCorrectionNoTote = -.13;
+	  final static double ftbCorrectionOneTote = -.13; //.15 is really the no tote
+	  final static double ftbCorrectionTwoTote = -.09;
 	  
 	 // final static double kFHighGear = .000028;       // kf = .5 * (1/maxSPeed)
 	 // final static double kFLowGear = .000065;    // kf = .5 * (1/maxSpeed)            (low speed)
