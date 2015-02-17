@@ -17,6 +17,11 @@ public class Constants {
 	public static int bottomSwitchPort = 23;
 	public static int topSwitchPort = 22;
 	
+	public static int ultraFrontPing = 18;
+	public static int ultraFrontEcho = 19;
+	public static int ultraSidePing = 20;
+	public static int ultraSideEcho = 21;
+	
 	public static int gearShiftChannel = 0;
 	public static int winchChannel = 1;
 	public static int breaksChannel = 2;

@@ -5,11 +5,11 @@ import java.util.Vector;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutonomousEngine implements Runnable {
 	Timer autoTimer;
-	DigitalInput autoEye;
 	Robot theBot;
 	robovikingMotionProfiler motion;
 	
@@ -19,7 +19,6 @@ public class AutonomousEngine implements Runnable {
 	
 	public AutonomousEngine(Robot robot){
 		theBot = robot;
-		autoEye = new DigitalInput(12); //not necessarily 12
 		autoTimer = new Timer();
 		step = 0;
 		mode = 0;

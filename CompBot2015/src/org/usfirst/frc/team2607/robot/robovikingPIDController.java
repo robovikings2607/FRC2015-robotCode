@@ -51,6 +51,7 @@ public class robovikingPIDController implements LiveWindowSendable {
 	PIDSource m_pidInput;
 	PIDOutput m_pidOutput;
 	DigitalInput m_bottomLimit;
+	DigitalInput m_topLimit;
 	java.util.Timer m_controlLoop;
 	private boolean m_freed = false;
 	private boolean m_usingPercentTolerance;
@@ -159,9 +160,10 @@ public class robovikingPIDController implements LiveWindowSendable {
 	 * @param output The PIDOutput object that is set to the output percentage
 	 */
 	public robovikingPIDController(double Kp, double Ki, double Kd,
-			PIDSource source, PIDOutput output, DigitalInput bottomLimit) {
+			PIDSource source, PIDOutput output, DigitalInput bottomLimit, DigitalInput topLimit) {
 		this(Kp, Ki, Kd, source, output, kDefaultPeriod);
 		m_bottomLimit = bottomLimit;
+		m_topLimit = topLimit;
 	}
 	/**
 	 * Allocate a PID object with the given constants for P, I, D, using a 50ms period.
@@ -253,6 +255,8 @@ public class robovikingPIDController implements LiveWindowSendable {
 				}
 				if (m_bottomLimit != null && !m_bottomLimit.get()){
 					m_result = Math.min(0, m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError) + m_setpoint * m_F);
+				} else if (m_topLimit != null && !m_topLimit.get()){
+					m_result = Math.max(0, m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError) + m_setpoint * m_F);
 				} else {
 					m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError) + m_setpoint * m_F;
 				}

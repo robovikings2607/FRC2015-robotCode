@@ -16,8 +16,8 @@ public class Elevator implements Runnable {
 	Encoder enc;
 	Solenoid arms, breaks, shifter;
 	robovikingPIDController pid;
-	double raiseSpeed = -.4;
-	double lowerSpeed = .4;
+	double raiseSpeed = -.6;
+	double lowerSpeed = .6;
 	boolean armsFlag = false;
 	boolean override = false;
 	boolean pidDisabled = false;
@@ -41,7 +41,7 @@ public class Elevator implements Runnable {
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(Constants.distancePerPulse);
     	enc.reset();
-    	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch);
+    	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
     	pid.setOutputRange(-.6, .45);
     	pid.setInputRange(-60, 0);
     	disablePID();
@@ -130,7 +130,11 @@ public class Elevator implements Runnable {
 	
 	public void raiseManual(){
 		disablePID();
+		if(topSwitch.get()){
 		elevatorTalon1.set(raiseSpeed);
+		} else {
+		 elevatorTalon1.set(0.0);
+		}
 	}
 	
 	public void lowerManual(){

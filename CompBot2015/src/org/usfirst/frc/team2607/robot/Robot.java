@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -36,6 +37,8 @@ public class Robot extends IterativeRobot {
 	Elevator motaVator; // this is the elevator....
 	AutonomousEngine auto;
 	Thread autoThread = null;
+	
+	Ultrasonic ultraSide, ultraFront;
 	
 	IMUAdvanced navx;
 	SerialPort comPort;
@@ -66,6 +69,13 @@ public class Robot extends IterativeRobot {
 
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
     	
+    	ultraFront = new Ultrasonic(Constants.ultraFrontPing, Constants.ultraFrontEcho);
+    	ultraSide = new Ultrasonic(Constants.ultraSidePing,Constants.ultraSideEcho);
+    	ultraFront.setAutomaticMode(true);
+    	ultraSide.setAutomaticMode(true);
+    	ultraFront.setEnabled(true);
+    	ultraSide.setEnabled(true);
+ 
     	//logger = new Logger(this);
     	
     	FrontL.enable();
@@ -232,12 +242,23 @@ public class Robot extends IterativeRobot {
     public void testInit(){
     	navx.zeroYaw();
     	testTick = 0;
+
     }
         
     private int testTick;
   
     public void testPeriodic() {
-
+    	
+    	if (++testTick >=50) {
+    		testTick = 0;
+    		System.out.println("Top Limit Switch: " + motaVator.topSwitch.get());
+    		System.out.println("Side Ultra Range: " + ultraSide.getRangeInches());
+    		System.out.println("Front Ultra Range: " + ultraFront.getRangeInches());
+    		
+    	}
+    	
+    	
+/*
     	if(xboxSupremeController.getToggleButton(5) || xboxMinor.getToggleButton(5)){
         	
 	    	if((xboxSupremeController.getButtonPressedOneShot(1) || xboxMinor.getButtonPressedOneShot(1))){
@@ -272,9 +293,9 @@ public class Robot extends IterativeRobot {
     	}
     }
     
-/*    
+    
     public void testPeriodic() {
-       	
+       /*	
     	double angler = 0.0; //xboxSupremeController.getToggleButton(8) ? navx.getYaw() : 0.0;
     	
     	if (xboxSupremeController.getOneShotButton(7)){
@@ -318,9 +339,9 @@ public class Robot extends IterativeRobot {
     	FrontL.logEntry();
     	FrontR.logEntry();
     	BackL.logEntry();
-    	BackR.logEntry();
+    	BackR.logEntry(); */
     }
-*/	    
+	    
     
    
     
