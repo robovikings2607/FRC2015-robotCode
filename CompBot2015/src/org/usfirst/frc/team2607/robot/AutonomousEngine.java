@@ -34,7 +34,9 @@ public class AutonomousEngine implements Runnable {
 		
 		SmartDashboard.putNumber("autoMode", mode);
 	}
-
+	
+	
+	//True 3-tote auto
 	private void autoModeOne() {
 		Vector<Double> strafeRight = new Vector<Double>();
 		strafeRight.add(.35);
@@ -131,10 +133,71 @@ public class AutonomousEngine implements Runnable {
 		} catch (Exception e) {}
 	}
 	
+	//Drive straight 3 tote auto
 	private void autoModeTwo() {
-		theBot.motaVator.arms.set(true);
-		theBot.motaVator.goToCarryingPos();
+		Vector<Double> strafeRight = new Vector<Double>();
+		strafeRight.add(.35);
+		strafeRight.add(0.0);
 		
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0); 
+		forward.add(-.5);
+		
+		Vector<Double> strafeLeft = new Vector<Double>();
+		strafeLeft.add(-.35); 
+		strafeLeft.add(-.08);
+		
+		theBot.robotDrive.resetDistance();
+		try {
+			// close the hooks
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(330);
+			// set elevator to carrying position
+			theBot.motaVator.goToHeight(-18.5);
+
+			// drive forward to next tote
+			motion.driveUntilDistance(83,  forward, false);
+			// Stop so mecanum wheels can accelerate together
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.lowerManual();
+			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			theBot.motaVator.equilibrium();
+			
+			theBot.motaVator.arms.set(false);
+			Thread.sleep(100);
+			
+			theBot.motaVator.goToHeight(0);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(700);
+			
+			// set elevator to carrying position
+			theBot.motaVator.goToHeight(-18.5);
+			// drive forward to next tote
+			motion.driveUntilDistance(83,  forward, false);
+			// Stop so mecanum wheels can accelerate together
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.lowerManual();
+			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			theBot.motaVator.equilibrium();
+			
+			theBot.motaVator.arms.set(false);
+			Thread.sleep(100);
+			
+			theBot.motaVator.goToHeight(0);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(700);
+			
+			motion.setFtB(Constants.ftbCorrectionTwoTote);
+			motion.driveUntilDistance(70,  strafeRight, false);
+		} catch (Exception e){
+			
+		}
 	}
 	
 	//Stacks a Recycling container on a tote, then rotates and drives to auto zone
@@ -236,22 +299,53 @@ public class AutonomousEngine implements Runnable {
 	
 	//One Tote Auto
 	public void autoModeSix(){
+//		Vector<Double> forward = new Vector<Double>();
+//		forward.add(0.0); 
+//		forward.add(-.3);
+//		
+//		theBot.robotDrive.resetDistance();
+//		
+//		try {
+//		theBot.motaVator.arms.set(true);
+//		
+//		motion.rotateUntilDegree(90, false);
+//		
+//		Thread.sleep(300);
+//			
+//		motion.driveUntilDistance(150, forward, false);
+//			
+//		} catch (InterruptedException e) {
+//		}
+		
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0); 
-		forward.add(-.3);
+		forward.add(-.4);
 		
 		theBot.robotDrive.resetDistance();
 		
 		try {
 		theBot.motaVator.arms.set(true);
+		Thread.sleep(500);
+		
+		theBot.motaVator.goToHeight(-18);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 		
 		motion.rotateUntilDegree(90, false);
-		
 		Thread.sleep(300);
+		
+		motion.driveUntilDistance(135, forward, false);
+		
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		theBot.motaVator.goToHeight(-1);
+		
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(false);
 			
-		motion.driveUntilDistance(150, forward, false);
 			
 		} catch (InterruptedException e) {
+
 		}
 		
 		

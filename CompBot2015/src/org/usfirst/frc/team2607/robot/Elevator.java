@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator implements Runnable {
 	
@@ -61,6 +62,7 @@ public class Elevator implements Runnable {
 			lastHeight = h;
 		}
 		enablePID();
+		SmartDashboard.putNumber("ElevatorHeight", Math.abs(h));
 	}
 	
 	public void disablePID() {
