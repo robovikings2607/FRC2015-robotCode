@@ -24,6 +24,8 @@ public class Elevator implements Runnable {
 	boolean pidDisabled = false;
 	double lastHeight = -100000;
 	
+	int prevDirection = 0; //-1 = up 1 = down
+	
 	public Elevator(){
 		
 		enc = new Encoder(Constants.encoderElevatorChannelA,  Constants.encoderElevatorChannelB, true, EncodingType.k1X);
@@ -131,6 +133,8 @@ public class Elevator implements Runnable {
 	}
 	
 	public void raiseManual(){
+		prevDirection = -1;
+		
 		disablePID();
 		if(topSwitch.get()){
 		elevatorTalon1.set(raiseSpeed);
@@ -140,6 +144,8 @@ public class Elevator implements Runnable {
 	}
 	
 	public void lowerManual(){
+		prevDirection = 1;
+		
 		disablePID();
 		if (bottomSwitch.get()) {
 			elevatorTalon1.set(lowerSpeed);
@@ -155,7 +161,16 @@ public class Elevator implements Runnable {
 	
 	public void holdCurrentPosition() {
 		double curPos = enc.getDistance();
-		goToHeight(curPos);
+		
+		if (prevDirection == -1){
+			prevDirection = 0;
+			goToHeight(curPos - 1); // -1 since more neg means higher
+		} else if (prevDirection == 1){
+			prevDirection = 0;
+			goToHeight(curPos + 1); // +1 since more pos means lower
+		} else {
+			goToHeight(curPos);
+		}
 	}
 	
 	public void grab(){
