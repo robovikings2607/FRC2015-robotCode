@@ -112,7 +112,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void disabledInit() {
-    	
+    	robotDrive.correctedMecanumDrive(0,0,0, 0.0, 0);
+    	if (autoThread != null) autoThread.interrupt();
     }
 
     public void disabledPeriodic(){
@@ -143,6 +144,7 @@ public class Robot extends IterativeRobot {
     public void teleopInit(){
     	//loggerThread = new Thread(logger);
     	//loggerThread.start();
+    	
     }
     
 
@@ -224,11 +226,6 @@ public class Robot extends IterativeRobot {
 			case 270:
 				motaVator.goToLevel(4);
 				break;
-    	}
-    	
-    	//Move to zero position - Button 3
-    	if (xboxSupremeController.getButtonPressedOneShot(3) || xboxMinor.getButtonPressedOneShot(3)){
-    		motaVator.goToLevel(0);
     	}
 	    	   	
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, Constants.ftbCorrectionNoTote);

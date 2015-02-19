@@ -136,27 +136,35 @@ public class AutonomousEngine implements Runnable {
 	//Drive straight 3 tote auto
 	private void autoModeTwo() {
 		Vector<Double> strafeRight = new Vector<Double>();
-		strafeRight.add(.35);
-		strafeRight.add(0.0);
+		strafeRight.add(.6);
+		strafeRight.add(.2);
 		
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0); 
-		forward.add(-.5);
+		forward.add(-.6);
+		
+		Vector<Double> fast = new Vector<Double>();
+		fast.add(0.0); 
+		fast.add(-.9);
 		
 		Vector<Double> strafeLeft = new Vector<Double>();
 		strafeLeft.add(-.35); 
 		strafeLeft.add(-.08);
 		
+		Vector<Double> back = new Vector<Double>();
+		back.add(0.0); 
+		back.add(.1);
+		
 		theBot.robotDrive.resetDistance();
 		try {
 			// close the hooks
 			theBot.motaVator.arms.set(true);
-			Thread.sleep(330);
+			Thread.sleep(1500);
 			// set elevator to carrying position
 			theBot.motaVator.goToHeight(-18.5);
 
 			// drive forward to next tote
-			motion.driveUntilDistance(83,  forward, false);
+			motion.driveUntilDistance(80.4,  forward, false);
 			// Stop so mecanum wheels can accelerate together
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 			
@@ -171,12 +179,12 @@ public class AutonomousEngine implements Runnable {
 			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 			
 			theBot.motaVator.arms.set(true);
-			Thread.sleep(700);
+			Thread.sleep(600);
 			
 			// set elevator to carrying position
 			theBot.motaVator.goToHeight(-18.5);
 			// drive forward to next tote
-			motion.driveUntilDistance(83,  forward, false);
+			motion.driveUntilDistance(80.4,  forward, false);
 			// Stop so mecanum wheels can accelerate together
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 			
@@ -191,10 +199,20 @@ public class AutonomousEngine implements Runnable {
 			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 			
 			theBot.motaVator.arms.set(true);
-			Thread.sleep(700);
+			Thread.sleep(600);
 			
 			motion.setFtB(Constants.ftbCorrectionTwoTote);
-			motion.driveUntilDistance(70,  strafeRight, false);
+			motion.driveUntilDistance(40,  strafeRight, false);
+			
+			System.out.println("Rotating!");
+			motion.rotateUntilDegree(90, false);
+			
+			System.out.println("Driving!");
+			motion.driveUntilDistance(87, fast, false);
+			
+			theBot.motaVator.arms.set(false);
+			
+			motion.driveUntilDistance(10, back, false);
 		} catch (Exception e){
 			
 		}

@@ -114,16 +114,16 @@ public class Elevator implements Runnable {
 			goToHeight(-0);
 			break;
 		case 1:
-			goToHeight(-18);
+			goToHeight(-0);
 			break;
 		case 2:
-			goToHeight(-30);
+			goToHeight(-2.1);
 			break;
 		case 3:
-			goToHeight(-42);
+			goToHeight(-35.5);
 			break;
 		case 4:
-			goToHeight(-54);
+			goToHeight(-55.1);
 			break;
 		default:
 			System.err.println("Seriously?");
