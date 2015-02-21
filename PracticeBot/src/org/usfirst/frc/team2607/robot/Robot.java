@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team2607.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -36,6 +37,7 @@ public class Robot extends IterativeRobot {
 	SmoothedEncoder encVator;
 	Gyro gyroPyro;
 	SmartDashboard iDash5s;
+	DigitalInput topSwitch, bottomSwitch;
 	double x, y, z;
 	double lift = -.80;
 	double lower = .50;
@@ -64,7 +66,9 @@ public class Robot extends IterativeRobot {
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
-    	encVator = new SmoothedEncoder(8, 9, false, Encoder.EncodingType.k1X);
+    	encVator = new SmoothedEncoder(10, 11, false, Encoder.EncodingType.k1X);
+    	bottomSwitch = new DigitalInput(8);
+    	topSwitch = new DigitalInput(9);
     	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	DriveRobot.setInvertedMotor(MotorType.kFrontLeft, true);
     	DriveRobot.setInvertedMotor(MotorType.kRearLeft, true);
@@ -227,6 +231,8 @@ public class Robot extends IterativeRobot {
 //DriveRobot.mecanumDrive_Cartesian(x, y, correctedZ, 0);
     public void disabledPeriodic(){
     	iDash5s.putNumber("Angle of the Bot", gyroPyro.getAngle());
+    	iDash5s.putBoolean("topSwitch", topSwitch.get());
+    	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
     }
     
     }
