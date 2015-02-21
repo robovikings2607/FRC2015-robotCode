@@ -67,8 +67,8 @@ public class Robot extends IterativeRobot {
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
     	encVator = new SmoothedEncoder(10, 11, false, Encoder.EncodingType.k1X);
-    	bottomSwitch = new DigitalInput(8);
-    	topSwitch = new DigitalInput(9);
+    	bottomSwitch = new DigitalInput(8);			// reads false when switch is closed
+    	topSwitch = new DigitalInput(9);			// reads false when switch is closed
     	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
     	DriveRobot.setInvertedMotor(MotorType.kFrontLeft, true);
     	DriveRobot.setInvertedMotor(MotorType.kRearLeft, true);
@@ -117,12 +117,12 @@ public class Robot extends IterativeRobot {
     	}
     	//	DriveRobot.mecanumDrive_Cartesian(sticktoriaJustice.getX(), sticktoriaJustice.getY(), -sticktoriaJustice.getRawAxis(4), 0);
     	
-    	if(sticktoriaJustice.getRawButton(1) || xboxMinor.getRawButton(1)){
+    	if(bottomSwitch.get() && (sticktoriaJustice.getRawButton(1) || xboxMinor.getRawButton(1))){
     		
     		Hellovator1.set(lower);
     		Hellovator2.set(lower);
     		
-    	}else{ if(sticktoriaJustice.getRawButton(4) || xboxMinor.getRawButton(4)){
+    	}else{ if(topSwitch.get() && (sticktoriaJustice.getRawButton(4) || xboxMinor.getRawButton(4))){
     		
     		Hellovator1.set(lift);
     		Hellovator2.set(lift);
@@ -142,6 +142,9 @@ public class Robot extends IterativeRobot {
     		iDash5s.putNumber("fail Adjustment speed ", driveValerie[2]);
     	}
     	
+    	iDash5s.putBoolean("topSwitch", topSwitch.get());
+    	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
+
     	if (sticktoriaJustice.getOneShotButton(2) || xboxMinor.getOneShotButton(2)){
     		arms = !arms;
     	Saulenoid.set(arms);
