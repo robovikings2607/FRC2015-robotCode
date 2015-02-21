@@ -2,6 +2,8 @@
 package org.usfirst.frc.team2607.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
@@ -40,6 +42,9 @@ public class Robot extends IterativeRobot {
 	double[] driveValerie = new double[3];
 	double[] DeadZones = new double[]{0.15, 0.15, 0.15};
 	boolean arms = false;
+	
+	I2C arduino = new I2C(Port.kOnboard ,4);
+	int i2cTick = 0;
 	/**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -162,36 +167,47 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    	
-    	if(sticktoriaJustice.getOneShotButton(7)){
-    		gyroPyro.reset();
-    		correctedZ = 0.0;
+    	if (i2cTick++ > 30){
+    		i2cTick = 0;
+    		
+    		byte[] toSend = {26};
+    		
+    		arduino.transaction(toSend, toSend.length, null, 0);
+    		
+    		System.out.println("Sent");
     	}
-    	double angler = gyroPyro.getAngle();
-    	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
-    	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
-    	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
-    	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
-    	iDash5s.getNumber("Vator Rate ", encVator.getRate());
-    	iDash5s.getNumber("Angle of the Bot", gyroPyro.getAngle());
+    }
     	
-    	correctedZ = angler * .005;
-       if (sticktoriaJustice.getRawButton(4)) {
-            y = .5;
-            x = 0.0;
-        } else if (sticktoriaJustice.getRawButton(1)) {
-            y = -.5;
-            x = 0.0;
-        } else if (sticktoriaJustice.getRawButton(3)) {
-            y = 0.0;
-            x = .5;
-        } else if (sticktoriaJustice.getRawButton(2)) {
-            y = 0.0;
-            x = -.5;
-        } else {
-            y = 0.0;
-            x = 0.0;
-        } 
+//    	
+//    	if(sticktoriaJustice.getOneShotButton(7)){
+//    		gyroPyro.reset();
+//    		correctedZ = 0.0;
+//    	}
+//    	double angler = gyroPyro.getAngle();
+//    	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
+//    	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
+//    	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
+//    	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
+//    	iDash5s.getNumber("Vator Rate ", encVator.getRate());
+//    	iDash5s.getNumber("Angle of the Bot", gyroPyro.getAngle());
+//    	
+//    	correctedZ = angler * .005;
+//       if (sticktoriaJustice.getRawButton(4)) {
+//            y = .5;
+//            x = 0.0;
+//        } else if (sticktoriaJustice.getRawButton(1)) {
+//            y = -.5;
+//            x = 0.0;
+//        } else if (sticktoriaJustice.getRawButton(3)) {
+//            y = 0.0;
+//            x = .5;
+//        } else if (sticktoriaJustice.getRawButton(2)) {
+//            y = 0.0;
+//            x = -.5;
+//        } else {
+//            y = 0.0;
+//            x = 0.0;
+//        } 
 /*if(sticktoriaJustice.getRawButton(1)){
     		
     		Hellovator1.set(lift);
@@ -208,9 +224,7 @@ public class Robot extends IterativeRobot {
     	}*/
     	
     	//Saulenoid.set(sticktoriaJustice.getToggleButton(2));
-DriveRobot.mecanumDrive_Cartesian(x, y, correctedZ, 0);
-    }
-    
+//DriveRobot.mecanumDrive_Cartesian(x, y, correctedZ, 0);
     public void disabledPeriodic(){
     	iDash5s.putNumber("Angle of the Bot", gyroPyro.getAngle());
     }
