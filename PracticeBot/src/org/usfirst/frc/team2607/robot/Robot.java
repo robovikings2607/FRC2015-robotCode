@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 	Solenoid Saulenoid;
 	RobotDrive DriveRobot;
 	SmoothedEncoder encFL, encFR, encBL, encBR;
-	SmoothedEncoder encVator;
+	Encoder encVator;
 	Gyro gyroPyro;
 	SmartDashboard iDash5s;
 	DigitalInput topSwitch, bottomSwitch;
@@ -66,7 +66,8 @@ public class Robot extends IterativeRobot {
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
     	encBL = new SmoothedEncoder(6, 7, false, Encoder.EncodingType.k1X);
-    	encVator = new SmoothedEncoder(10, 11, false, Encoder.EncodingType.k1X);
+    	encVator = new Encoder(10, 11, false, Encoder.EncodingType.k1X);
+    	encVator.reset();
     	bottomSwitch = new DigitalInput(8);			// reads false when switch is closed
     	topSwitch = new DigitalInput(9);			// reads false when switch is closed
     	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
@@ -144,7 +145,7 @@ public class Robot extends IterativeRobot {
     	
     	iDash5s.putBoolean("topSwitch", topSwitch.get());
     	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
-
+    	iDash5s.putNumber("elevator", encVator.getDistance());
     	if (sticktoriaJustice.getOneShotButton(2) || xboxMinor.getOneShotButton(2)){
     		arms = !arms;
     	Saulenoid.set(arms);
