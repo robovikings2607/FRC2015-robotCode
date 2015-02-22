@@ -35,12 +35,12 @@ public class Constants {
 	public static int encoderFrontLeftChannelB = 1;
 	public static boolean encoderFrontLeftReversed = false;
 	
-	public static int encoderBackRightChannelA = 6;
-	public static int encoderBackRightChannelB = 7;
+	public static int encoderBackRightChannelA = 4; //6;
+	public static int encoderBackRightChannelB = 5; //7;
 	public static boolean encoderBackRightReversed = false;
 	
-	public static int encoderBackLeftChannelA = 4;
-	public static int encoderBackLeftChannelB = 5;
+	public static int encoderBackLeftChannelA = 6; //4;
+	public static int encoderBackLeftChannelB = 7; //5;
 	public static boolean encoderBackLeftReversed = false;
 
 	public static int encoderElevatorChannelA = 8;
