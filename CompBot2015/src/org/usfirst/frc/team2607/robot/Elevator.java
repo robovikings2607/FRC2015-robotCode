@@ -117,10 +117,11 @@ public class Elevator implements Runnable {
 			goToHeight(-0);
 			break;
 		case 2:
-			goToHeight(-2.1);
+			goToHeight(-3.1);
 			break;
 		case 3:
-			goToHeight(-35.5);
+//			goToHeight(-35.5);
+			goToHeight(lastHeight + .5);
 			break;
 		case 4:
 			goToHeight(-55.1);

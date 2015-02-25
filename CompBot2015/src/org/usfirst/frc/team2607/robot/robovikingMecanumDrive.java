@@ -3,6 +3,7 @@ package org.usfirst.frc.team2607.robot;
 import com.kauailabs.nav6.frc.IMUAdvanced;
 
 import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.can.CANNotInitializedException;
@@ -16,6 +17,7 @@ public class robovikingMecanumDrive extends RobotDrive {
     static final int kFrontRight_val = 1;
     static final int kRearLeft_val = 2;
     static final int kRearRight_val = 3;
+    private static int gyroResetTick = 0;
     private IMUAdvanced navx;
     private boolean needGyroReset;
     
@@ -43,12 +45,14 @@ public class robovikingMecanumDrive extends RobotDrive {
         xIn = rotated[0];
         yIn = rotated[1];
         
+        if (DriverStation.getInstance().isAutonomous()) gyroResetTick = 999;
         if ((xIn != 0.0 || yIn != 0.0) && rotation == 0.0) {
-        	if (needGyroReset) {
+        	if (needGyroReset && ++gyroResetTick >= 3) {
         		navx.zeroYaw();
         		needGyroReset = false;
+        		gyroResetTick = 0;
         	}
-        	rotation = navx.getYaw() * -.016;
+        	if (!needGyroReset) rotation = navx.getYaw() * -.016; 
         } else {
         	needGyroReset = true;
         }
