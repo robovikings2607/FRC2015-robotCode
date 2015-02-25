@@ -22,4 +22,32 @@ public class LEDsWithArduino {
 	void turnOff(){
 		setMode(1);
 	}
+	
+	void patternWaveRoll(){
+		setMode(2);
+	}
+	
+	void patternWaveInvert(){
+		setMode(3);
+	}
+	
+	void patternCenterFillGreen(){
+		setMode(4);
+	}
+	
+	void patternCenterFillGold(){
+		setMode(5);
+	}
+	
+	void patternCenterPulseGreen(){
+		setMode(6);
+	}
+	
+	void patternFlashGreenGold(){
+		setMode(7);
+	}
+	
+	void patternFlashRed(){
+		setMode(8);
+	}
 }
