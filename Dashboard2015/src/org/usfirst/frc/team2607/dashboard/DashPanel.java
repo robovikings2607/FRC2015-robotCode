@@ -1,5 +1,11 @@
 package org.usfirst.frc.team2607.dashboard;
-
+/* 0
+ * 84
+ * 168
+ * 252
+ * 336
+ * 420
+ */
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -36,12 +42,12 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class DashPanel extends JFrame {
 
 	private JPanel contentPane;
-	
-	private static JPanel pnlArms;
+	private static JLabel lblAutonMode;
+	private static JPanel pnlArms, pnlCamera;
 	
 	static NetworkTable t;
 
-	static double elevatorHeight = 0.0;
+	static int elevatorHeight = 0;
 	
 	public static void main(String[] args) {
 		try {
@@ -60,16 +66,23 @@ public class DashPanel extends JFrame {
 			}
 		});
 		
-		NetworkTable.setClientMode();
 		NetworkTable.setIPAddress("roborio-2607.local");
+		NetworkTable.setClientMode();
 		t = NetworkTable.getTable("SmartDashboard");
 		
 		new Thread(new Runnable(){
 
 			@Override
 			public void run() {
-				elevatorHeight = t.getNumber("elevatorHeight", 0.0);
-				pnlArms.setLocation(0, (int) elevatorHeight);
+				System.out.println("Starting thread");
+				while (true) {
+					try {
+						elevatorHeight = (int)t.getNumber("elevatorHeight", 0);
+						pnlArms.setLocation(0, elevatorHeight * 84);
+						lblAutonMode.setText(t.getString("autonMode", "CONNECTING..."));
+						Thread.sleep(250);
+					} catch (Exception e) {}
+				}
 			}
 			
 		}).start();
@@ -89,6 +102,11 @@ public class DashPanel extends JFrame {
 		JPanel pnlToteStack = new JPanel();
 		pnlToteStack.setBounds(641, 12, 119, 561);
 		contentPane.add(pnlToteStack);
+		
+		lblAutonMode = new JLabel("CONNECTING...");
+		lblAutonMode.setBounds(5, 5, 630, 80);
+		lblAutonMode.setFont(new Font("Segoe UI", Font.BOLD, 25));
+		contentPane.add(lblAutonMode);
 		
 		JLabel lblTote6 = new JLabel("6");
 		lblTote6.setHorizontalAlignment(SwingConstants.CENTER);
@@ -174,6 +192,7 @@ public class DashPanel extends JFrame {
 		pnlElevator.add(pnlArms);
 		pnlArms.setLayout(null);
 		
+		pnlCamera = new JPanel();
 		JLabel lblArms = new JLabel("   ");
 		lblArms.setBackground(Color.BLACK);
 		lblArms.setBounds(0, 0, 87, 5);
