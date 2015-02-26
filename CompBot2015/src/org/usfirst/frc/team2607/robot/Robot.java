@@ -113,13 +113,17 @@ public class Robot extends IterativeRobot {
 
     public void disabledInit() {
     	robotDrive.correctedMecanumDrive(0,0,0, 0.0, 0);
-    	if (autoThread != null) autoThread.interrupt();
+    	
     }
 
     public void disabledPeriodic(){
     	if (xboxSupremeController.getButtonPressedOneShot(8)){
     		// increment auto mode
     		auto.selectMode();
+    	}
+    	smartDash.putBoolean("topSwtich", motaVator.topSwitch.get());
+    	if (autoThread != null) { 
+    		autoThread.interrupt();
     	}
     }
     

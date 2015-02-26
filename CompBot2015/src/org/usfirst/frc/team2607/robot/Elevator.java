@@ -45,8 +45,9 @@ public class Elevator implements Runnable {
     	enc.setDistancePerPulse(Constants.distancePerPulse);
     	enc.reset();
     	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
+    	//pid = new robovikingPIDController(0.03, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
     	pid.setOutputRange(-.6, .45);
-    	pid.setInputRange(-60, 0);
+    	pid.setInputRange(-54.2, 0);
     	disablePID();
     	
     	pid.setAbsoluteTolerance(.6);
@@ -124,7 +125,7 @@ public class Elevator implements Runnable {
 			goToHeight(lastHeight + .5);
 			break;
 		case 4:
-			goToHeight(-55.1);
+			goToHeight(-54.2);
 			break;
 		default:
 			System.err.println("Seriously?");
@@ -165,10 +166,10 @@ public class Elevator implements Runnable {
 		
 		if (prevDirection == -1){
 			prevDirection = 0;
-			goToHeight(curPos - 1); // -1 since more neg means higher
+			goToHeight(curPos - .5); // -1 since more neg means higher
 		} else if (prevDirection == 1){
 			prevDirection = 0;
-			goToHeight(curPos + 1); // +1 since more pos means lower
+			goToHeight(curPos + .5); // +1 since more pos means lower
 		} else {
 			goToHeight(curPos);
 		}
