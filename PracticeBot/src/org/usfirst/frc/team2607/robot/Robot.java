@@ -99,8 +99,8 @@ public class Robot extends IterativeRobot {
     	double angler = gyroPyro.getAngle();
 
     	
-    	driveValerie[0] = -(sticktoriaJustice.getX() * .65);
-    	driveValerie[1] = -(sticktoriaJustice.getY() * .65);
+    	driveValerie[0] = -(sticktoriaJustice.getX() * .35);
+    	driveValerie[1] = -(sticktoriaJustice.getY() * .35);
     	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4)/2);
     	
     	for (int i = 0; i < 3; i++) {
