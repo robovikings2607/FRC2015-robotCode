@@ -30,7 +30,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	public void selectMode() {
-		if (++mode > 6) mode = 0;
+		if (++mode > 8) mode = 0;
 
 		SmartDashboard.putNumber("autoMode", mode);
 		switch(mode) {
@@ -54,6 +54,12 @@ public class AutonomousEngine implements Runnable {
 				break;
 			case 6:
 				SmartDashboard.putString("autonMode", "Auton: 1 Tote");
+				break;
+			case 7:
+				SmartDashboard.putString("autonMode", "Auton: Recycle Bin From Front");
+				break;
+			case 8:
+				SmartDashboard.putString("autonMode", "Auton: Rotate other way one bin");
 				break;
 			default:
 				SmartDashboard.putString("autonMode", "UNKNOWN!!");
@@ -185,7 +191,7 @@ public class AutonomousEngine implements Runnable {
 		try {
 			// close the hooks
 			theBot.motaVator.arms.set(true);
-			Thread.sleep(1500);
+			Thread.sleep(2000);
 			// set elevator to carrying position
 			theBot.motaVator.goToHeight(-18.5);
 
@@ -275,7 +281,7 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(-90, false);
 		Thread.sleep(300);
 
-		motion.driveUntilDistance(135, forward, false);
+		motion.driveUntilDistance(115, forward, false);
 
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
@@ -323,7 +329,7 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(-90, false);
 		Thread.sleep(300);
 
-		motion.driveUntilDistance(135, forward, false);
+		motion.driveUntilDistance(115, forward, false);
 
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
@@ -377,7 +383,86 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(90, false);
 		Thread.sleep(300);
 
-		motion.driveUntilDistance(135, forward, false);
+		motion.driveUntilDistance(115, forward, false);
+
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+
+		theBot.motaVator.goToHeight(-1);
+
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+
+		theBot.motaVator.arms.set(false);
+
+
+		} catch (InterruptedException e) {
+
+		}
+
+
+	}
+	
+	//grabs a recycling container and moves backwards
+	public void autoModeSeven(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.4);
+		
+		Vector<Double> back = new Vector<Double>();
+		back.add(0.0);
+		back.add(.4);
+		
+		
+
+		theBot.robotDrive.resetDistance();
+
+		try {
+		theBot.motaVator.goToHeight(-8.0);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		motion.driveUntilDistance(21, forward, false);
+			
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(500);
+
+		theBot.motaVator.goToHeight(-12);
+		Thread.sleep(400);
+
+		motion.driveUntilDistance(100, back, false);
+
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+
+		theBot.motaVator.goToHeight(-7);
+
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+
+		theBot.motaVator.arms.set(false);
+		
+		} catch (InterruptedException e) {
+
+		}
+
+		
+	}
+	
+	//Grabs recycling container, rotates other way 90 degrees, and drives to auto zone
+	public void autoModeEight(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.4);
+
+		theBot.robotDrive.resetDistance();
+
+		try {
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(500);
+
+		theBot.motaVator.goToHeight(-18);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+
+		motion.rotateUntilDegree(90, false);
+		Thread.sleep(300);
+
+		motion.driveUntilDistance(115, forward, false);
 
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
@@ -436,6 +521,17 @@ public class AutonomousEngine implements Runnable {
 				case 6:
 					System.out.println("Running Auto 6");
 					autoModeSix();
+					mode = 0;
+					break;
+					
+				case 7:
+					System.out.println("Running Auto 7");
+					autoModeSeven();
+					mode = 0;
+					break;
+				case 8:
+					System.out.println("Running Auto 8");
+					autoModeEight();
 					mode = 0;
 					break;
 
