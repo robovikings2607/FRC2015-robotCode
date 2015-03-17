@@ -12,6 +12,7 @@ public class Constants {
 	public static int talonElevator2 = 5;
 	
 	public static int solenoidChannel = 0;
+	public static int pistonChannel = 1;
 	public static int gyroChannel = 0;
 	
 	public static int encoderFrontRightChannelA = 0;
