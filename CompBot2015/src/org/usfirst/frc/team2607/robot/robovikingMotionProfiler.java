@@ -221,7 +221,7 @@ public class robovikingMotionProfiler implements Runnable{
 					running = false;
 				}
 				
-				if (deDirection != null){
+				if (deDirection != null && autoEye != null){
 					driveUntilTriggerCode();
 					deDirection = null;
 					running = false;

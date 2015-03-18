@@ -479,6 +479,112 @@ public class AutonomousEngine implements Runnable {
 
 
 	}
+	
+	//3 Tote auton for reals this time, no joke. AKA God Mode
+	public void autoModeNine(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.6);
+		
+		Vector<Double> strafeRight = new Vector<Double>();
+		strafeRight.add(.35);
+		strafeRight.add(0.0);
+		
+		Vector<Double> strafeRightFast = new Vector<Double>();
+		strafeRight.add(.75);
+		strafeRight.add(0.0);
+		
+		Vector<Double> back = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(.4);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try {
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(300);
+		
+		theBot.motaVator.goToHeight(-6);
+		
+		motion.rotateUntilDegree(40, false);
+		Thread.sleep(300);
+		
+		motion.driveUntilDistance(10, forward, false);
+		Thread.sleep(300);
+		
+		motion.rotateUntilDegree(-40, false);
+		
+		motion.driveUntilDistance(8, strafeRight, false);
+		Thread.sleep(500);
+		
+		
+		motion.driveUntilDistance(87,  forward, false);
+		theBot.motaVator.goToHeight(-14);
+		
+		Thread.sleep(500);
+		
+		theBot.motaVator.goToHeight(-10);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		Thread.sleep(300);
+		
+		theBot.motaVator.arms.set(false);
+		
+		theBot.motaVator.goToHeight(-1);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(true);
+		
+		Thread.sleep(300);
+		
+		theBot.motaVator.goToHeight(-6);
+		
+		motion.rotateUntilDegree(40, false);
+		Thread.sleep(300);
+		
+		motion.driveUntilDistance(10, forward, false);
+		Thread.sleep(300);
+		
+		motion.rotateUntilDegree(-40, false);
+		
+		motion.driveUntilDistance(8, strafeRight, false);
+		Thread.sleep(500);
+		
+		
+		motion.driveUntilDistance(87,  forward, false);
+		theBot.motaVator.goToHeight(-14);
+		
+		Thread.sleep(500);
+		
+		theBot.motaVator.goToHeight(-10);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		Thread.sleep(300);
+		
+		theBot.motaVator.arms.set(false);
+		
+		theBot.motaVator.goToHeight(-1);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(true);
+		
+		Thread.sleep(300);
+		
+		motion.driveUntilDistance(100,  strafeRightFast, false);
+		
+		theBot.motaVator.goToHeight(-1);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(false);
+		
+		motion.driveUntilDistance(8, back, false);
+		
+		
+		
+		} catch (InterruptedException e){
+			
+		}
+	}
 
 
 	@Override
