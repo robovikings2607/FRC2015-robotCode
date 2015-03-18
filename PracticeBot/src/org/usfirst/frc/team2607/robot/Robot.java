@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	Talon BackL;
 	Talon BackR;
 	Talon Hellovator1, Hellovator2;
-	Solenoid Saulenoid, preston;
+	Solenoid Saulenoid;
 	RobotDrive DriveRobot;
 	SmoothedEncoder encFL, encFR, encBL, encBR;
 	Encoder encVator;
@@ -63,7 +63,6 @@ public class Robot extends IterativeRobot {
     	Hellovator1 = new Talon(Constants.talonElevator1);
     	Hellovator2 = new Talon(Constants.talonElevator2);
     	Saulenoid = new Solenoid(1,Constants.solenoidChannel);
-    	preston = new Solenoid(1, Constants.pistonChannel);
     	encFR = new SmoothedEncoder(0, 1, false, Encoder.EncodingType.k1X);
     	encFL = new SmoothedEncoder(2, 3, false, Encoder.EncodingType.k1X);
     	encBR = new SmoothedEncoder(4, 5, false, Encoder.EncodingType.k1X);
@@ -101,8 +100,8 @@ public class Robot extends IterativeRobot {
     	double angler = gyroPyro.getAngle();
 
     	
-    	driveValerie[0] = -(sticktoriaJustice.getX() * .50);
-    	driveValerie[1] = -(sticktoriaJustice.getY() * .50);
+    	driveValerie[0] = -(sticktoriaJustice.getX() * .58);
+    	driveValerie[1] = -(sticktoriaJustice.getY() * .58);
     	driveValerie[2] = -(sticktoriaJustice.getRawAxis(4)/2);
     	
     	for (int i = 0; i < 3; i++) {
@@ -153,10 +152,7 @@ public class Robot extends IterativeRobot {
     	Saulenoid.set(arms);
     	}
     	
-    	if (sticktoriaJustice.getOneShotButton(3) || xboxMinor.getOneShotButton(3)){
-    		pistonB = !pistonB;
-    	preston.set(pistonB);
-    	}
+    	
 
     	/*iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
