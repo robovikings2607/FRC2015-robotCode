@@ -144,9 +144,10 @@ public class Robot extends IterativeRobot {
     		iDash5s.putNumber("fail Adjustment speed ", driveValerie[2]);
     	}
     	
-    	iDash5s.putBoolean("topSwitch", topSwitch.get());
-    	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
-    	iDash5s.putNumber("elevator", encVator.getDistance());
+//    	iDash5s.putBoolean("topSwitch", topSwitch.get());
+//    	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
+//    	iDash5s.putNumber("elevator", encVator.getDistance());
+    	
     	if (sticktoriaJustice.getOneShotButton(2) || xboxMinor.getOneShotButton(2)){
     		arms = !arms;
     	Saulenoid.set(arms);
@@ -154,12 +155,17 @@ public class Robot extends IterativeRobot {
     	
     	
 
-    	/*iDash5s.putNumber("Front Right Rate ", encFR.getRate());
+    	iDash5s.putNumber("Front Right Rate ", encFR.getRate());
     	iDash5s.putNumber("Front Left Rate ", encFL.getRate());
     	iDash5s.putNumber("Back Right Rate ", encBR.getRate());
     	iDash5s.putNumber("Back Left Rate ", encBL.getRate());
-    	iDash5s.getNumber("Vator Rate ", encVator.getRate());
-    	*/
+    	
+    	iDash5s.putNumber("Front Right Distance", encFR.getDistance());
+    	iDash5s.putNumber("Front Left Distance", encFL.getDistance());
+    	iDash5s.putNumber("Back Right Distance", encBR.getDistance());
+    	iDash5s.putNumber("Back Left Distance", encBL.getDistance());
+//    	iDash5s.getNumber("Vator Rate ", encVator.getRate());
+    	
     	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
     
     }
@@ -178,15 +184,48 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    	if (i2cTick++ > 30){
-    		i2cTick = 0;
-    		
-    		byte[] toSend = {26};
-    		
-    		arduino.transaction(toSend, toSend.length, null, 0);
-    		
-    		System.out.println("Sent");
-    	}
+//    	if (i2cTick++ > 30){
+//    		i2cTick = 0;
+//    		
+//    		byte[] toSend = {26};
+//    		
+//    		arduino.transaction(toSend, toSend.length, null, 0);
+//    		
+//    		System.out.println("Sent");
+//    	}
+    	
+    	
+    	
+    	if (sticktoriaJustice.getRawButton(1)){
+    		DriveRobot.mecanumDrive_Polar(.3, 0, 0); // drives forward
+    	} else {
+    		if (sticktoriaJustice.getRawButton(2)){
+        		DriveRobot.mecanumDrive_Polar(.3, 270, 0); // strafes right
+        		} else {
+        			if (sticktoriaJustice.getRawButton(3)){
+        				DriveRobot.mecanumDrive_Polar(.3, 315, 0); // strafes diagonally right
+        			}
+        			else {
+        				if (sticktoriaJustice.getRawButton(4)){
+        		    		DriveRobot.mecanumDrive_Polar(-.3, 45, 0); // strafes diagonally left
+        		    		} else {
+        		    			DriveRobot.mecanumDrive_Polar(0, 0, 0); // drives forward
+        		    		}
+        		}
+        		
+    	} 
+    	}	
+    	
+    	iDash5s.putNumber("Front Right Rate ", encFR.getRaw());
+    	iDash5s.putNumber("Front Left Rate ", encFL.getRaw());
+    	iDash5s.putNumber("Back Right Rate ", encBR.getRaw());
+    	iDash5s.putNumber("Back Left Rate ", encBL.getRaw());
+    	
+    	iDash5s.putNumber("Front Right Distance", encFR.getDistance());
+    	iDash5s.putNumber("Front Left Distance", encFL.getDistance());
+    	iDash5s.putNumber("Back Right Distance", encBR.getDistance());
+    	iDash5s.putNumber("Back Left Distance", encBL.getDistance());
+    	
     }
     	
 //    	
