@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -176,12 +177,18 @@ public class Robot extends IterativeRobot {
     public void testInit(){
     	gyroPyro.reset();
     	correctedZ = 0.0;
+    	encFR.reset();
+    	encFL.reset();
+    	encBL.reset();
+    	encBR.reset();
     }
     
     public void teleopInit(){
     	gyroPyro.reset();
     	correctedZ = 0.0;
     }
+    
+    
     
     public void testPeriodic() {
 //    	if (i2cTick++ > 30){
@@ -195,19 +202,19 @@ public class Robot extends IterativeRobot {
 //    	}
     	
     	
-    	
+    	LiveWindow.setEnabled(false);
     	if (sticktoriaJustice.getRawButton(1)){
-    		DriveRobot.mecanumDrive_Polar(.3, 0, 0); // drives forward
+    		DriveRobot.mecanumDrive_Polar(.8, 0, 0); // drives forward
     	} else {
     		if (sticktoriaJustice.getRawButton(2)){
-        		DriveRobot.mecanumDrive_Polar(.3, 270, 0); // strafes right
+        		DriveRobot.mecanumDrive_Polar(.8, 90, 0); // strafes right
         		} else {
         			if (sticktoriaJustice.getRawButton(3)){
-        				DriveRobot.mecanumDrive_Polar(.3, 315, 0); // strafes diagonally right
+        				DriveRobot.mecanumDrive_Polar(.8, 270, 0); // strafes diagonally right
         			}
         			else {
         				if (sticktoriaJustice.getRawButton(4)){
-        		    		DriveRobot.mecanumDrive_Polar(-.3, 45, 0); // strafes diagonally left
+        		    		DriveRobot.mecanumDrive_Polar(.8, 180, 0); // strafes diagonally left
         		    		} else {
         		    			DriveRobot.mecanumDrive_Polar(0, 0, 0); // drives forward
         		    		}
@@ -216,10 +223,10 @@ public class Robot extends IterativeRobot {
     	} 
     	}	
     	
-    	iDash5s.putNumber("Front Right Rate ", encFR.getRaw());
-    	iDash5s.putNumber("Front Left Rate ", encFL.getRaw());
-    	iDash5s.putNumber("Back Right Rate ", encBR.getRaw());
-    	iDash5s.putNumber("Back Left Rate ", encBL.getRaw());
+    	iDash5s.putNumber("Front Right Raw ", encFR.getRaw());
+    	iDash5s.putNumber("Front Left Raw ", encFL.getRaw());
+    	iDash5s.putNumber("Back Right Raw ", encBR.getRaw());
+    	iDash5s.putNumber("Back Left Raw ", encBL.getRaw());
     	
     	iDash5s.putNumber("Front Right Distance", encFR.getDistance());
     	iDash5s.putNumber("Front Left Distance", encFL.getDistance());
