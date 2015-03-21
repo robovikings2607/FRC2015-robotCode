@@ -47,6 +47,11 @@ public class Robot extends IterativeRobot {
 	boolean arms = false;
 	boolean pistonB = false;
 	
+	int autoAngle;
+	int autoDistance;
+	int autoPulses;
+	private double autoSpeed;
+	
 	I2C arduino = new I2C(Port.kOnboard ,4);
 	int i2cTick = 0;
 	/**
@@ -85,13 +90,24 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
+    	double angler = gyroPyro.getAngle();
+    	if (encFL.get() < autoPulses){
+    		
+    		driveValerie[2] = angler * .005;
+    		DriveRobot.mecanumDrive_Polar(autoSpeed, autoAngle, 	driveValerie[2]);
+    	} else {
+    		DriveRobot.mecanumDrive_Polar(0,0,0);
+    	}
+    	
+    	
+    	
     }
 
     /**
      * This function is called periodically during operator control
      */
 	private double correctedZ = 0.0;
+	
     public void teleopPeriodic() {
     	
     	if(sticktoriaJustice.getOneShotButton(7)){
@@ -181,6 +197,21 @@ public class Robot extends IterativeRobot {
     	encFL.reset();
     	encBL.reset();
     	encBR.reset();
+    	
+    }
+    
+    public void autonomousInit(){
+    	gyroPyro.reset();
+    	correctedZ = 0.0;
+    	encFR.reset();
+    	encFL.reset();
+    	encBL.reset();
+    	encBR.reset();
+    	autoDistance = 48;
+    	autoAngle = -45;
+    	autoSpeed = .8;
+    	autoPulses = calculateAutoPulses(autoDistance, autoAngle);
+    	
     }
     
     public void teleopInit(){
@@ -191,6 +222,8 @@ public class Robot extends IterativeRobot {
     
     
     public void testPeriodic() {
+	
+    }
 //    	if (i2cTick++ > 30){
 //    		i2cTick = 0;
 //    		
@@ -202,38 +235,38 @@ public class Robot extends IterativeRobot {
 //    	}
     	
     	
-    	LiveWindow.setEnabled(false);
-    	if (sticktoriaJustice.getRawButton(1)){
-    		DriveRobot.mecanumDrive_Polar(.8, 0, 0); // drives forward
-    	} else {
-    		if (sticktoriaJustice.getRawButton(2)){
-        		DriveRobot.mecanumDrive_Polar(.8, 90, 0); // strafes right
-        		} else {
-        			if (sticktoriaJustice.getRawButton(3)){
-        				DriveRobot.mecanumDrive_Polar(.8, 270, 0); // strafes diagonally right
-        			}
-        			else {
-        				if (sticktoriaJustice.getRawButton(4)){
-        		    		DriveRobot.mecanumDrive_Polar(.8, 180, 0); // strafes diagonally left
-        		    		} else {
-        		    			DriveRobot.mecanumDrive_Polar(0, 0, 0); // drives forward
-        		    		}
-        		}
-        		
-    	} 
-    	}	
-    	
-    	iDash5s.putNumber("Front Right Raw ", encFR.getRaw());
-    	iDash5s.putNumber("Front Left Raw ", encFL.getRaw());
-    	iDash5s.putNumber("Back Right Raw ", encBR.getRaw());
-    	iDash5s.putNumber("Back Left Raw ", encBL.getRaw());
-    	
-    	iDash5s.putNumber("Front Right Distance", encFR.getDistance());
-    	iDash5s.putNumber("Front Left Distance", encFL.getDistance());
-    	iDash5s.putNumber("Back Right Distance", encBR.getDistance());
-    	iDash5s.putNumber("Back Left Distance", encBL.getDistance());
-    	
-    }
+//    	LiveWindow.setEnabled(false);
+//    	if (sticktoriaJustice.getRawButton(1)){
+//    		DriveRobot.mecanumDrive_Polar(.8, 0, 0); // drives forward
+//    	} else {
+//    		if (sticktoriaJustice.getRawButton(2)){
+//        		DriveRobot.mecanumDrive_Polar(.8, 90, 0); // strafes right
+//        		} else {
+//        			if (sticktoriaJustice.getRawButton(3)){
+//        				DriveRobot.mecanumDrive_Polar(.8, 270, 0); // strafes diagonally right
+//        			}
+//        			else {
+//        				if (sticktoriaJustice.getRawButton(4)){
+//        		    		DriveRobot.mecanumDrive_Polar(.8, 180, 0); // strafes diagonally left
+//        		    		} else {
+//        		    			DriveRobot.mecanumDrive_Polar(0, 0, 0); // drives forward
+//        		    		}
+//        		}
+//        		
+//    	} 
+//    	}	
+//    	
+//    	iDash5s.putNumber("Front Right Raw ", encFR.getRaw());
+//    	iDash5s.putNumber("Front Left Raw ", encFL.getRaw());
+//    	iDash5s.putNumber("Back Right Raw ", encBR.getRaw());
+//    	iDash5s.putNumber("Back Left Raw ", encBL.getRaw());
+//    	
+//    	iDash5s.putNumber("Front Right Distance", encFR.getDistance());
+//    	iDash5s.putNumber("Front Left Distance", encFL.getDistance());
+//    	iDash5s.putNumber("Back Right Distance", encBR.getDistance());
+//    	iDash5s.putNumber("Back Left Distance", encBL.getDistance());
+//    	
+//    }
     	
 //    	
 //    	if(sticktoriaJustice.getOneShotButton(7)){
@@ -286,6 +319,10 @@ public class Robot extends IterativeRobot {
     	iDash5s.putNumber("Angle of the Bot", gyroPyro.getAngle());
     	iDash5s.putBoolean("topSwitch", topSwitch.get());
     	iDash5s.putBoolean("bottomSwitch",bottomSwitch.get());
+    }
+    
+    public int calculateAutoPulses(int distance, int angle){
+    	return (int) ((360/(8 * Math.PI)) * ((distance * Math.cos(angle/(360/(2 * Math.PI)))) - (distance * Math.sin(angle/(360/(2 * Math.PI))))));
     }
     
     }
