@@ -42,7 +42,7 @@ public class Elevator implements Runnable {
 		elevatorTalon1.enableBrakeMode(true);
 		elevatorTalon2.enableBrakeMode(true);
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
-    	enc.setDistancePerPulse(Constants.distancePerPulse);
+    	enc.setDistancePerPulse(Constants.elevatorDistancePerPulse);
     	enc.reset();
     	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
     	//pid = new robovikingPIDController(0.03, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);

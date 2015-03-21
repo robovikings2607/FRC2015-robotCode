@@ -61,6 +61,12 @@ public class AutonomousEngine implements Runnable {
 			case 8:
 				SmartDashboard.putString("autonMode", "Auton: Rotate other way one bin");
 				break;
+			case 9:
+				SmartDashboard.putString("autonMode", "Auton: Don't run this (unfinished 3 tote)");
+				break;
+			case 10:
+				SmartDashboard.putString("autonMode", "Auton: Test");
+				break;
 			default:
 				SmartDashboard.putString("autonMode", "UNKNOWN!!");
 				break;
@@ -585,6 +591,13 @@ public class AutonomousEngine implements Runnable {
 			
 		}
 	}
+	
+	//strafes at -45 degrees until reaching 48 inches
+	public void autoModeTen(){
+		theBot.robotDrive.resetDistance();
+		motion.driveUntilDistancePulse(48, -45, false);
+		
+	}
 
 
 	@Override
@@ -638,6 +651,18 @@ public class AutonomousEngine implements Runnable {
 				case 8:
 					System.out.println("Running Auto 8");
 					autoModeEight();
+					mode = 0;
+					break;
+					
+				case 9:
+					System.out.println("Running Auto 9");
+					autoModeNine();
+					mode = 0;
+					break;
+					
+				case 10:
+					System.out.println("Running Auto 10");
+					autoModeTen();
 					mode = 0;
 					break;
 

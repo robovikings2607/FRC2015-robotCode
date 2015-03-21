@@ -38,6 +38,8 @@ public class robovikingMotionProfiler implements Runnable{
 	Vector<Double> dreDirection = null;
 	
 	private double ftbCorrection = Constants.ftbCorrectionNoTote;
+	private int pulseAngle = 0;
+	private double pulseDistance = 0;
 	
 	
 	public robovikingMotionProfiler(robovikingMecanumDrive someDrive){
@@ -187,6 +189,26 @@ public class robovikingMotionProfiler implements Runnable{
 		}
 	}
 	
+	public void driveUntilDistancePulseCode() throws InterruptedException{
+		long startTime = System.currentTimeMillis();
+		
+		drive.resetDistance();
+		int FrontLeftPulse = (int) ((256/(6 * Math.PI)) * ((pulseDistance * Math.cos(pulseAngle/(360/(2 * Math.PI)))) - (pulseDistance * Math.sin(pulseAngle/(360/(2 * Math.PI))))));
+		int BackLeftPulse =  (int) ((256/(6 * Math.PI)) * ((pulseDistance * Math.cos(pulseAngle/(360/(2 * Math.PI)))) + (pulseDistance * Math.sin(pulseAngle/(360/(2 * Math.PI))))));
+		
+		while (System.currentTimeMillis() < startTime + 10000){
+			
+			drive.correctedMecanumDrivePolar(pulseDistance, pulseAngle, 0, ftbCorrection);
+			
+			if (drive.getCount(0) > FrontLeftPulse && drive.getCount(2) > BackLeftPulse){
+				break;
+			}
+			Thread.sleep(3);
+		}
+		
+	}
+	
+	
 	
 
 	@Override
@@ -221,9 +243,16 @@ public class robovikingMotionProfiler implements Runnable{
 					running = false;
 				}
 				
-				if (deDirection != null && autoEye != null){
-					driveUntilTriggerCode();
-					deDirection = null;
+//				if (deDirection != null && autoEye != null){
+//					driveUntilTriggerCode();
+//					deDirection = null;
+//					running = false;
+//				}
+				
+				if (pulseDistance > 0){
+					driveUntilDistancePulseCode();
+					pulseDistance = 0;
+					pulseAngle = 0;
 					running = false;
 				}
 
@@ -325,6 +354,20 @@ public class robovikingMotionProfiler implements Runnable{
 		if (!thread){
 			try {
 				rotateUntilTriggerCode();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void driveUntilDistancePulse (double distance, int angle, boolean thread){
+		running = true;
+		pulseDistance = distance;
+		pulseAngle = angle;
+		if (!thread){
+			try {
+				driveUntilDistanceCode();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

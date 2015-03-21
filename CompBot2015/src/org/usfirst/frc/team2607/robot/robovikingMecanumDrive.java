@@ -21,6 +21,8 @@ public class robovikingMecanumDrive extends RobotDrive {
     private IMUAdvanced navx;
     private boolean needGyroReset;
     
+    private SpeedController FrontL, RearR, FrontR, RearL;
+    
 	public robovikingMecanumDrive(SpeedController frontLeftMotor,
 			SpeedController rearLeftMotor, SpeedController frontRightMotor,
 			SpeedController rearRightMotor,
@@ -84,6 +86,45 @@ public class robovikingMecanumDrive extends RobotDrive {
         if (m_safetyHelper != null) m_safetyHelper.feed();
 	}
 	
+	public void correctedMecanumDrivePolar(double magnitude, double direction, double rotation, double frontBackRatio) {
+        if(!kMecanumPolar_Reported) {
+            UsageReporting.report(tResourceType.kResourceType_RobotDrive, getNumMotors(), tInstances.kRobotDrive_MecanumPolar);
+            kMecanumPolar_Reported = true;
+        }
+        double frontLeftSpeed, rearLeftSpeed, frontRightSpeed, rearRightSpeed;
+        // Normalized for full power along the Cartesian axes.
+        magnitude = limit(magnitude) * Math.sqrt(2.0);
+        // The rollers are at 45 degree angles.
+        double dirInRad = (direction + 45.0) * 3.14159 / 180.0;
+        double cosD = Math.cos(dirInRad);
+        double sinD = Math.sin(dirInRad);
+
+        double wheelSpeeds[] = new double[kMaxNumberOfMotors];
+        wheelSpeeds[kFrontLeft_val] = (sinD * magnitude + rotation);
+        wheelSpeeds[kFrontRight_val] = (cosD * magnitude - rotation);
+        wheelSpeeds[kRearLeft_val] = (cosD * magnitude + rotation);
+        wheelSpeeds[kRearRight_val] = (sinD * magnitude - rotation);
+
+        normalize(wheelSpeeds);
+
+        byte syncGroup = (byte)0x80;
+        
+        if(frontBackRatio > 0){
+	        m_frontLeftMotor.set((1-frontBackRatio) * wheelSpeeds[kFrontLeft_val] * m_invertedMotors[kFrontLeft_val] * m_maxOutput, syncGroup);
+	        m_frontRightMotor.set((1-frontBackRatio)* wheelSpeeds[kFrontRight_val] * m_invertedMotors[kFrontRight_val] * m_maxOutput, syncGroup);
+	        m_rearLeftMotor.set(wheelSpeeds[kRearLeft_val] * m_invertedMotors[kRearLeft_val] * m_maxOutput, syncGroup);
+	        m_rearRightMotor.set(wheelSpeeds[kRearRight_val] * m_invertedMotors[kRearRight_val] * m_maxOutput, syncGroup);
+        } else {
+        	m_frontLeftMotor.set(wheelSpeeds[kFrontLeft_val] * m_invertedMotors[kFrontLeft_val] * m_maxOutput, syncGroup);
+            m_frontRightMotor.set(wheelSpeeds[kFrontRight_val] * m_invertedMotors[kFrontRight_val] * m_maxOutput, syncGroup);
+            m_rearLeftMotor.set((1-Math.abs(frontBackRatio))* wheelSpeeds[kRearLeft_val] * m_invertedMotors[kRearLeft_val] * m_maxOutput, syncGroup);
+            m_rearRightMotor.set((1-Math.abs(frontBackRatio)) * wheelSpeeds[kRearRight_val] * m_invertedMotors[kRearRight_val] * m_maxOutput, syncGroup);
+
+        }
+
+        if (m_safetyHelper != null) m_safetyHelper.feed();
+    }
+	
 	public void resetDistance(){
 		if (m_frontLeftMotor instanceof WheelRPMController){
 			((WheelRPMController) m_frontLeftMotor).resetDistance();
@@ -91,6 +132,24 @@ public class robovikingMecanumDrive extends RobotDrive {
 			((WheelRPMController) m_rearLeftMotor).resetDistance();
 			((WheelRPMController) m_rearRightMotor).resetDistance();
 		}
+	}
+	
+	public int getCount(int i){
+		if (m_frontLeftMotor instanceof WheelRPMController){
+			switch (i){
+			case 0:
+				return (int) (((WheelRPMController) m_frontLeftMotor).getCount());
+			case 1:
+				return (int) (((WheelRPMController) m_frontRightMotor).getCount());
+			case 2:
+				return (int) (((WheelRPMController) m_rearLeftMotor).getCount());
+			case 3: 
+				return (int) (((WheelRPMController) m_rearRightMotor).getCount());
+			default:
+				return 0;
+			}
+		}
+		return 0;
 	}
 	
 	public double getWheelDistance(int i){

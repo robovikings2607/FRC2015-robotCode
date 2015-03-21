@@ -81,6 +81,11 @@ public class WheelRPMController implements SpeedController {
     	return enc.getCurrentRate();
     }
     
+    public double getCount() {
+    	if (!encodersFlag) return 0.0;
+    	return enc.get();
+    }
+    
     public void displayWheelRPM() {
     	if (!encodersFlag) return;
         System.out.print(deviceName + ": ");
@@ -187,6 +192,7 @@ public class WheelRPMController implements SpeedController {
     public void resetDistance(){
     	enc.reset();
     }
+    
     
     public double getDistance(){
     	return enc.getDistance();

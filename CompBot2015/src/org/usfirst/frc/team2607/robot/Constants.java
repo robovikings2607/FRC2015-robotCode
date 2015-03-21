@@ -47,7 +47,7 @@ public class Constants {
 	public static int encoderElevatorChannelB = 9;
 	public static boolean encoderElevatorReversed = false;
 	
-	public static double distancePerPulse = 1.043/256;
+	public static double elevatorDistancePerPulse = 1.043/256;
 	public static double driveDistancePerPulse = (1/(256 * 3 * (60.0/24.0))) * (6 * Math.PI); 
 	
 	public static int[][] encoders = {
