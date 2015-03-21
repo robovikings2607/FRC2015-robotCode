@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
     	if (encFL.get() < autoPulses){
     		
     		driveValerie[2] = angler * .005;
-    		DriveRobot.mecanumDrive_Polar(autoSpeed, autoAngle, 	driveValerie[2]);
+    		DriveRobot.mecanumDrive_Polar(autoSpeed, autoAngle, driveValerie[2]);
     	} else {
     		DriveRobot.mecanumDrive_Polar(0,0,0);
     	}
@@ -322,7 +322,7 @@ public class Robot extends IterativeRobot {
     }
     
     public int calculateAutoPulses(int distance, int angle){
-    	return (int) ((360/(8 * Math.PI)) * ((distance * Math.cos(angle/(360/(2 * Math.PI)))) - (distance * Math.sin(angle/(360/(2 * Math.PI))))));
+    	return (int) ((250/(8 * Math.PI)) * ((distance * Math.cos(angle/(360/(2 * Math.PI)))) - (distance * Math.sin(angle/(360/(2 * Math.PI))))));
     }
     
     }
