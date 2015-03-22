@@ -25,7 +25,7 @@ public class robovikingMotionProfiler implements Runnable{
 
 	double dsDistance = 0;
 	Vector<Double> dsDirection = null;
-	int dsAcceptableRange = 5;
+	int dsAcceptableRange = 3;
 	
 	double dgDegree = 0;
 	Vector<Double> dgDirection = null;
@@ -146,11 +146,12 @@ public class robovikingMotionProfiler implements Runnable{
 			System.out.println("In loop : " + System.currentTimeMillis());
 			if (navX.getYaw() > dgDegree + dgAcceptableRange){
 				//drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * .0001), 0, ftbCorrection);
-				drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.0038) - .15, 0, ftbCorrection);
+				//p = .0038
+				drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.005) - .15, 0, ftbCorrection);
 			SmartDashboard.putNumber("Rotation Speed Positive", (navX.getYaw() - dgDegree) * .006);	
 			} else if(navX.getYaw() < dgDegree - dgAcceptableRange){
 				//drive.correctedMecanumDrive(0,0, (dgDegree - navX.getYaw() * -.0001), 0, ftbCorrection);
-				drive.correctedMecanumDrive(0,0, ((dgDegree - navX.getYaw()) * .0038) + .15, 0, ftbCorrection);
+				drive.correctedMecanumDrive(0,0, ((dgDegree - navX.getYaw()) * .005) + .15, 0, ftbCorrection);
 				SmartDashboard.putNumber("Rotation Speed Positive", (dgDegree - navX.getYaw()) * -.006);
 			}
 			SmartDashboard.putNumber("Angle", navX.getYaw());

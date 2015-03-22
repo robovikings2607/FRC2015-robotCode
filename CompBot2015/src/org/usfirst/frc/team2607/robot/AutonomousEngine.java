@@ -610,6 +610,11 @@ public class AutonomousEngine implements Runnable {
 		forward.add(0.0);
 		forward.add(-.6);
 		
+		Vector<Double> fastforward = new Vector<Double>();
+		fastforward.add(0.0);
+		fastforward.add(-.8);
+		
+
 		
 		try {
 		theBot.motaVator.arms.set(true);
@@ -618,68 +623,92 @@ public class AutonomousEngine implements Runnable {
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
 		theBot.motaVator.goToCarryingPos();
 			
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(17, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		motion.rotateUntilDegree(60, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(10, fastforward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		Thread.sleep(200);
+		motion.rotateUntilDegree(-33.5, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		Thread.sleep(200);
+		
+		theBot.motaVator.goToHeight(-16);
+		Thread.sleep(350);
+		motion.driveUntilDistance(58.5, forward, false);  
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		theBot.motaVator.lowerManual();
+		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+		theBot.motaVator.equilibrium();
+		theBot.motaVator.arms.set(false);
+		Thread.sleep(200);
+		motion.setFtB(Constants.ftbCorrectionTwoTote);
+		theBot.motaVator.goToHeight(-1);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(200);
 		motion.rotateUntilDegree(-30, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
+		theBot.motaVator.goToCarryingPos();
+			
+		motion.driveUntilDistance(17, forward, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		motion.rotateUntilDegree(60, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		theBot.motaVator.goToHeight(-18);
-		motion.driveUntilDistance(63, forward, false);  
+		motion.driveUntilDistance(10, fastforward, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		Thread.sleep(200);
+		motion.rotateUntilDegree(-36, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-//		theBot.motaVator.lowerManual();
-//		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
-//		theBot.motaVator.equilibrium();
-//		theBot.motaVator.arms.set(false);
-//		motion.setFtB(Constants.ftbCorrectionTwoTote);
-//		theBot.motaVator.goToHeight(-1);
-//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-//		
-//		theBot.motaVator.arms.set(true);
-//		Thread.sleep(300);
-//		motion.rotateUntilDegree(-30, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
-//		theBot.motaVator.goToCarryingPos();
-//			
-//		motion.driveUntilDistance(10, forward, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		motion.rotateUntilDegree(60, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		
-//		motion.driveUntilDistance(10, forward, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		motion.rotateUntilDegree(-30, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		
-//		theBot.motaVator.goToHeight(-18);
-//		motion.driveUntilDistance(63, forward, false);  
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		
-//		Thread.sleep(300);
-//		theBot.motaVator.lowerManual();
-//		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
-//		theBot.motaVator.equilibrium();
-//		theBot.motaVator.arms.set(false);
-//		theBot.motaVator.goToHeight(-1);
-//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-//		
-//		theBot.motaVator.arms.set(true);
-//		Thread.sleep(300);
-//		theBot.motaVator.goToCarryingPos();
-//		
-//		
-//		motion.rotateUntilDegree(-90, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//		
-//		motion.driveUntilDistance(87, forward, false);
-//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-//
-//		theBot.motaVator.arms.set(false);
+		Thread.sleep(200);
+		
+		theBot.motaVator.goToHeight(-16);
+		Thread.sleep(350);
+		motion.driveUntilDistance(58.5, forward, false);  
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+
+		theBot.motaVator.lowerManual();
+		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+		theBot.motaVator.equilibrium();
+		theBot.motaVator.arms.set(false);
+		Thread.sleep(200);
+		theBot.motaVator.goToHeight(-1);
+		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(200);
+		theBot.motaVator.goToCarryingPos();
+		
+		motion.dsAcceptableRange=(15);
+		motion.rotateUntilDegree(80, false);
+		motion.dsAcceptableRange=(3);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+    	theBot.gearShiftSolenoid.set(true);    	    	
+    	theBot.FrontL.setGearPID(true);
+    	theBot.FrontR.setGearPID(true);
+    	theBot.BackL.setGearPID(true);
+    	theBot.BackR.setGearPID(true);
+    	
+		theBot.motaVator.goToHeight(0.0);
+		motion.driveUntilDistance(75, forward, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+
+
+		theBot.motaVator.arms.set(false);
+		
+    	theBot.gearShiftSolenoid.set(false);    	    	
+    	theBot.FrontL.setGearPID(false);
+    	theBot.FrontR.setGearPID(false);
+    	theBot.BackL.setGearPID(false);
+    	theBot.BackR.setGearPID(false);
 		
 		
 		} catch (InterruptedException e) {
