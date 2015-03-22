@@ -30,7 +30,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	public void selectMode() {
-		if (++mode > 8) mode = 0;
+		if (++mode > 12) mode = 0;
 
 		SmartDashboard.putNumber("autoMode", mode);
 		switch(mode) {
@@ -65,7 +65,13 @@ public class AutonomousEngine implements Runnable {
 				SmartDashboard.putString("autonMode", "Auton: Don't run this (unfinished 3 tote)");
 				break;
 			case 10:
-				SmartDashboard.putString("autonMode", "Auton: Test");
+				SmartDashboard.putString("autonMode", "Auton: Test odometry");
+				break;
+			case 11:
+				SmartDashboard.putString("autonMode", "Auton: test 3 tote pushing cans (triangles)");
+				break;
+			case 12:
+				SmartDashboard.putString("autonMode", "Auton: Testing rotation target code");
 				break;
 			default:
 				SmartDashboard.putString("autonMode", "UNKNOWN!!");
@@ -595,8 +601,97 @@ public class AutonomousEngine implements Runnable {
 	//strafes at -45 degrees until reaching 48 inches
 	public void autoModeTen(){
 		theBot.robotDrive.resetDistance();
-		motion.driveUntilDistancePulse(48, -45, false);
+		motion.driveUntilDistancePulse(48, .8, -45, false);
 		
+	}
+	
+	public void autoModeEleven(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.6);
+		
+		
+		try {
+		theBot.motaVator.arms.set(true);
+		Thread.sleep(300);
+		motion.rotateUntilDegree(-30, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
+		theBot.motaVator.goToCarryingPos();
+			
+		motion.driveUntilDistance(10, forward, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		motion.rotateUntilDegree(60, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		motion.driveUntilDistance(10, forward, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		motion.rotateUntilDegree(-30, false);
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+		theBot.motaVator.goToHeight(-18);
+		motion.driveUntilDistance(63, forward, false);  
+		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+		
+//		theBot.motaVator.lowerManual();
+//		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+//		theBot.motaVator.equilibrium();
+//		theBot.motaVator.arms.set(false);
+//		motion.setFtB(Constants.ftbCorrectionTwoTote);
+//		theBot.motaVator.goToHeight(-1);
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+//		
+//		theBot.motaVator.arms.set(true);
+//		Thread.sleep(300);
+//		motion.rotateUntilDegree(-30, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
+//		theBot.motaVator.goToCarryingPos();
+//			
+//		motion.driveUntilDistance(10, forward, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		motion.rotateUntilDegree(60, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		
+//		motion.driveUntilDistance(10, forward, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		motion.rotateUntilDegree(-30, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		
+//		theBot.motaVator.goToHeight(-18);
+//		motion.driveUntilDistance(63, forward, false);  
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		
+//		Thread.sleep(300);
+//		theBot.motaVator.lowerManual();
+//		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+//		theBot.motaVator.equilibrium();
+//		theBot.motaVator.arms.set(false);
+//		theBot.motaVator.goToHeight(-1);
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+//		
+//		theBot.motaVator.arms.set(true);
+//		Thread.sleep(300);
+//		theBot.motaVator.goToCarryingPos();
+//		
+//		
+//		motion.rotateUntilDegree(-90, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//		
+//		motion.driveUntilDistance(87, forward, false);
+//		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//
+//		theBot.motaVator.arms.set(false);
+		
+		
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+	}
+	
+	
+	public void autoModeTwelve(){
+		motion.driveUntilTargetRotation(.6, -90.0, 90.0, -.3, false);
 	}
 
 
@@ -665,6 +760,17 @@ public class AutonomousEngine implements Runnable {
 					autoModeTen();
 					mode = 0;
 					break;
+					
+				case 11: 
+					System.out.println("Running Auto 11");
+					autoModeEleven();
+					mode = 0;
+					break;
+					
+				case 12:
+					System.out.println("Running Auto 12");
+					autoModeTwelve();
+					mode = 0;
 
 				default:
 			}

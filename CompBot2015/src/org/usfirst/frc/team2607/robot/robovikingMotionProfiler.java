@@ -40,6 +40,12 @@ public class robovikingMotionProfiler implements Runnable{
 	private double ftbCorrection = Constants.ftbCorrectionNoTote;
 	private int pulseAngle = 0;
 	private double pulseDistance = 0;
+	private double pulseMagnitude;
+	
+	private double rMagnitude;
+	private double rAngle;
+	private double rTarget;
+	private double rSpeed;
 	
 	
 	public robovikingMotionProfiler(robovikingMecanumDrive someDrive){
@@ -198,9 +204,38 @@ public class robovikingMotionProfiler implements Runnable{
 		
 		while (System.currentTimeMillis() < startTime + 10000){
 			
-			drive.correctedMecanumDrivePolar(pulseDistance, pulseAngle, 0, ftbCorrection);
+			drive.correctedMecanumDrivePolar(pulseMagnitude, pulseAngle, 0, ftbCorrection);
 			
 			if (drive.getCount(0) > FrontLeftPulse && drive.getCount(2) > BackLeftPulse){
+				break;
+			}
+			Thread.sleep(3);
+		}
+		
+	}
+	
+	public void driveUntilTargetRotationCode() throws InterruptedException{
+		long startTime = System.currentTimeMillis();
+		
+		drive.resetDistance();
+		navX.zeroYaw();
+		
+		while (System.currentTimeMillis() < startTime + 5000){
+			System.out.println("In loop : " + System.currentTimeMillis());
+			if (navX.getYaw() > rTarget + dgAcceptableRange){
+				//drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * .0001), 0, ftbCorrection);
+				//drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.0038) - .15, 0, ftbCorrection);
+				drive.correctedMecanumDrivePolar(rMagnitude, rAngle, rSpeed, ftbCorrection);
+			SmartDashboard.putNumber("Rotation Speed Positive", (navX.getYaw() - dgDegree) * .006);	
+			} else if(navX.getYaw() < rTarget - dgAcceptableRange){
+				//drive.correctedMecanumDrive(0,0, (dgDegree - navX.getYaw() * -.0001), 0, ftbCorrection);
+				//drive.correctedMecanumDrive(0,0, ((dgDegree - navX.getYaw()) * .0038) + .15, 0, ftbCorrection);
+				drive.correctedMecanumDrivePolar(rMagnitude, rAngle - 180, -rSpeed, ftbCorrection);
+				SmartDashboard.putNumber("Rotation Speed Positive", (dgDegree - navX.getYaw()) * -.006);
+			}
+			SmartDashboard.putNumber("Angle", navX.getYaw());
+			
+			if (navX.getYaw() < rTarget + dgAcceptableRange && navX.getYaw() > rTarget - dgAcceptableRange){
 				break;
 			}
 			Thread.sleep(3);
@@ -253,6 +288,15 @@ public class robovikingMotionProfiler implements Runnable{
 					driveUntilDistancePulseCode();
 					pulseDistance = 0;
 					pulseAngle = 0;
+					pulseMagnitude = 0;
+					running = false;
+				}
+				
+				if (rMagnitude > 0){
+					rMagnitude = 0;
+					rAngle = 0;
+					rTarget = 0;
+					rSpeed = 0;
 					running = false;
 				}
 
@@ -361,10 +405,27 @@ public class robovikingMotionProfiler implements Runnable{
 		}
 	}
 	
-	public void driveUntilDistancePulse (double distance, int angle, boolean thread){
+	public void driveUntilDistancePulse (double distance, double magnitude, int angle, boolean thread){
 		running = true;
 		pulseDistance = distance;
 		pulseAngle = angle;
+		pulseMagnitude = magnitude;
+		if (!thread){
+			try {
+				driveUntilDistanceCode();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void driveUntilTargetRotation(double magnitude, double angle, double rotationTarget, double rotationSpeed, boolean thread){
+		running = true;
+		rMagnitude = magnitude;
+		rAngle = angle;
+		rTarget = rotationTarget;
+		rSpeed = rotationSpeed;
 		if (!thread){
 			try {
 				driveUntilDistanceCode();
