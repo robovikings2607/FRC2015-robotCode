@@ -48,7 +48,7 @@ public class robovikingMecanumDrive extends RobotDrive {
         yIn = rotated[1];
         
         if (DriverStation.getInstance().isAutonomous()) gyroResetTick = 999;
-        if ((xIn != 0.0 || yIn != 0.0) && rotation == 0.0) {
+        if ((xIn != 0.0 || yIn != 0.0) && rotation == 0.0 && DriverStation.getInstance().isAutonomous()) {
         	if (needGyroReset && ++gyroResetTick >= 3) {
         		navx.zeroYaw();
         		needGyroReset = false;

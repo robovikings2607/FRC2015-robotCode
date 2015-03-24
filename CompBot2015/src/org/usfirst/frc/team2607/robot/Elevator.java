@@ -17,8 +17,8 @@ public class Elevator implements Runnable {
 	Encoder enc;
 	Solenoid arms, breaks, shifter;
 	robovikingPIDController pid;
-	double raiseSpeed = -.6;
-	double lowerSpeed = .6;
+	double raiseSpeed = -.75;
+	double lowerSpeed = .75;
 	boolean armsFlag = false;
 	boolean override = false;
 	boolean pidDisabled = false;
@@ -44,10 +44,11 @@ public class Elevator implements Runnable {
 		enc.setPIDSourceParameter(PIDSourceParameter.kDistance);
     	enc.setDistancePerPulse(Constants.elevatorDistancePerPulse);
     	enc.reset();
-    	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
-    	//pid = new robovikingPIDController(0.03, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
-    	pid.setOutputRange(-.6, .45);
-    	pid.setInputRange(-54.2, 0);
+//    	pid = new robovikingPIDController(0.09, 0.0011, 0.0006, enc, elevatorTalon1, bottomSwitch, topSwitch);
+    	pid = new robovikingPIDController(0.085, 0.00032, 0.0000, enc, elevatorTalon1, bottomSwitch, topSwitch);
+//    	pid.setOutputRange(-.6, .45);
+    	pid.setOutputRange(-1, .75);
+    	pid.setInputRange(-56.2, 0);
     	disablePID();
     	
     	pid.setAbsoluteTolerance(.6);
@@ -122,7 +123,9 @@ public class Elevator implements Runnable {
 			break;
 		case 3:
 //			goToHeight(-35.5);
-			goToHeight(lastHeight + .5);
+			//goToHeight(lastHeight + .5);
+			//41 inches is height for tote loading
+			goToHeight(-25);
 			break;
 		case 4:
 			goToHeight(-54.2);
@@ -166,7 +169,7 @@ public class Elevator implements Runnable {
 		
 		if (prevDirection == -1){
 			prevDirection = 0;
-			goToHeight(curPos - .5); // -1 since more neg means higher
+			goToHeight(curPos - 1.2); // -1 since more neg means higher
 		} else if (prevDirection == 1){
 			prevDirection = 0;
 			goToHeight(curPos + .5); // +1 since more pos means lower
