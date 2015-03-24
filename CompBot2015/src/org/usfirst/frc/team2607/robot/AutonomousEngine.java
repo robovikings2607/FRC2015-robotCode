@@ -628,17 +628,17 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(60, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, fastforward, false);
+		motion.driveUntilDistance(17, fastforward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
-		motion.rotateUntilDegree(-33.5, false);
+		motion.rotateUntilDegree(-30, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		Thread.sleep(200);
 		
 		theBot.motaVator.goToHeight(-16);
 		Thread.sleep(350);
-		motion.driveUntilDistance(58.5, forward, false);  
+		motion.driveUntilDistance(55.5, forward, false);  
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		theBot.motaVator.lowerManual();
@@ -661,10 +661,10 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(60, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, fastforward, false);
+		motion.driveUntilDistance(17, fastforward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
-		motion.rotateUntilDegree(-36, false);
+		motion.rotateUntilDegree(-30, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		Thread.sleep(200);

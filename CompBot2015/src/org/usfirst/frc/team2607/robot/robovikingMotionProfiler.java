@@ -25,7 +25,7 @@ public class robovikingMotionProfiler implements Runnable{
 
 	double dsDistance = 0;
 	Vector<Double> dsDirection = null;
-	int dsAcceptableRange = 3;
+	int dsAcceptableRange = 2;
 	
 	double dgDegree = 0;
 	Vector<Double> dgDirection = null;
