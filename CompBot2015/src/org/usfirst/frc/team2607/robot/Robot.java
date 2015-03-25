@@ -231,6 +231,13 @@ public class Robot extends IterativeRobot {
 				motaVator.goToLevel(4);
 				break;
     	}
+    	
+    	if(xboxMinor.getButtonPressedOneShot(5)){
+    		motaVator.goToHeight(-10.5);
+    	}
+    	if(xboxMinor.getButtonPressedOneShot(6)){
+    		motaVator.goToHeight(-40);
+    	}
 	    	   	
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, Constants.ftbCorrectionNoTote);
 	    

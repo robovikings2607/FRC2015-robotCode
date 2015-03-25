@@ -116,19 +116,20 @@ public class Elevator implements Runnable {
 			goToHeight(-0);
 			break;
 		case 1:
-			goToHeight(-0);
+			goToHeight(-54.2);
 			break;
 		case 2:
-			goToHeight(-3.1);
+			//goToHeight(-3.1);
 			break;
 		case 3:
 //			goToHeight(-35.5);
 			//goToHeight(lastHeight + .5);
 			//41 inches is height for tote loading
-			goToHeight(-25);
+			//goToHeight(-25);
+			goToHeight(-0);
 			break;
 		case 4:
-			goToHeight(-54.2);
+			//goToHeight(-54.2);
 			break;
 		default:
 			System.err.println("Seriously?");
