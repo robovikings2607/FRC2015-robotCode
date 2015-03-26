@@ -144,21 +144,22 @@ public class Robot extends IterativeRobot {
 
     
     
-    
+    boolean elevatorHeightChangedOneShot;    
     public void teleopInit(){
     	//loggerThread = new Thread(logger);
     	//loggerThread.start();
-    	
+    	elevatorHeightChangedOneShot = false;
     }
     
 
     /**
      * This function is called periodically during operator control
      */
+ 
     public void teleopPeriodic() {
     	
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
-    	BackL.enableLogging(xboxSupremeController.getToggleButton(7));
+    	//BackL.enableLogging(xboxSupremeController.getToggleButton(7));
     	
     	//Shifting Management - Button 9
     	gearShiftSolenoid.set(xboxSupremeController.getToggleButton(9));    	    	
@@ -232,18 +233,30 @@ public class Robot extends IterativeRobot {
 				break;
     	}
     	
-    	if(xboxMinor.getButtonPressedOneShot(5)){
+    	if(xboxMinor.getRawAxis(2) > .5 && !elevatorHeightChangedOneShot){
+    		motaVator.goToHeight(-20);
+    		elevatorHeightChangedOneShot = true;
+    	}
+
+    	if(xboxMinor.getRawAxis(3) > .5 && !elevatorHeightChangedOneShot){
+    		motaVator.goToHeight(-40);
+    		elevatorHeightChangedOneShot = true;
+    	}
+    	
+    	if(xboxMinor.getButtonPressedOneShot(6)){
     		motaVator.goToHeight(-10.5);
     	}
-    	if(xboxMinor.getButtonPressedOneShot(6)){
-    		motaVator.goToHeight(-40);
+	    
+    	if (xboxMinor.getRawAxis(2) < .5 && xboxMinor.getRawAxis(3) < .5)  {
+    		elevatorHeightChangedOneShot = false;
     	}
-	    	   	
+    	
+    	
 	    robotDrive.correctedMecanumDrive(driveValue[0], driveValue[1], driveValue[2], 0.0, Constants.ftbCorrectionNoTote);
 	    
 
     	//logger.logEntry();
-	    BackL.logEntry();
+	    //BackL.logEntry();
 
     }
      

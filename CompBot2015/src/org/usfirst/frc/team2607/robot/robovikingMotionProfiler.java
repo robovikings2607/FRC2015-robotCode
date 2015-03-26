@@ -142,6 +142,7 @@ public class robovikingMotionProfiler implements Runnable{
 		long startTime = System.currentTimeMillis();
 		navX.zeroYaw();
 		SmartDashboard.putNumber("Before Loop Angle", navX.getYaw());
+		System.out.printf("Starting turn; Yaw: %f Target: %f, Tolerance: %f", navX.getYaw(), dgDegree, dgAcceptableRange);
 		while (System.currentTimeMillis() < startTime + 5000){
 			System.out.println("In loop : " + System.currentTimeMillis());
 			SmartDashboard.putNumber("In Loop Angle", navX.getYaw());
@@ -163,6 +164,7 @@ public class robovikingMotionProfiler implements Runnable{
 			Thread.sleep(3);
 		}
 		SmartDashboard.putNumber("After Loop Angle", navX.getYaw());
+		System.out.printf("Done turn; Yaw: %f Target: %f, Tolerance: %f", navX.getYaw(), dgDegree, dgAcceptableRange);
 	}
 	
 	public void driveUntilTriggerCode() throws InterruptedException{
