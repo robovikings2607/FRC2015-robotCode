@@ -642,7 +642,7 @@ public class AutonomousEngine implements Runnable {
 		
 		Thread.sleep(200);
 		
-		theBot.motaVator.goToHeight(-16);
+		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
 		motion.driveUntilDistance(55.5, forward, false);  
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
@@ -675,7 +675,7 @@ public class AutonomousEngine implements Runnable {
 		
 		Thread.sleep(200);
 		
-		theBot.motaVator.goToHeight(-16);
+		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
 		motion.driveUntilDistance(58.5, forward, false);  
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
@@ -743,26 +743,26 @@ public class AutonomousEngine implements Runnable {
 		try {
 		theBot.motaVator.arms.set(true);
 		Thread.sleep(300);
-		motion.rotateUntilDegree(-15, false);
+		motion.rotateUntilDegree(-20, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
 		theBot.motaVator.goToCarryingPos();
 			
 		motion.driveUntilDistance(10, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-		motion.rotateUntilDegree(30, false);
+		motion.rotateUntilDegree(40, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, fastforward, false);
+		motion.driveUntilDistance(10, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
-		motion.rotateUntilDegree(-15, false);
+		motion.rotateUntilDegree(-20, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		Thread.sleep(200);
 		
-		theBot.motaVator.goToHeight(-16);
+		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
-		motion.driveUntilDistance(60.5, forward, false);  
+		motion.driveUntilDistance(59, forward, false);  
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		theBot.motaVator.lowerManual();
@@ -776,26 +776,26 @@ public class AutonomousEngine implements Runnable {
 		
 		theBot.motaVator.arms.set(true);
 		Thread.sleep(200);
-		motion.rotateUntilDegree(-15, false);
+		motion.rotateUntilDegree(-20, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
 		theBot.motaVator.goToCarryingPos();
 			
 		motion.driveUntilDistance(10, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-		motion.rotateUntilDegree(30, false);
+		motion.rotateUntilDegree(40, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, fastforward, false);
+		motion.driveUntilDistance(10, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
-		motion.rotateUntilDegree(-15, false);
+		motion.rotateUntilDegree(-20, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		Thread.sleep(200);
 		
-		theBot.motaVator.goToHeight(-16);
+		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
-		motion.driveUntilDistance(60.5, forward, false);  
+		motion.driveUntilDistance(56, forward, false);  
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
 		theBot.motaVator.lowerManual();

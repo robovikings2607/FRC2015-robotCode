@@ -29,7 +29,7 @@ public class robovikingMotionProfiler implements Runnable{
 	
 	double dgDegree = 0;
 	Vector<Double> dgDirection = null;
-	double dgAcceptableRange = 5;
+	double dgAcceptableRange = 1;
 	IMUAdvanced navX;
 	
 	Vector<Double> deDirection = null;
@@ -144,7 +144,7 @@ public class robovikingMotionProfiler implements Runnable{
 		SmartDashboard.putNumber("Before Loop Angle", navX.getYaw());
 		System.out.printf("Starting turn; Yaw: %f Target: %f, Tolerance: %f", navX.getYaw(), dgDegree, dgAcceptableRange);
 		while (System.currentTimeMillis() < startTime + 5000){
-			System.out.println("In loop : " + System.currentTimeMillis());
+			//System.out.println("In loop : " + System.currentTimeMillis());
 			SmartDashboard.putNumber("In Loop Angle", navX.getYaw());
 			if (navX.getYaw() > dgDegree + dgAcceptableRange){
 				//drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * .0001), 0, ftbCorrection);
@@ -226,7 +226,7 @@ public class robovikingMotionProfiler implements Runnable{
 		navX.zeroYaw();
 		
 		while (System.currentTimeMillis() < startTime + 5000){
-			System.out.println("In loop : " + System.currentTimeMillis());
+			//System.out.println("In loop : " + System.currentTimeMillis());
 			if (navX.getYaw() > rTarget + dgAcceptableRange){
 				//drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * .0001), 0, ftbCorrection);
 				//drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.0038) - .15, 0, ftbCorrection);
