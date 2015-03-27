@@ -38,43 +38,43 @@ public class AutonomousEngine implements Runnable {
 				SmartDashboard.putString("autonMode", "Auton: NONE");
 				break;
 			case 1:
-				SmartDashboard.putString("autonMode", "Auton: 3-tote serpentine");
+				SmartDashboard.putString("autonMode", "Auton: 1 Can Clockwise");
 				break;
 			case 2:
-				SmartDashboard.putString("autonMode", "Auton: 3-tote straight");
+				SmartDashboard.putString("autonMode", "Auton: 1 Can CounterClockwise");
 				break;
 			case 3:
-				SmartDashboard.putString("autonMode", "Auton: Recycle Bin and 1 Tote");
+				SmartDashboard.putString("autonMode", "Auton: 1 Can and 1 Tote");
 				break;
 			case 4:
-				SmartDashboard.putString("autonMode", "Auton: Just drive forward");
+				SmartDashboard.putString("autonMode", "Auton: Full Three Tote");
 				break;
 			case 5:
-				SmartDashboard.putString("autonMode", "Auton: Recycle Bin");
-				break;
-			case 6:
 				SmartDashboard.putString("autonMode", "Auton: 1 Tote");
 				break;
+			case 6:
+				SmartDashboard.putString("autonMode", "Auton: 1-Can Backwards");
+				break;
 			case 7:
-				SmartDashboard.putString("autonMode", "Auton: Recycle Bin From Front");
+				SmartDashboard.putString("autonMode", "Auton: Just Drive Forward");
 				break;
 			case 8:
-				SmartDashboard.putString("autonMode", "Auton: Rotate other way one bin");
+				SmartDashboard.putString("autonMode", "Auton: Drive Straight Three Tote");
 				break;
 			case 9:
-				SmartDashboard.putString("autonMode", "Auton: Don't run this (unfinished 3 tote)");
+				SmartDashboard.putString("autonMode", "Auton: Strafe Three Tote (NONFUNCTIONAL)");
 				break;
 			case 10:
-				SmartDashboard.putString("autonMode", "Auton: Test odometry");
+				SmartDashboard.putString("autonMode", "Auton: Test 10");
 				break;
 			case 11:
-				SmartDashboard.putString("autonMode", "Auton: test 3 tote pushing cans (triangles)");
+				SmartDashboard.putString("autonMode", "Auton: Test 11");
 				break;
 			case 12:
-				SmartDashboard.putString("autonMode", "Auton: Testing rotation target code");
+				SmartDashboard.putString("autonMode", "Auton: Test 12");
 				break;
 			case 13:
-				SmartDashboard.putString("autonMode", "Auton: 3 tote auton with small angles");
+				SmartDashboard.putString("autonMode", "Auton: Test 13");
 				break;
 				
 			default:
@@ -85,7 +85,7 @@ public class AutonomousEngine implements Runnable {
 
 
 	//True 3-tote auto
-	private void autoModeOne() {
+	private void strafeThreeTote() {
 		Vector<Double> strafeRight = new Vector<Double>();
 		strafeRight.add(.35);
 		strafeRight.add(0.0);
@@ -182,7 +182,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	//Drive straight 3 tote auto
-	private void autoModeTwo() {
+	private void driveStraightThreeTote() {
 		Vector<Double> strafeRight = new Vector<Double>();
 		strafeRight.add(.6);
 		strafeRight.add(.2);
@@ -267,7 +267,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	//Stacks a Recycling container on a tote, then rotates and drives to auto zone
-	public void autoModeThree(){
+	public void oneCanOneTote(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.35);
@@ -314,7 +314,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	// Just Drives Forward
-	public void autoModeFour(){
+	public void driveForward(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.3);
@@ -328,7 +328,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	//Grabs recycling container, rotates 90 degrees, and drives to auto zone
-	public void autoModeFive(){
+	public void oneCanCounterclockwise(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.4);
@@ -364,7 +364,7 @@ public class AutonomousEngine implements Runnable {
 	}
 
 	//One Tote Auto
-	public void autoModeSix(){
+	public void oneTote(){
 //		Vector<Double> forward = new Vector<Double>();
 //		forward.add(0.0);
 //		forward.add(-.3);
@@ -418,7 +418,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	//grabs a recycling container and moves backwards
-	public void autoModeSeven(){
+	public void oneCanDriveBackwards(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.4);
@@ -461,7 +461,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	//Grabs recycling container, rotates other way 90 degrees, and drives to auto zone
-	public void autoModeEight(){
+	public void oneCanClockwise(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.4);
@@ -497,7 +497,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	//3 Tote auton for reals this time, no joke. AKA God Mode
-	public void autoModeNine(){
+	public void tryTwoThreeTote(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.6);
@@ -603,7 +603,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	//strafes at -45 degrees until reaching 48 inches
-	public void autoModeTen(){
+	public void testAutonMode(){
 		theBot.robotDrive.resetDistance();
 		motion.driveUntilDistancePulse(48, .8, -45, false);
 		
@@ -611,7 +611,7 @@ public class AutonomousEngine implements Runnable {
 	
 	
 	//3 tote auton buy pushing totes, 30 degree angles
-	public void autoModeEleven(){
+	public void tryThreeThreeTote(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.6);
@@ -725,11 +725,11 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	
-	public void autoModeTwelve(){
+	public void anotherAutonTest(){
 		motion.driveUntilTargetRotation(.6, -90.0, 90.0, -.3, false);
 	}
 	
-	public void autoModeThirteen(){
+	public void workingThreeTote(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.6);
@@ -848,82 +848,158 @@ public class AutonomousEngine implements Runnable {
 		// called by Thread.start();
 		System.out.println("Auto Thread Start");
 			switch (mode) {
-				case 0:
-					// turn off outputs
-					break;
-				case 1:
-					System.out.println("Running Auto 1");
-					autoModeOne();	// only exits when done, or interrupted
-					mode = 0;
-					break;
-				case 2:
-					System.out.println("Running Auto 2");
-					autoModeTwo();	// only exits when done, or interrupted
-					mode = 0;
-					break;
+			case 0:
+				// turn off outputs
+				break;
+			case 1:
+				System.out.println("Running Auto 1");
+				oneCanClockwise();
+				mode = 0;
+				break;
+			case 2:
+				System.out.println("Running Auto 2");
+				oneCanCounterclockwise();
+				mode = 0;
+				break;
 
-				case 3:
-					System.out.println("Running Auto 3");
-					autoModeThree();
-					mode = 0;
-					break;
+			case 3:
+				System.out.println("Running Auto 3");
+				oneCanOneTote();
+				mode = 0;
+				break;
 
-				case 4:
-					System.out.println("Running Auto 4");
-					autoModeFour();
-					mode = 0;
-					break;
+			case 4:
+				System.out.println("Running Auto 4");
+				workingThreeTote();
+				mode = 0;
+				break;
 
-				case 5:
-					System.out.println("Running Auto 5");
-					autoModeFive();
-					mode = 0;
-					break;
+			case 5:
+				System.out.println("Running Auto 5");
+				oneTote();
+				mode = 0;
+				break;
 
-				case 6:
-					System.out.println("Running Auto 6");
-					autoModeSix();
-					mode = 0;
-					break;
-					
-				case 7:
-					System.out.println("Running Auto 7");
-					autoModeSeven();
-					mode = 0;
-					break;
-				case 8:
-					System.out.println("Running Auto 8");
-					autoModeEight();
-					mode = 0;
-					break;
-					
-				case 9:
-					System.out.println("Running Auto 9");
-					autoModeNine();
-					mode = 0;
-					break;
-					
-				case 10:
-					System.out.println("Running Auto 10");
-					autoModeTen();
-					mode = 0;
-					break;
-					
-				case 11: 
-					System.out.println("Running Auto 11");
-					autoModeEleven();
-					mode = 0;
-					break;
-					
-				case 12:
-					System.out.println("Running Auto 12");
-					autoModeTwelve();
-					mode = 0;
+			case 6:
+				System.out.println("Running Auto 6");
+				oneCanDriveBackwards();
+				mode = 0;
+				break;
 				
-				case 13:
-					System.out.println("Running Auto 13");
-					autoModeThirteen();
-					mode = 0;
+			case 7:
+				System.out.println("Running Auto 7");
+				driveForward();
+				mode = 0;
+				break;
+			case 8:
+				System.out.println("Running Auto 8");
+				driveStraightThreeTote();	// only exits when done, or interrupted
+				mode = 0;
+				break;
+				
+			case 9:
+				System.out.println("Running Auto 9");
+				strafeThreeTote();	// only exits when done, or interrupted
+				mode = 0;
+				break;
+				
+			case 10:
+				System.out.println("Running Auto 10");
+				testAutonMode();
+				mode = 0;
+				break;
+				
+			case 11: 
+				System.out.println("Running Auto 11");
+				tryThreeThreeTote();
+				mode = 0;
+				break;
+				
+			case 12:
+				System.out.println("Running Auto 12");
+				anotherAutonTest();
+				mode = 0;
+			
+			case 13:
+				System.out.println("Running Auto 13");
+				tryTwoThreeTote();
+				mode = 0;
+//				case 0:
+//					// turn off outputs
+//					break;
+//				case 1:
+//					System.out.println("Running Auto 1");
+//					strafeThreeTote();	// only exits when done, or interrupted
+//					mode = 0;
+//					break;
+//				case 2:
+//					System.out.println("Running Auto 2");
+//					driveStraightThreeTote();	// only exits when done, or interrupted
+//					mode = 0;
+//					break;
+//
+//				case 3:
+//					System.out.println("Running Auto 3");
+//					oneCanOneTote();
+//					mode = 0;
+//					break;
+//
+//				case 4:
+//					System.out.println("Running Auto 4");
+//					driveForward();
+//					mode = 0;
+//					break;
+//
+//				case 5:
+//					System.out.println("Running Auto 5");
+//					oneCanCounterclockwise();
+//					mode = 0;
+//					break;
+//
+//				case 6:
+//					System.out.println("Running Auto 6");
+//					oneTote();
+//					mode = 0;
+//					break;
+//					
+//				case 7:
+//					System.out.println("Running Auto 7");
+//					oneCanDriveBackwards();
+//					mode = 0;
+//					break;
+//				case 8:
+//					System.out.println("Running Auto 8");
+//					oneCanClockwise();
+//					mode = 0;
+//					break;
+//					
+//				case 9:
+//					System.out.println("Running Auto 9");
+//					tryTwoThreeTote();
+//					mode = 0;
+//					break;
+//					
+//				case 10:
+//					System.out.println("Running Auto 10");
+//					testAutonMode();
+//					mode = 0;
+//					break;
+//					
+//				case 11: 
+//					System.out.println("Running Auto 11");
+//					tryThreeThreeTote();
+//					mode = 0;
+//					break;
+//					
+//				case 12:
+//					System.out.println("Running Auto 12");
+//					anotherAutonTest();
+//					mode = 0;
+//				
+//				case 13:
+//					System.out.println("Running Auto 13");
+//					workingThreeTote();
+//					mode = 0;
 
 				default:
 			}
