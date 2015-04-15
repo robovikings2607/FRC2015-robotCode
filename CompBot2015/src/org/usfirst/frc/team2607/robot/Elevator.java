@@ -51,7 +51,7 @@ public class Elevator implements Runnable {
     	pid.setInputRange(-56.2, 0);
     	disablePID();
     	
-    	pid.setAbsoluteTolerance(.6);
+    	pid.setAbsoluteTolerance(.8);
 	}
 	
 	public void goToCarryingPos() {

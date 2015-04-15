@@ -14,18 +14,16 @@ public class Logger extends Thread {
 	
 	
 	@Override
-	public void run() {
+	public void run(){
 		while (true){
 			logEntry();
+			try {Thread.sleep(10); } catch (Exception e) {}
 		}
 		
 	}
 	
 	public Logger(Robot robot){
-		theBot = robot;
-		
-		
-		
+		theBot = robot;					
 	}
 	
 	 public void enableLogging(boolean enable) {
@@ -37,12 +35,7 @@ public class Logger extends Thread {
 	    		try {
 	    			String s = "/home/lvuser/" + "MatchFiles" + "." + System.currentTimeMillis() + ".csv";
 	    			logFile = new PrintWriter(new File(s));
-	    			logFile.println("matchTime,buttonsPilot,buttonsSubPilot,"
-	    					+ "FrontLeftSetPoint, FrontLeftActual,"
-	    					+ "FrontRightSetPoint, FrontRightActual,"
-	    					+ "BackLeftSetPoint, BackLeftActual, "
-	    					+ "BackRightSetPoint, BackRightActual,"
-	    					+ "ElevatorSetPoint, ElevatorActual");
+	    			logFile.println("Time,Auto,Tele,navX Cal,navX Conn,navX Yaw");
 	    		} catch (Exception e) {}
 	    	} 
 	    	
@@ -58,12 +51,13 @@ public class Logger extends Thread {
 	 
 	 public void logEntry() {
 	        if (loggingEnabled) {
-	        	logFile.printf("%d,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f\n", DriverStation.getInstance().getMatchTime(), DriverStation.getInstance().getStickButtons(0), DriverStation.getInstance().getStickButtons(1), 
-    					theBot.FrontL.getPID().getSetpoint(), theBot.FrontL.getPID().get(),
-    					theBot.FrontR.getPID().getSetpoint(), theBot.FrontR.getPID().get(),
-    					theBot.BackL.getPID().getSetpoint(), theBot.BackL.getPID().get(),
-    					theBot.BackR.getPID().getSetpoint(), theBot.BackR.getPID().get(),
-    					theBot.motaVator.pid.getSetpoint(), theBot.motaVator.pid.get());
+	        	logFile.println(System.currentTimeMillis() + "," +
+	        					theBot.inAuto + "," + 
+	        					theBot.inTeleop + "," +
+	        				    theBot.navx.isCalibrating() + "," + 
+	        					theBot.navx.isConnected() + "," + 
+	        				    theBot.navx.getYaw());
+	        	logFile.flush();
 	        }
 	    }
 

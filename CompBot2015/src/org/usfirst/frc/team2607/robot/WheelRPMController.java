@@ -35,6 +35,8 @@ public class WheelRPMController implements SpeedController {
     	encodersFlag = useEncoders;
         motor = new CANTalon(Constants.talonCANAddresses[index], 0);  // 2nd parameter = 0 when 
                                                                    // using the Y-splitter
+        motor.enableBrakeMode(true);
+        
         if (encodersFlag){
         enc = new SmoothedEncoder(Constants.encoders[index][0], Constants.encoders[index][1],
                                   true, Encoder.EncodingType.k1X);

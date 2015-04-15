@@ -1,6 +1,9 @@
 
 package org.usfirst.frc.team2607.robot;
 
+import java.io.File;
+import java.io.PrintWriter;
+
 import com.kauailabs.nav6.frc.IMUAdvanced;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -31,9 +34,9 @@ public class Robot extends IterativeRobot {
 	WheelRPMController BackL;
 	WheelRPMController BackR;
 	
-	//Logger logger;
+	Logger logger;
 	Thread loggerThread = null;
-	
+	boolean navXInitialized = false;
 	Elevator motaVator; // this is the elevator....
 	AutonomousEngine auto;
 	Thread autoThread = null;
@@ -46,17 +49,20 @@ public class Robot extends IterativeRobot {
 	robovikingMecanumDrive robotDrive;
 	robovikingStick xboxSupremeController, xboxMinor;
 	SmartDashboard smartDash;
-	
+	boolean inAuto = false, inTeleop = false;
 	double x, y, z;
 	double[] driveValue = new double[3];
 	double[] deadZones = {0.15, 0.15, 0.15};
 	double tempAngle = 0;
+	boolean extraLowGear = false;
+	double gearCoefficient =1.5;
 	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	int calCounter = 0;
     	motaVator = new Elevator();
     //	new Thread(motaVator).start();
     	
@@ -76,8 +82,10 @@ public class Robot extends IterativeRobot {
     	ultraFront.setEnabled(true);
     	ultraSide.setEnabled(true);
  
-    	//logger = new Logger(this);
-    	
+    	logger = new Logger(this);
+    	logger.start();
+    	inAuto = false;
+    	inTeleop = false;
     	FrontL.enable();
     	BackL.enable();
     	FrontR.enable();
@@ -96,24 +104,39 @@ public class Robot extends IterativeRobot {
                     byte update_rate_hz = 50;
                     //imu = new IMU(serial_port,update_rate_hz);
                     navx = new IMUAdvanced(comPort, update_rate_hz);
-                	while (navx.isCalibrating()) {
+                	while (navx.isCalibrating() && ++calCounter < 6000) {
                 		Thread.sleep(5);
                 	}
+                	if (calCounter < 6000) { 
+                		navXInitialized = true;
+                	} else {
+                		navXInitialized = false;
+                	}
+                	navx.zeroYaw();
             } catch( Exception ex ) {
-                    
+            	navXInitialized = false;
+            	ex.printStackTrace();
             }
+    	GyroArduinoUpdater ardu = new GyroArduinoUpdater(navx, navXInitialized);
 
     	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR, navx);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
-    	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);    	
+    	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);    
+    	robotDrive.setSafetyEnabled(false);
     	smartDash = new SmartDashboard();
     	
     	auto = new AutonomousEngine(this);
+    	auto.loadSavedMode();
     }
 
     public void disabledInit() {
-    	robotDrive.correctedMecanumDrive(0,0,0, 0.0, 0);
     	
+    	robotDrive.correctedMecanumDrive(0,0,0, 0.0, 0);
+    	if (navXInitialized) {
+    		smartDash.putString("navX Calibration", "GOOD");
+    	} else {
+    		smartDash.putString("navX Calibration", "BAD");
+    	}
     }
 
     public void disabledPeriodic(){
@@ -131,15 +154,22 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     
-    
     public void autonomousInit(){
     	autoThread = new Thread(auto);
-    	autoThread.start();
-    	
+    	if (navXInitialized) {
+    		navx.zeroYaw();
+    		autoThread.start();
+    		if (logger != null) {
+    			logger.enableLogging(true);
+    		}
+    	} else {
+    		SmartDashboard.putString("autonMode", "SKIPPED");
+    	}
     }
     
     public void autonomousPeriodic() {
-    	
+    	inAuto = true;
+    	inTeleop = false;
     }
 
     
@@ -149,6 +179,7 @@ public class Robot extends IterativeRobot {
     	//loggerThread = new Thread(logger);
     	//loggerThread.start();
     	elevatorHeightChangedOneShot = false;
+    	gearCoefficient = 1.5;
     }
     
 
@@ -157,6 +188,8 @@ public class Robot extends IterativeRobot {
      */
  
     public void teleopPeriodic() {
+    	inAuto = false;
+    	inTeleop = true;
     	
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	//BackL.enableLogging(xboxSupremeController.getToggleButton(7));
@@ -169,19 +202,31 @@ public class Robot extends IterativeRobot {
     	BackR.setGearPID(xboxSupremeController.getToggleButton(9));
     	
     	//Some dead-zone stuff that nobody understands anymore, but hey, it works
-    	driveValue[0] = xboxSupremeController.getX() * .65;
-    	driveValue[1] = xboxSupremeController.getY() * .65;
-    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
+    	if(xboxSupremeController.getToggleButton(10)){
+	    	driveValue[0] = xboxSupremeController.getX() * .65 * .5;
+	    	driveValue[1] = xboxSupremeController.getY() * .65 * .5;
+	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2 * .5;
+    	} else {
+	    	driveValue[0] = xboxSupremeController.getX() * .65;
+	    	driveValue[1] = xboxSupremeController.getY() * .65;
+	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
+    	}
+    	
+//    	if (xboxSupremeController.getButtonPressedOneShot(10)){
+//    		extraLowGear = !extraLowGear;
+//    		gearCoefficient = extraLowGear ? 0.5:1.5;
+//    		System.out.println("Changed " + extraLowGear);
+//    	}
     	
     	for (int i = 0; i <= 2; i++) {
     		if (Math.abs(driveValue[i]) <= deadZones[i]) {
     			driveValue[i] = 0;
     		}
     		if (driveValue[i] > deadZones[i] && driveValue[i] <= deadZones[i] * 2) {
-    			driveValue[i] = (driveValue[i] - .15) * 1.5;
+    			driveValue[i] = (driveValue[i] - .15) * gearCoefficient;
     		}
     		if (driveValue[i] < -deadZones[i] && driveValue[i] >= -2 * deadZones[i]) {
-    			driveValue[i] = (driveValue[i] + .15) * 1.5;
+    			driveValue[i] = (driveValue[i] + .15) * gearCoefficient;
     		}
 	    	}
     	
@@ -234,7 +279,7 @@ public class Robot extends IterativeRobot {
     	}
     	
     	if(xboxMinor.getRawAxis(2) > .5 && !elevatorHeightChangedOneShot){
-    		motaVator.goToHeight(-20);
+    		motaVator.goToHeight(-16);
     		elevatorHeightChangedOneShot = true;
     	}
 

@@ -1,6 +1,10 @@
 package org.usfirst.frc.team2607.robot;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
+import java.util.Scanner;
 import java.util.Vector;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -29,9 +33,7 @@ public class AutonomousEngine implements Runnable {
 		motion = new robovikingMotionProfiler(theBot.robotDrive);
 	}
 
-	public void selectMode() {
-		if (++mode > 13) mode = 0;
-
+	public void displayMode() {
 		SmartDashboard.putNumber("autoMode", mode);
 		switch(mode) {
 			case 0:
@@ -76,14 +78,52 @@ public class AutonomousEngine implements Runnable {
 			case 13:
 				SmartDashboard.putString("autonMode", "Auton: Test 13");
 				break;
-				
+			case 14:
+				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop clockwise rotation");
+				break;
+			case 15:
+				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop counter clockwise rotation");
+				break;	
+			case 16: SmartDashboard.putString("autonMode", "Auton: Setting up for teleop long clockwise rotation");
+				break;
+			
 			default:
 				SmartDashboard.putString("autonMode", "UNKNOWN!!");
 				break;
+		}	
+	
+	}
+	
+	public void saveMode() {
+		try {
+			PrintWriter p = new PrintWriter(new File("/home/lvuser/autoMode.txt"));
+			p.printf("%d", mode);
+			p.flush();
+			p.close();
+		} catch (Exception e) {
+			
 		}
 	}
+	
+	public void selectMode() {
+		if (++mode > 16) mode = 0;
+		saveMode();
+		displayMode();
+	}
 
-
+	public void loadSavedMode() {
+		try {
+			FileInputStream fin = new FileInputStream("/home/lvuser/autoMode.txt");
+			Scanner s = new Scanner(fin);
+			if (s.hasNextInt()) mode = s.nextInt();
+			else mode = 0;
+			fin.close();
+		} catch (Exception e) {
+			mode = 0;
+		}
+		displayMode();
+	}
+	
 	//True 3-tote auto
 	private void strafeThreeTote() {
 		Vector<Double> strafeRight = new Vector<Double>();
@@ -212,18 +252,19 @@ public class AutonomousEngine implements Runnable {
 			theBot.motaVator.goToHeight(-18.5);
 
 			// drive forward to next tote
-			motion.driveUntilDistance(80.4,  forward, false);
+			motion.driveUntilDistance(78.4,  forward, false);
 			// Stop so mecanum wheels can accelerate together
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
 			theBot.motaVator.lowerManual();
-			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			while(theBot.motaVator.enc.getDistance() < -13) Thread.sleep(2);
 			theBot.motaVator.equilibrium();
 
 			theBot.motaVator.arms.set(false);
 			Thread.sleep(100);
 
-			theBot.motaVator.goToHeight(0);
+			
+			theBot.motaVator.goToHeight(-1);
 			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 
 			theBot.motaVator.arms.set(true);
@@ -232,18 +273,18 @@ public class AutonomousEngine implements Runnable {
 			// set elevator to carrying position
 			theBot.motaVator.goToHeight(-18.5);
 			// drive forward to next tote
-			motion.driveUntilDistance(80.4,  forward, false);
+			motion.driveUntilDistance(78.4,  forward, false);
 			// Stop so mecanum wheels can accelerate together
 			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
 			theBot.motaVator.lowerManual();
-			while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+			while(theBot.motaVator.enc.getDistance() < -13) Thread.sleep(2);
 			theBot.motaVator.equilibrium();
 
 			theBot.motaVator.arms.set(false);
 			Thread.sleep(100);
 
-			theBot.motaVator.goToHeight(0);
+			theBot.motaVator.goToHeight(-1);
 			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 
 			theBot.motaVator.arms.set(true);
@@ -339,8 +380,9 @@ public class AutonomousEngine implements Runnable {
 		theBot.motaVator.arms.set(true);
 		Thread.sleep(500);
 
-		theBot.motaVator.goToHeight(-18);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		theBot.motaVator.goToHeight(-8);
+		Thread.sleep(300);
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 
 		motion.rotateUntilDegree(-90, false);
 		Thread.sleep(300);
@@ -351,8 +393,8 @@ public class AutonomousEngine implements Runnable {
 
 		theBot.motaVator.goToHeight(-1);
 
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
 		theBot.motaVator.arms.set(false);
 
 
@@ -394,8 +436,9 @@ public class AutonomousEngine implements Runnable {
 		Thread.sleep(500);
 
 		theBot.motaVator.goToHeight(-18);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
+		
 		motion.rotateUntilDegree(90, false);
 		Thread.sleep(300);
 
@@ -405,8 +448,8 @@ public class AutonomousEngine implements Runnable {
 
 		theBot.motaVator.goToHeight(-1);
 
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+		//while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
 		theBot.motaVator.arms.set(false);
 
 
@@ -433,7 +476,8 @@ public class AutonomousEngine implements Runnable {
 
 		try {
 		theBot.motaVator.goToHeight(-8.0);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+//		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
 		
 		motion.driveUntilDistance(21, forward, false);
 			
@@ -449,8 +493,9 @@ public class AutonomousEngine implements Runnable {
 
 		theBot.motaVator.goToHeight(-7);
 
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+		//while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
+		
 		theBot.motaVator.arms.set(false);
 		
 		} catch (InterruptedException e) {
@@ -473,8 +518,9 @@ public class AutonomousEngine implements Runnable {
 		Thread.sleep(500);
 
 		theBot.motaVator.goToHeight(-18);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+		//while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
+		
 		motion.rotateUntilDegree(90, false);
 		Thread.sleep(300);
 
@@ -484,8 +530,9 @@ public class AutonomousEngine implements Runnable {
 
 		theBot.motaVator.goToHeight(-1);
 
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-
+		//while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		Thread.sleep(300);
+		
 		theBot.motaVator.arms.set(false);
 
 
@@ -730,6 +777,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	public void workingThreeTote(){
+		int vatorTimeOut = 0;
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
 		forward.add(-.6);
@@ -738,6 +786,9 @@ public class AutonomousEngine implements Runnable {
 		fastforward.add(0.0);
 		fastforward.add(-.8);
 		
+		Vector<Double> fasterforward = new Vector<Double>();
+		fasterforward.add(0.0);
+		fasterforward.add(-.92);
 
 		
 		try {
@@ -747,12 +798,12 @@ public class AutonomousEngine implements Runnable {
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
 		theBot.motaVator.goToCarryingPos();
 			
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(13, forward, false); //10
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		motion.rotateUntilDegree(40, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(8.5, forward, false); //16
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
 		motion.rotateUntilDegree(-20, false);
@@ -762,30 +813,44 @@ public class AutonomousEngine implements Runnable {
 		
 		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
-		motion.driveUntilDistance(59, forward, false);  
+		motion.driveUntilDistance(59.5, forward, false);  //59
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
 		theBot.motaVator.lowerManual();
-		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+		vatorTimeOut = 0;
+		while(theBot.motaVator.enc.getDistance() < -12) { 
+			if (++vatorTimeOut > 750) {
+				theBot.motaVator.equilibrium();
+				return;
+			}
+			Thread.sleep(2);
+		}
 		theBot.motaVator.equilibrium();
 		theBot.motaVator.arms.set(false);
 		Thread.sleep(200);
 		motion.setFtB(Constants.ftbCorrectionTwoTote);
 		theBot.motaVator.goToHeight(-1);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-		
+		vatorTimeOut = 0;
+		while(!theBot.motaVator.pid.onTarget() ) { 
+			if (++vatorTimeOut > 750) {
+				theBot.motaVator.equilibrium();
+				return;
+			}
+			Thread.sleep(2);
+		}
+			
 		theBot.motaVator.arms.set(true);
 		Thread.sleep(200);
 		motion.rotateUntilDegree(-20, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);		
 		theBot.motaVator.goToCarryingPos();
 			
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(13, forward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		motion.rotateUntilDegree(40, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		
-		motion.driveUntilDistance(10, forward, false);
+		motion.driveUntilDistance(8.5, forward, false); // 16
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 		Thread.sleep(200);
 		motion.rotateUntilDegree(-20, false);
@@ -795,16 +860,30 @@ public class AutonomousEngine implements Runnable {
 		
 		theBot.motaVator.goToHeight(-18);
 		Thread.sleep(350);
-		motion.driveUntilDistance(56, forward, false);  
+		motion.driveUntilDistance(59.5, forward, false);  //61.5
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
 		theBot.motaVator.lowerManual();
-		while(theBot.motaVator.enc.getDistance() < -12) Thread.sleep(2);
+		vatorTimeOut = 0;
+		while(theBot.motaVator.enc.getDistance() < -12) { 
+			if (++vatorTimeOut > 750) {
+				theBot.motaVator.equilibrium();
+				return;
+			}
+			Thread.sleep(2);
+		}
 		theBot.motaVator.equilibrium();
 		theBot.motaVator.arms.set(false);
 		Thread.sleep(200);
 		theBot.motaVator.goToHeight(-1);
-		while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+		vatorTimeOut = 0;
+		while(!theBot.motaVator.pid.onTarget() ) { 
+			if (++vatorTimeOut > 750) {
+				theBot.motaVator.equilibrium();
+				return;
+			}
+			Thread.sleep(2);
+		}
 		
 		theBot.motaVator.arms.set(true);
 		Thread.sleep(200);
@@ -814,7 +893,7 @@ public class AutonomousEngine implements Runnable {
 		motion.rotateUntilDegree(80, false);
 		motion.dsAcceptableRange=(3);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-		
+	
     	theBot.gearShiftSolenoid.set(true);    	    	
     	theBot.FrontL.setGearPID(true);
     	theBot.FrontR.setGearPID(true);
@@ -822,7 +901,7 @@ public class AutonomousEngine implements Runnable {
     	theBot.BackR.setGearPID(true);
     	
 		theBot.motaVator.goToHeight(0.0);
-		motion.driveUntilDistance(75, forward, false);
+		motion.driveUntilDistance(70, fastforward, false);
 		theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
 
 
@@ -839,6 +918,126 @@ public class AutonomousEngine implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+		
+	}
+	
+	private void teleopSetUpClockWise(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.4);
+		
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(.4);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try{
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(500);
+			
+			theBot.motaVator.goToHeight(-5);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			motion.rotateUntilDegree(45, false);
+			Thread.sleep(300);
+			
+			motion.driveUntilDistance(73, forward, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.goToHeight(-1);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(false);
+			
+			motion.driveUntilDistance(25, backwards, false);
+			
+		} catch(InterruptedException e){
+			
+			
+			
+		}
+		
+	}
+	
+	private void teleopSetUpCounterClockWise(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.4);
+		
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(.4);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try{
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(500);
+			
+			theBot.motaVator.goToHeight(-5);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			motion.rotateUntilDegree(-45, false);
+			Thread.sleep(300);
+			
+			motion.driveUntilDistance(73, forward, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.goToHeight(-1);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(false);
+			
+			motion.driveUntilDistance(25, backwards, false);
+			
+		} catch(InterruptedException e){
+			
+			
+			
+		}
+		
+	}
+	
+	private void teleopSetUpLongClockWise(){
+		Vector<Double> forward = new Vector<Double>();
+		forward.add(0.0);
+		forward.add(-.4);
+		
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(.4);
+		
+		theBot.robotDrive.resetDistance();
+		
+		try{
+			theBot.motaVator.arms.set(true);
+			Thread.sleep(500);
+			
+			theBot.motaVator.goToHeight(-5);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			motion.rotateUntilDegree(135, false);
+			Thread.sleep(300);
+			
+			motion.driveUntilDistance(73, forward, false);
+			
+			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+			
+			theBot.motaVator.goToHeight(-1);
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+			
+			theBot.motaVator.arms.set(false);
+			
+			motion.driveUntilDistance(25, backwards, false);
+			
+		} catch(InterruptedException e){
+			
+			
+			
+		}
 		
 	}
 
@@ -923,6 +1122,21 @@ public class AutonomousEngine implements Runnable {
 			case 13:
 				System.out.println("Running Auto 13");
 				tryTwoThreeTote();
+				mode = 0;
+				
+			case 14:
+				System.out.println("Running Auto 14");
+				teleopSetUpClockWise();
+				mode = 0;
+			
+			case 15:
+				System.out.println("Running Auto 15");
+				teleopSetUpCounterClockWise();
+				mode = 0;
+				
+			case 16:
+				System.out.println("Runnint Auto 16");
+				teleopSetUpLongClockWise();
 				mode = 0;
 //				case 0:
 //					// turn off outputs

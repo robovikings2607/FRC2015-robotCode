@@ -7,31 +7,43 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 public class GyroArduinoUpdater extends Thread {
 	IMUAdvanced navx;
+	boolean good;
+	double startAngle = 0;
 	
-	int address = 0;
+	int address = 4;
 	I2C i2c;
 	
 	int flashCoutner = 0;
 	boolean flashPosition;
 	
-	GyroArduinoUpdater(IMUAdvanced navx){
+	GyroArduinoUpdater(IMUAdvanced navx, boolean good){
 		this.navx = navx;
+		this.good = good;
 		i2c = new I2C(Port.kOnboard, address);
+		
+		this.startAngle = this.navx.getYaw();
 		
 		this.start();
 	}
 	
-	GyroArduinoUpdater(IMUAdvanced navx, int address){
-		this(navx);
+	GyroArduinoUpdater(IMUAdvanced navx, boolean good, int address){
+		this(navx, good);
 		
 		this.address = address;		
 	}
 	
 	public void run() {
 		while (true){
-			if (navx.getYaw() - .5 > 0 ) setLeft();
-			else if (navx.getYaw() + .5 < 0 ) setRight();
-			else setCenter();
+			//System.out.println("Yeah");
+			if(good){
+				if (startAngle - navx.getYaw() - .13 > 0 ) setLeft();
+				else if (startAngle - navx.getYaw() + .13 < 0 ) setRight();
+				else setCenter();
+				//System.out.println("Inside!");
+			} else {
+				setFlash();
+				//System.out.println("NO!");
+			}
 			
 			try {
 				Thread.sleep(80);

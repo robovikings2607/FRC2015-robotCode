@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2607.robot;
 
+import java.io.PrintWriter;
 import java.util.Vector;
 
 import com.kauailabs.nav6.frc.IMUAdvanced;
@@ -25,11 +26,11 @@ public class robovikingMotionProfiler implements Runnable{
 
 	double dsDistance = 0;
 	Vector<Double> dsDirection = null;
-	int dsAcceptableRange = 2;
+	double dsAcceptableRange = 1.2; //2
 	
 	double dgDegree = 0;
 	Vector<Double> dgDirection = null;
-	double dgAcceptableRange = 1;
+	double dgAcceptableRange = .3;
 	IMUAdvanced navX;
 	
 	Vector<Double> deDirection = null;
@@ -123,10 +124,13 @@ public class robovikingMotionProfiler implements Runnable{
 			SmartDashboard.putNumber("Wheel distance", averageDistance);
 			
 			if (averageDistance > dsDistance + dsAcceptableRange){
-				drive.correctedMecanumDrive(-dsDirection.get(0), -dsDirection.get(1), 0, 0, ftbCorrection);
+				//drive.correctedMecanumDrive(-dsDirection.get(0), -dsDirection.get(1), 0, 0, ftbCorrection);
+				drive.correctedMecanumDrive(-dsDirection.get(0)*Math.min(1, (dsDistance-averageDistance)*.3), -dsDirection.get(1)*Math.min(1, (dsDistance-averageDistance)*.3), 0, 0, ftbCorrection);
 			} else if (averageDistance < dsDistance - dsAcceptableRange){
-				drive.correctedMecanumDrive(dsDirection.get(0), dsDirection.get(1), 0, 0, ftbCorrection);
+				//drive.correctedMecanumDrive(dsDirection.get(0), dsDirection.get(1), 0, 0, ftbCorrection);
+				drive.correctedMecanumDrive(dsDirection.get(0)*Math.min(1, (dsDistance-averageDistance)*.3), dsDirection.get(1)*Math.min(1, (dsDistance-averageDistance)*.3), 0, 0, ftbCorrection);
 			}
+			
 			if (averageDistance < dsDistance + dsAcceptableRange &&
 					averageDistance > dsDistance - dsAcceptableRange){
 				break;
@@ -149,11 +153,13 @@ public class robovikingMotionProfiler implements Runnable{
 			if (navX.getYaw() > dgDegree + dgAcceptableRange){
 				//drive.correctedMecanumDrive(0, 0, (navX.getYaw() - dgDegree * .0001), 0, ftbCorrection);
 				//p = .0038
-				drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.005) - .15, 0, ftbCorrection);
-			SmartDashboard.putNumber("Rotation Speed Positive", (navX.getYaw() - dgDegree) * .006);	
+				//drive.correctedMecanumDrive(0, 0, ((navX.getYaw() - dgDegree) * -.005) - .15, 0, ftbCorrection);
+				drive.correctedMecanumDrive(0, 0, (Math.max(-.3, (navX.getYaw() - dgDegree) * -.015) - .021), 0, ftbCorrection); //neg
+				SmartDashboard.putNumber("Rotation Speed Positive", (navX.getYaw() - dgDegree) * .006);	
 			} else if(navX.getYaw() < dgDegree - dgAcceptableRange){
 				//drive.correctedMecanumDrive(0,0, (dgDegree - navX.getYaw() * -.0001), 0, ftbCorrection);
-				drive.correctedMecanumDrive(0,0, ((dgDegree - navX.getYaw()) * .005) + .15, 0, ftbCorrection);
+				//drive.correctedMecanumDrive(0,0, ((dgDegree - navX.getYaw()) * .005) + .15, 0, ftbCorrection);
+				drive.correctedMecanumDrive(0,0, (Math.min(.3, (dgDegree - navX.getYaw()) * .015) + .021), 0, ftbCorrection); //pos
 				SmartDashboard.putNumber("Rotation Speed Positive", (dgDegree - navX.getYaw()) * -.006);
 			}
 			SmartDashboard.putNumber("Angle", navX.getYaw());
