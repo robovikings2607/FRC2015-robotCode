@@ -56,6 +56,7 @@ public class Robot extends IterativeRobot {
 	double tempAngle = 0;
 	boolean extraLowGear = false;
 	double gearCoefficient =1.5;
+	double feederAngle;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -180,6 +181,8 @@ public class Robot extends IterativeRobot {
     	//loggerThread.start();
     	elevatorHeightChangedOneShot = false;
     	gearCoefficient = 1.5;
+    	feederAngle= 0.0;
+    	
     }
     
 
@@ -190,6 +193,9 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	inAuto = false;
     	inTeleop = true;
+    	if(xboxSupremeController.getButtonPressedOneShot(8)){
+    		feederAngle = navx.getYaw();
+    	}
     	
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	//BackL.enableLogging(xboxSupremeController.getToggleButton(7));
@@ -205,10 +211,35 @@ public class Robot extends IterativeRobot {
     	if(xboxSupremeController.getToggleButton(10)){
 	    	driveValue[0] = xboxSupremeController.getX() * .65 * .5;
 	    	driveValue[1] = xboxSupremeController.getY() * .65 * .5;
+	    	if(xboxSupremeController.getRawButton(3)){
+	    		if (navx.getYaw() < feederAngle + 2 && navx.getYaw() > feederAngle - 2){
+	    			driveValue[2] = 0.0;
+				}
+	    		if (navx.getYaw() > feederAngle +2){
+	    			driveValue[2] =  (Math.max(-.3, (navx.getYaw() - feederAngle) * -.015) - .021);
+	    		} else {
+	    			if (navx.getYaw() < feederAngle - 2){
+	    				driveValue[2] = (Math.min(.3, (feederAngle - navx.getYaw()) * .015) + .021);
+	    			}
+	    			}
+	    		}else
 	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2 * .5;
+	    	
     	} else {
 	    	driveValue[0] = xboxSupremeController.getX() * .65;
 	    	driveValue[1] = xboxSupremeController.getY() * .65;
+	    	if(xboxSupremeController.getRawButton(3)){
+	    		if (navx.getYaw() < feederAngle + 2 && navx.getYaw() > feederAngle - 2){
+	    			driveValue[2] = 0.0;
+				}
+	    		if (navx.getYaw() > feederAngle +2){
+	    			driveValue[2] =  (Math.max(-.3, (navx.getYaw() - feederAngle) * -.015) - .021);
+	    		} else {
+	    			if (navx.getYaw() < feederAngle - 2){
+	    				driveValue[2] = (Math.min(.3, (feederAngle - navx.getYaw()) * .015) + .021);
+	    			}
+	    			}
+	    	} else
 	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
     	}
     	
