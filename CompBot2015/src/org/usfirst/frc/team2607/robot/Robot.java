@@ -56,7 +56,9 @@ public class Robot extends IterativeRobot {
 	double tempAngle = 0;
 	boolean extraLowGear = false;
 	double gearCoefficient =1.5;
-	double feederAngle;
+	Solenoid canBurglar;
+	GyroPIDController gyroPID;
+	double targetGyroPIDAngle = 0;  
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -75,6 +77,8 @@ public class Robot extends IterativeRobot {
     	BackR = new WheelRPMController("BackRight", 3,true);
 
     	gearShiftSolenoid = new Solenoid(1, Constants.gearShiftChannel);
+    	canBurglar = new Solenoid(1, Constants.breaksChannel);
+    	
     	
     	ultraFront = new Ultrasonic(Constants.ultraFrontPing, Constants.ultraFrontEcho);
     	ultraSide = new Ultrasonic(Constants.ultraSidePing,Constants.ultraSideEcho);
@@ -119,6 +123,7 @@ public class Robot extends IterativeRobot {
             	ex.printStackTrace();
             }
     	GyroArduinoUpdater ardu = new GyroArduinoUpdater(navx, navXInitialized);
+    	gyroPID = new GyroPIDController(0.014, .000, 0.006, 0.04, navx);
 
     	robotDrive = new robovikingMecanumDrive(FrontL, BackL, FrontR, BackR, navx);
     	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
@@ -175,14 +180,12 @@ public class Robot extends IterativeRobot {
 
     
     
-    boolean elevatorHeightChangedOneShot;    
+    boolean elevatorHeightChangedOneShot;  
     public void teleopInit(){
     	//loggerThread = new Thread(logger);
     	//loggerThread.start();
     	elevatorHeightChangedOneShot = false;
     	gearCoefficient = 1.5;
-    	feederAngle= 0.0;
-    	
     }
     
 
@@ -193,9 +196,6 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	inAuto = false;
     	inTeleop = true;
-    	if(xboxSupremeController.getButtonPressedOneShot(8)){
-    		feederAngle = navx.getYaw();
-    	}
     	
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	//BackL.enableLogging(xboxSupremeController.getToggleButton(7));
@@ -211,35 +211,10 @@ public class Robot extends IterativeRobot {
     	if(xboxSupremeController.getToggleButton(10)){
 	    	driveValue[0] = xboxSupremeController.getX() * .65 * .5;
 	    	driveValue[1] = xboxSupremeController.getY() * .65 * .5;
-	    	if(xboxSupremeController.getRawButton(3)){
-	    		if (navx.getYaw() < feederAngle + 2 && navx.getYaw() > feederAngle - 2){
-	    			driveValue[2] = 0.0;
-				}
-	    		if (navx.getYaw() > feederAngle +2){
-	    			driveValue[2] =  (Math.max(-.3, (navx.getYaw() - feederAngle) * -.015) - .021);
-	    		} else {
-	    			if (navx.getYaw() < feederAngle - 2){
-	    				driveValue[2] = (Math.min(.3, (feederAngle - navx.getYaw()) * .015) + .021);
-	    			}
-	    			}
-	    		}else
 	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2 * .5;
-	    	
     	} else {
 	    	driveValue[0] = xboxSupremeController.getX() * .65;
 	    	driveValue[1] = xboxSupremeController.getY() * .65;
-	    	if(xboxSupremeController.getRawButton(3)){
-	    		if (navx.getYaw() < feederAngle + 2 && navx.getYaw() > feederAngle - 2){
-	    			driveValue[2] = 0.0;
-				}
-	    		if (navx.getYaw() > feederAngle +2){
-	    			driveValue[2] =  (Math.max(-.3, (navx.getYaw() - feederAngle) * -.015) - .021);
-	    		} else {
-	    			if (navx.getYaw() < feederAngle - 2){
-	    				driveValue[2] = (Math.min(.3, (feederAngle - navx.getYaw()) * .015) + .021);
-	    			}
-	    			}
-	    	} else
 	    	driveValue[2] = xboxSupremeController.getRawAxis(4)/2;
     	}
     	
@@ -261,6 +236,17 @@ public class Robot extends IterativeRobot {
     		}
 	    	}
     	
+    	if(xboxSupremeController.getButtonPressedOneShot(3)){
+    		gyroPID.enable();
+    		gyroPID.setSetpoint(targetGyroPIDAngle);
+    	}
+    	if(xboxSupremeController.getRawButton(3)){
+    		driveValue[2] = gyroPID.get();
+    	}
+    	if(xboxSupremeController.getButtonReleasedOneShot(3)){
+    		gyroPID.disable();
+    	}
+    	
     	//Manual Elevator Control - Button 1 & 4
 	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
     		motaVator.lowerManual();
@@ -278,6 +264,9 @@ public class Robot extends IterativeRobot {
     	if(xboxSupremeController.getButtonPressedOneShot(2) || (xboxMinor.getButtonPressedOneShot(2))){
     	motaVator.grab();
     	}
+    	
+    	//CanBurgle - CoPilot Button 3
+    	canBurglar.set(xboxMinor.getToggleButton(3));
     	
     	//Move to various tote heights - D-Pad
     	switch (xboxSupremeController.getPOV(0)){

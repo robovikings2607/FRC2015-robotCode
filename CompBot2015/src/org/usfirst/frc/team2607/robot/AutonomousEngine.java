@@ -82,14 +82,10 @@ public class AutonomousEngine implements Runnable {
 				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop clockwise rotation");
 				break;
 			case 15:
-				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop counter clockwise rotation");
+				SmartDashboard.putString("autonMode", "Auton: Setting up for Can Burglar");
 				break;	
-			case 16:
-				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop long clockwise rotation");
-				break;	
-			case 17:
-				SmartDashboard.putString("autonMode", "Auton: Setting up for teleop clockwise rotation beginning at feeder angle");
-				break;	
+			case 16: SmartDashboard.putString("autonMode", "Auton: Setting up for teleop long clockwise rotation");
+				break;
 			
 			default:
 				SmartDashboard.putString("autonMode", "UNKNOWN!!");
@@ -110,7 +106,7 @@ public class AutonomousEngine implements Runnable {
 	}
 	
 	public void selectMode() {
-		if (++mode > 17) mode = 0;
+		if (++mode > 16) mode = 0;
 		saveMode();
 		displayMode();
 	}
@@ -930,6 +926,9 @@ public class AutonomousEngine implements Runnable {
 		forward.add(0.0);
 		forward.add(-.4);
 		
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(.4);
 		
 		theBot.robotDrive.resetDistance();
 		
@@ -938,7 +937,7 @@ public class AutonomousEngine implements Runnable {
 			Thread.sleep(500);
 			
 			theBot.motaVator.goToHeight(-5);
-			
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 			
 			motion.rotateUntilDegree(45, false);
 			Thread.sleep(300);
@@ -952,7 +951,7 @@ public class AutonomousEngine implements Runnable {
 			
 			theBot.motaVator.arms.set(false);
 			
-			
+			motion.driveUntilDistance(25, backwards, false);
 			
 		} catch(InterruptedException e){
 			
@@ -962,35 +961,65 @@ public class AutonomousEngine implements Runnable {
 		
 	}
 	
-	private void teleopSetUpCounterClockWise(){
+	private void canBurgle(){
 		Vector<Double> forward = new Vector<Double>();
 		forward.add(0.0);
-		forward.add(-.4);
+		forward.add(-1.0);
 		
-
-		
-		theBot.robotDrive.resetDistance();
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(1.0);
 		
 		try{
-			theBot.motaVator.arms.set(true);
-			Thread.sleep(500);
 			
-			theBot.motaVator.goToHeight(-5);
-		
+			theBot.robotDrive.correctedMecanumDrive(0,0.25,0,0,0);
+			theBot.canBurglar.set(true);
+			Thread.sleep(800);
 			
-			motion.rotateUntilDegree(-45, false);
-			Thread.sleep(300);
+			theBot.robotDrive.correctedMecanumDrive(0,0,0,0,0);
+	    	theBot.gearShiftSolenoid.set(true);    	    	
+	    	theBot.FrontL.setGearPID(true);
+	    	theBot.FrontR.setGearPID(true);
+	    	theBot.BackL.setGearPID(true);
+	    	theBot.BackR.setGearPID(true);
+	    	
+	    	//motion.driveUntilDistance(76, forward, false);
+	    	
+	    	theBot.robotDrive.correctedMecanumDrive(0, -1, -.48, 0, 0);
+	    	
+	    	Thread.sleep(1150);
+	    	
+	    	theBot.robotDrive.correctedMecanumDrive(0, 0,0,0,0);
+	    	theBot.gearShiftSolenoid.set(false);    	    	
+	    	theBot.FrontL.setGearPID(false);
+	    	theBot.FrontR.setGearPID(false);
+	    	theBot.BackL.setGearPID(false);
+	    	theBot.BackR.setGearPID(false);
+	    	
+	    	theBot.canBurglar.set(false);
 			
-			motion.driveUntilDistance(73, forward, false);
-			
-			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-			
-			theBot.motaVator.goToHeight(-1);
-			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-			
-			theBot.motaVator.arms.set(false);
-			
-			
+//		theBot.robotDrive.resetDistance();
+//		
+//		try{
+//			theBot.motaVator.arms.set(true);
+//			Thread.sleep(500);
+//			
+//			theBot.motaVator.goToHeight(-5);
+//			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+//			
+//			motion.rotateUntilDegree(-45, false);
+//			Thread.sleep(300);
+//			
+//			motion.driveUntilDistance(73, forward, false);
+//			
+//			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
+//			
+//			theBot.motaVator.goToHeight(-1);
+//			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
+//			
+//			theBot.motaVator.arms.set(false);
+//			
+//			motion.driveUntilDistance(25, backwards, false);
 			
 		} catch(InterruptedException e){
 			
@@ -1005,6 +1034,10 @@ public class AutonomousEngine implements Runnable {
 		forward.add(0.0);
 		forward.add(-.4);
 		
+		Vector<Double> backwards = new Vector<Double>();
+		backwards.add(0.0);
+		backwards.add(.4);
+		
 		theBot.robotDrive.resetDistance();
 		
 		try{
@@ -1012,7 +1045,7 @@ public class AutonomousEngine implements Runnable {
 			Thread.sleep(500);
 			
 			theBot.motaVator.goToHeight(-5);
-			
+			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
 			
 			motion.rotateUntilDegree(135, false);
 			Thread.sleep(300);
@@ -1026,50 +1059,14 @@ public class AutonomousEngine implements Runnable {
 			
 			theBot.motaVator.arms.set(false);
 			
-			
-			
-		} catch(InterruptedException e){
-			
-			
-			
-		}
-		
-	}
-	
-	public void teleopSetUpClockWiseFeederAligned(){
-		Vector<Double> forward = new Vector<Double>();
-		forward.add(0.0);
-		forward.add(-.4);
-		
-		
-		theBot.robotDrive.resetDistance();
-		
-		try{
-			theBot.motaVator.arms.set(true);
-			Thread.sleep(500);
-			
-			theBot.motaVator.goToHeight(-5);
-			
-			
-			motion.rotateUntilDegree(38.36, false); //38.36
-			Thread.sleep(300);
-			
-			motion.driveUntilDistance(57, forward, false); 
-			
-			theBot.robotDrive.correctedMecanumDrive(0, 0, 0, 0, 0);
-			
-			theBot.motaVator.goToHeight(-1);
-			while(!theBot.motaVator.pid.onTarget()) Thread.sleep(2);
-			
-			theBot.motaVator.arms.set(false);
-			
-			
+			motion.driveUntilDistance(25, backwards, false);
 			
 		} catch(InterruptedException e){
 			
 			
 			
 		}
+		
 	}
 
 
@@ -1149,31 +1146,28 @@ public class AutonomousEngine implements Runnable {
 				System.out.println("Running Auto 12");
 				anotherAutonTest();
 				mode = 0;
+				break;
 			
 			case 13:
 				System.out.println("Running Auto 13");
 				tryTwoThreeTote();
 				mode = 0;
-				
+				break;
 			case 14:
 				System.out.println("Running Auto 14");
 				teleopSetUpClockWise();
 				mode = 0;
-			
+				break;
 			case 15:
 				System.out.println("Running Auto 15");
-				teleopSetUpCounterClockWise();
+				canBurgle();
 				mode = 0;
-				
+				break;
 			case 16:
 				System.out.println("Runnint Auto 16");
 				teleopSetUpLongClockWise();
 				mode = 0;
-				
-			case 17:
-				System.out.println("Runnint Auto 17");
-				teleopSetUpClockWiseFeederAligned();
-				mode = 0;
+				break;
 //				case 0:
 //					// turn off outputs
 //					break;

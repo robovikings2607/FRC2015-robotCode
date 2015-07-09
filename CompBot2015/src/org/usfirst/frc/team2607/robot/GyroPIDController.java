@@ -8,8 +8,11 @@ import edu.wpi.first.wpilibj.PIDSource;
 
 public class GyroPIDController extends PIDController {
 
-	public GyroPIDController(double Kp, double Ki, double Kd, IMUAdvanced x) {
-		super(Kp, Ki, Kd, new GyroSource(x), new DummyOut());
+	public GyroPIDController(double Kp, double Ki, double Kd, double Kf, IMUAdvanced x) {
+		super(Kp, Ki, Kd, Kf, new GyroSource(x), new DummyOut());
+		
+		this.setAbsoluteTolerance(1);
+		this.setOutputRange(-0.3, 0.3);
 	}
 
 }

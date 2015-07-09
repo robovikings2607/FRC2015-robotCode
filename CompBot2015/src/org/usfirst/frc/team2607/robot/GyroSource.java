@@ -13,8 +13,8 @@ public class GyroSource implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		y.getYaw();
-		return 0;
+		System.out.println(y.getYaw());
+		return y.getYaw();
 	}
 
 }
