@@ -18,7 +18,7 @@ public class Elevator implements Runnable {
 	Solenoid arms, breaks, shifter;
 	robovikingPIDController pid;
 	double raiseSpeed = -.75;
-	double lowerSpeed = .55;
+	double lowerSpeed = .65;
 	boolean armsFlag = false;
 	boolean override = false;
 	boolean pidDisabled = false;
