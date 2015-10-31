@@ -59,6 +59,7 @@ public class Robot extends IterativeRobot {
 	Solenoid canBurglar;
 	GyroPIDController gyroPID;
 	double targetGyroPIDAngle = 0;  
+	boolean maintenanceModeWasRun = false;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -161,6 +162,7 @@ public class Robot extends IterativeRobot {
      */
     
     public void autonomousInit(){
+    	if (maintenanceModeWasRun) return;
     	autoThread = new Thread(auto);
     	if (navXInitialized) {
     		navx.zeroYaw();
@@ -174,6 +176,7 @@ public class Robot extends IterativeRobot {
     }
     
     public void autonomousPeriodic() {
+    	if (maintenanceModeWasRun) return;
     	inAuto = true;
     	inTeleop = false;
     }
@@ -196,7 +199,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	inAuto = false;
     	inTeleop = true;
-    	
+    	if (maintenanceModeWasRun) return;
     	//logger.enableLogging(xboxSupremeController.getToggleButton(7));
     	//BackL.enableLogging(xboxSupremeController.getToggleButton(7));
     	
@@ -324,7 +327,9 @@ public class Robot extends IterativeRobot {
 	    //BackL.logEntry();
 
     }
-     
+    
+    
+    
     public void testInit(){
     	navx.zeroYaw();
     	testTick = 0;
@@ -335,6 +340,17 @@ public class Robot extends IterativeRobot {
   
     public void testPeriodic() {
     	
+    	//Manual Elevator Control for re-widing cable - Button 1 & 4
+	    if((xboxSupremeController.getRawButton(1) || xboxMinor.getRawButton(1))){
+    		motaVator.maintenanceMode(.25);
+    		maintenanceModeWasRun = true;
+    	} else if((xboxSupremeController.getRawButton(4) || xboxMinor.getRawButton(4))){
+    		motaVator.maintenanceMode(-.25);
+    		maintenanceModeWasRun = true;
+    	}  else {
+    		motaVator.maintenanceMode(0.0);
+    	}
+
     	if (++testTick >=50) {
     		testTick = 0;
     		System.out.println("Top Limit Switch: " + motaVator.topSwitch.get());

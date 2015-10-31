@@ -160,6 +160,11 @@ public class Elevator implements Runnable {
 		}
 	}
 	
+	public void maintenanceMode(double speed) {
+		disablePID();
+		elevatorTalon1.set(speed);
+	}
+	
 	public void equilibrium(){
 		disablePID();
 		elevatorTalon1.set(0.0);
