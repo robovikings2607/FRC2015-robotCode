@@ -974,7 +974,7 @@ public class AutonomousEngine implements Runnable {
 			
 			//theBot.robotDrive.correctedMecanumDrive(0,0.25,0,0,0);
 			theBot.canBurglar.set(true);
-			Thread.sleep(800);
+			Thread.sleep(1250);	//Time between burgle arm falling and robot driving
 			
 			theBot.robotDrive.correctedMecanumDrive(0,0,0,0,0);
 	    	theBot.gearShiftSolenoid.set(true);    	    	
